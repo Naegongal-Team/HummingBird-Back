@@ -68,8 +68,14 @@ cmake-build-*/
 # File-based project format
 *.iws
 
-# IntelliJ
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
 out/
+!**/src/main/**/out/
+!**/src/test/**/out/
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
@@ -189,3 +195,7 @@ Temporary Items
 *.icloud
 
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij,macos,git
+/build/
+/.gradle/
+/.idea/
+HELP.md
