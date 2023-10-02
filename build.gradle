@@ -26,7 +26,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'junit:junit:4.13.1'
-	implementation 'se.michaelthelin.spotify:spotify-web-api-java:8.2.1'
+	implementation 'com.github.thelinmichael:spotify-web-api-java:master-SNAPSHOT'
 
     compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
@@ -37,6 +37,12 @@ dependencies {
 		exclude group: "org.hamcrest", module: "hamcrest-core"
 	}
 
+}
+
+allprojects {
+	repositories {
+		maven { url 'https://jitpack.io'}
+	}
 }
 
 tasks.named('test') {

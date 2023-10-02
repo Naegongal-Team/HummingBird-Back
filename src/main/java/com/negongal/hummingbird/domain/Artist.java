@@ -1,13 +1,25 @@
 package com.negongal.hummingbird.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import lombok.*;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED) @AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder @Getter @ToString
 public class Artist {
+
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        Long id;
+        private Long id;
+
+        private String name;
+
+        @Lob
+        private String description;
+
+        private String images;
+
+        private String genres;
 }
