@@ -35,6 +35,8 @@ dependencies {
 	testImplementation("org.junit.vintage:junit-vintage-engine") {
 		exclude group: "org.hamcrest", module: "hamcrest-core"
 	}
+	//oauth2 client 추가
+	implementation ("org.springframework.boot:spring-boot-starter-oauth2-client")
 
 }
 
