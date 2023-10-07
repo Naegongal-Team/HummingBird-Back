@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -20,40 +19,42 @@ import java.io.IOException;
 @Configuration
 public class SpotifyConfig {
 
-    @Value("${spotifyApi.client-id}")
-    private static String clientId;
+    private static String SPOTIFY_API_CLIENT_ID;
 
-    @Value("${spotifyApi.client-secret}")
-    private static String clientSecret;
+    private static String SPOTIFY_API_CLIENT_SECRET;
 
-    private static SpotifyApi spotifyApi;
+    public static SpotifyApi spotifyApi;
 
     @PostConstruct
-    public void init() {
-        this.spotifyApi = new SpotifyApi.Builder()
-                .setClientId(clientId)
-                .setClientSecret(clientSecret)
+    private void initSpotifyApi() throws IOException, ParseException, SpotifyWebApiException {
+        spotifyApi = new SpotifyApi.Builder()
+                .setClientId(SPOTIFY_API_CLIENT_ID)
+                .setClientSecret(SPOTIFY_API_CLIENT_SECRET)
                 .build();
         setAccessToken();
     }
 
-    public static void setAccessToken() {
-        ClientCredentialsRequest clientCredentialsRequest = spotifyApi.clientCredentials().build();
+    private void setAccessToken() throws IOException, ParseException, SpotifyWebApiException {
+        final ClientCredentialsRequest clientCredentialsRequest = spotifyApi.clientCredentials().build();
 
-        try {
             final ClientCredentials clientCredentials = clientCredentialsRequest.execute();
             spotifyApi.setAccessToken(clientCredentials.getAccessToken());
 
             log.info("Expires in: {}", clientCredentials.getExpiresIn());
-
-        } catch (IOException | SpotifyWebApiException | ParseException e) {
-            log.error("Error: {}", e.getMessage());
-
-        }
     }
 
     @Bean
     public SpotifyApi spotifyApi() {
         return spotifyApi;
+    }
+
+    @Value("${spotifyApi.client-id}")
+    public void setClientId(String clientId) {
+        SPOTIFY_API_CLIENT_ID = clientId;
+    }
+
+    @Value("${spotifyApi.client-secret}")
+    public void setClientSecret(String clientSecret) {
+        SPOTIFY_API_CLIENT_SECRET = clientSecret;
     }
 }
