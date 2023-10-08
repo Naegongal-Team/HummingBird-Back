@@ -12,18 +12,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/performance")
 public class PerformanceApiController {
 
     private final PerformanceService performanceService;
 
-    @PostMapping(value = "/performance", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<String> register(
                 @Valid @RequestPart(value = "performance") PerformanceRequestDto requestDto,
                 @RequestPart(required = false, value = "photo") MultipartFile file) {
@@ -35,11 +39,17 @@ public class PerformanceApiController {
         return new ResponseEntity<>("ok", HttpStatus.CREATED);
     }
 
-    @GetMapping("/performance")
+    @GetMapping
     public ResponseEntity<HashMap<String, List<PerformanceDto>>> getPerformances() {
         List<PerformanceDto> performanceList = performanceService.findAll();
         HashMap<String, List<PerformanceDto>> responseList = new HashMap<>();
         responseList.put("performance_list", performanceList);
         return new ResponseEntity<>(responseList, HttpStatus.OK);
+    }
+
+    @GetMapping("/detail/{performanceId}")
+    public ResponseEntity<PerformanceDto> getPerformanceDetail(@PathVariable Long performanceId) {
+        PerformanceDto Performance = performanceService.findOne(performanceId);
+        return new ResponseEntity<>(Performance, HttpStatus.OK);
     }
 }

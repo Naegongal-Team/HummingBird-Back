@@ -53,4 +53,10 @@ public class PerformanceService {
                 .stream().map(p -> PerformanceDto.of(p))
                 .collect(Collectors.toList());
     }
+
+    public PerformanceDto findOne(Long performanceId) {
+        Performance performance = performanceRepository.findById(performanceId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 공연입니다."));
+        return PerformanceDto.of(performance);
+    }
 }
