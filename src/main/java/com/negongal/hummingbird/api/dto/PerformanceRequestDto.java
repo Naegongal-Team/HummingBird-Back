@@ -17,6 +17,9 @@ public class PerformanceRequestDto {
     @NotBlank(message = "공연 이름은 필수 값입니다.")
     private String name;
 
+    @NotBlank(message = "가수 이름은 필수 값입니다.")
+    private String artistName;
+
     @NotBlank(message = "장소는 필수 값입니다.")
     private String location;
 
