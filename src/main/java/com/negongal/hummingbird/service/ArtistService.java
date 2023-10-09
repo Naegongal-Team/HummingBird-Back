@@ -47,9 +47,8 @@ public class ArtistService {
             log.info("Length: {}", artists.length);
     }
 
-    @Transactional
-    public void searchArtist() {
-
+    @Transactional(readOnly = true)
+    public void searchArtistByName() {
     }
 
 
