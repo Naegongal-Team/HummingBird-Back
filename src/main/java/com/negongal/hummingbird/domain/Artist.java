@@ -3,6 +3,7 @@ package com.negongal.hummingbird.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED) @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -16,9 +17,12 @@ public class Artist {
         @Column(nullable = false, unique = true)
         private String name;
 
-        private String images;
+        private String image;
 
         private String genres;
 
         private int popularity;
+
+        @OneToMany(mappedBy = "artist")
+        private List<ArtistLike> artistLikes;
 }
