@@ -1,10 +1,13 @@
 package com.negongal.hummingbird.domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -24,8 +27,6 @@ public class Performance {
 
     private String artistName;  /** Artist 매핑 필요 **/
 
-    private String photo;
-
     @Column(nullable = false)
     private String location;
 
@@ -35,26 +36,29 @@ public class Performance {
     @Column(nullable = false)
     private LocalDateTime date;
 
+    private String photo;
     private String description;
-    private String ticketingLink;
-    private LocalDateTime ticketingDate;
 
-    @Builder(builderMethodName = "createPerformanceBuilder")
+    @OneToMany(mappedBy = "performance")
+    private List<Ticketing> ticketing;
+
+//    @OneToMany(mappedBy = "performance")
+//    private List<Ticketing> earlybirdTicketing;
+
+
+    @Builder
     public Performance(String name, String artistName, String location, Long runtime, LocalDateTime date) {
         this.name = name;
         this.artistName = artistName;
         this.location = location;
         this.runtime = runtime;
         this.date = date;
+        this.ticketing = new ArrayList<>();
+//        this.earlybirdTicketing = new ArrayList<>();
     }
 
     public void addPhoto(String photo) {
         this.photo = photo;
-    }
-
-    public void addTicketingData(String ticketingLink, LocalDateTime ticketingDate) {
-        this.ticketingLink = ticketingLink;
-        this.ticketingDate = ticketingDate;
     }
 
     public void addDescription(String description) {

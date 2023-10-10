@@ -27,7 +27,7 @@ public class PerformanceService {
          * requestDto.getArtistName()
          */
 
-        Performance performance = Performance.createPerformanceBuilder()
+        Performance performance = Performance.builder()
                 .name(requestDto.getName())
                 .artistName(requestDto.getArtistName())  /** Artist 매핑 필요 **/
                 .location(requestDto.getLocation())
@@ -40,7 +40,6 @@ public class PerformanceService {
         }
 
         /**
-         * 티켓팅 정보 - 날짜, 링크 추가 필요
          * S3 이미지 저장 필요
          */
 

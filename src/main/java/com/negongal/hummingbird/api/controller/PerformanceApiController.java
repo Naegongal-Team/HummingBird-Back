@@ -2,8 +2,8 @@ package com.negongal.hummingbird.api.controller;
 
 import com.negongal.hummingbird.api.dto.PerformanceDto;
 import com.negongal.hummingbird.api.dto.PerformanceRequestDto;
-import com.negongal.hummingbird.domain.Performance;
 import com.negongal.hummingbird.service.PerformanceService;
+import com.negongal.hummingbird.service.TicketingService;
 import java.util.HashMap;
 import java.util.List;
 import javax.validation.Valid;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class PerformanceApiController {
 
     private final PerformanceService performanceService;
+    private final TicketingService ticketService;
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<String> register(
@@ -35,7 +35,10 @@ public class PerformanceApiController {
          * 파일 등록 - S3 이용 추가 필요
          */
 
-        performanceService.save(requestDto);
+        Long performanceId = performanceService.save(requestDto);
+        if(requestDto.getEarlybirdTicketing() != null || requestDto.getEarlybirdTicketing() != null) {
+            ticketService.save(performanceId, requestDto);
+        }
         return new ResponseEntity<>("ok", HttpStatus.CREATED);
     }
 
