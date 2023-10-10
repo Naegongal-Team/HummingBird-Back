@@ -27,17 +27,7 @@ public class PerformanceService {
          * requestDto.getArtistName()
          */
 
-        Performance performance = Performance.builder()
-                .name(requestDto.getName())
-                .artistName(requestDto.getArtistName())  /** Artist 매핑 필요 **/
-                .location(requestDto.getLocation())
-                .runtime(requestDto.getRuntime())
-                .date(requestDto.getDate())
-                .build();
-
-        if(requestDto.getDescription() != null) {
-            performance.addDescription(requestDto.getDescription());
-        }
+        Performance performance = requestDto.toEntity();
 
         /**
          * S3 이미지 저장 필요

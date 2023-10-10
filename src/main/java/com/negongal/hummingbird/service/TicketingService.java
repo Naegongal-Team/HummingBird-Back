@@ -27,43 +27,25 @@ public class TicketingService {
     private final PerformanceRepository performanceRepository;
 
     @Transactional
-    public Long save(Long performanceId, PerformanceRequestDto requestDto){
+    public void save(Long performanceId, PerformanceRequestDto requestDto){
         Performance performance = performanceRepository.findById(performanceId)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 공연입니다."));
 
         List<Ticketing> ticketingList = new ArrayList<>();
         if(requestDto.getRegularTicketing() != null) {
-            List<Ticketing> ticketing = requestDto.getRegularTicketing()
-                    .stream()
-                    .map(t -> Ticketing.builder()
-                            .performance(performance)
-                            .type(Type.REGULAR)
-                            .date(t.getDate())
-                            .platform(t.getPlatform())
-                            .link(t.getLink())
-                            .description("")
-                            .build())
+            List<Ticketing> rTicketing = requestDto.getRegularTicketing().stream()
+                    .map(t -> t.toEntity(performance, Type.REGULAR))
                     .collect(Collectors.toList());
-            ticketingList.addAll(ticketing);
+            ticketingList.addAll(rTicketing);
         }
 
         if(requestDto.getEarlybirdTicketing() != null) {
-            List<Ticketing> ticketing = requestDto.getEarlybirdTicketing()
-                    .stream()
-                    .map(t -> Ticketing.builder()
-                            .performance(performance)
-                            .type(Type.EARLY_BIRD)
-                            .date(t.getDate())
-                            .platform(t.getPlatform())
-                            .link(t.getLink())
-                            .description(t.getDescription())
-                            .build())
+            List<Ticketing> eTicketing = requestDto.getEarlybirdTicketing().stream()
+                    .map(t -> t.toEntity(performance, Type.EARLY_BIRD))
                     .collect(Collectors.toList());
-
-            ticketingList.addAll(ticketing);
+            ticketingList.addAll(eTicketing);
         }
 
         ticketingRepository.saveAll(ticketingList);
-        return null;
     }
 }

@@ -28,13 +28,14 @@ public class PerformanceDto {
     private String artistName;
     private String photo;
     private String location;
+    private String description;
     private Long runtime;
     private LocalDateTime date;
     private List<TicketingDto> regularTicketing;
     private List<TicketingDto> earlybirdTicketing;
 
     @Builder
-    public PerformanceDto(Long id, String name, String artistName, String location, Long runtime,
+    public PerformanceDto(Long id, String name, String artistName, String location, Long runtime, String description,
                           LocalDateTime date, String photo, List<TicketingDto> regularTicketing, List<TicketingDto> earlybirdTicketing) {
         this.id = id;
         this.name = name;
@@ -42,20 +43,13 @@ public class PerformanceDto {
         this.photo = photo;
         this.location = location;
         this.runtime = runtime;
+        this.description = description;
         this.date = date;
         this.regularTicketing = regularTicketing;
         this.earlybirdTicketing = earlybirdTicketing;
     }
 
     public static PerformanceDto of(Performance p) {
-        List<TicketingDto> regular = p.getTicketing().stream()
-                .filter(t -> t.getType() == Type.REGULAR)
-                .map(t -> TicketingDto.of(t))
-                .collect(Collectors.toList());
-        List<TicketingDto> earlybird = p.getTicketing().stream()
-                .filter(t -> t.getType() == Type.EARLY_BIRD)
-                .map(t -> TicketingDto.of(t))
-                .collect(Collectors.toList());
         return PerformanceDto.builder()
                 .id(p.getId())
                 .name(p.getName())
@@ -63,9 +57,16 @@ public class PerformanceDto {
                 .photo(p.getPhoto())
                 .location(p.getLocation())
                 .runtime(p.getRuntime())
+                .description(p.getDescription())
                 .date(p.getDate())
-                .regularTicketing(regular)
-                .earlybirdTicketing(earlybird)
+                .regularTicketing(p.getTicketing().stream()
+                        .filter(t -> t.getType() == Type.REGULAR)
+                        .map(t -> TicketingDto.of(t))
+                        .collect(Collectors.toList()))
+                .earlybirdTicketing(p.getTicketing().stream()
+                        .filter(t -> t.getType() == Type.EARLY_BIRD)
+                        .map(t -> TicketingDto.of(t))
+                        .collect(Collectors.toList()))
                 .build();
     }
 }

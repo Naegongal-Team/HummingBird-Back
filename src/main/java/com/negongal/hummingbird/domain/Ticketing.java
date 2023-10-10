@@ -50,44 +50,5 @@ public class Ticketing {
 
         //==연관관계 편의 메서드==//
         performance.getTicketing().add(this);
-//        if(type == Type.REGULAR) performance.getTicketing().add(this);
-//        else performance.getEarlybirdTicketing().add(this);
-    }
-
-//    @Builder(builderMethodName = "createRegularBuilder")
-//    public Ticketing(Performance performance, Type type, LocalDateTime date, String platform, String link) {
-//        this.performance = performance;
-//        this.type = type;
-//        this.date = date;
-//        this.platform = platform;
-//        this.link = link;
-//        this.description = "z";
-//
-//        //==연관관계 편의 메서드==//
-//        performance.getRegularTicketing().add(this);
-//    }
-//
-//    @Builder(builderMethodName = "createEarlybirdBuilder")
-//    public Ticketing(Performance performance, Type type, LocalDateTime date, String platform, String link, String description) {
-//        this.performance = performance;
-//        this.type = type;
-//        this.date = date;
-//        this.platform = platform;
-//        this.link = link;
-//        this.description = description;
-//
-//        //==연관관계 편의 메서드==//
-//        performance.getEarlybirdTicketing().add(this);
-//    }
-
-    @Override
-    public String toString() {
-        return "Ticketing{" +
-                "type=" + type +
-                ", date=" + date +
-                ", platform='" + platform + '\'' +
-                ", link='" + link + '\'' +
-                ", description='" + description + '\'' +
-                '}';
     }
 }

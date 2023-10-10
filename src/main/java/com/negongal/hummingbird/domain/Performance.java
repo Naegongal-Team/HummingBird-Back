@@ -42,27 +42,20 @@ public class Performance {
     @OneToMany(mappedBy = "performance")
     private List<Ticketing> ticketing;
 
-//    @OneToMany(mappedBy = "performance")
-//    private List<Ticketing> earlybirdTicketing;
-
-
     @Builder
-    public Performance(String name, String artistName, String location, Long runtime, LocalDateTime date) {
+    public Performance(String name, String artistName, String location, Long runtime, String description, LocalDateTime date) {
         this.name = name;
         this.artistName = artistName;
         this.location = location;
         this.runtime = runtime;
         this.date = date;
+        this.description = description;
         this.ticketing = new ArrayList<>();
-//        this.earlybirdTicketing = new ArrayList<>();
     }
 
     public void addPhoto(String photo) {
         this.photo = photo;
     }
 
-    public void addDescription(String description) {
-        this.description = description;
-    }
 
 }

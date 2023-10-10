@@ -3,6 +3,7 @@ package com.negongal.hummingbird.api.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.negongal.hummingbird.domain.Performance;
 import com.negongal.hummingbird.domain.Ticketing;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,4 +37,16 @@ public class PerformanceRequestDto {
 
     private List<TicketingRequestDto> regularTicketing;
     private List<TicketingRequestDto> earlybirdTicketing;
+
+    public Performance toEntity() {
+        if(this.description == null) description = "";
+        return Performance.builder()
+                .name(name)
+                .artistName(artistName)  /** Artist 매핑 필요 **/
+                .location(location)
+                .runtime(runtime)
+                .description(description)
+                .date(date)
+                .build();
+    }
 }
