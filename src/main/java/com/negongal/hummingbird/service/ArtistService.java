@@ -1,7 +1,11 @@
 package com.negongal.hummingbird.service;
 
+import com.negongal.hummingbird.domain.Artist;
+import com.negongal.hummingbird.repository.ArtistRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,8 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ArtistService {
 
-    @Transactional(readOnly = true)
-    public void getArtists() {
+    private final ArtistRepository artistRepository;
 
+    @Transactional(readOnly = true)
+    public Page<Artist> getArtists(Pageable pageable) {
+        return artistRepository.findAll(pageable);
     }
+
 }
