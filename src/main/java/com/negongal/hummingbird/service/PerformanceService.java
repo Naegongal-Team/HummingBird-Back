@@ -25,7 +25,7 @@ public class PerformanceService {
     private final PerformanceDateRepository dateRepository;
 
     @Transactional
-    public Long save(PerformanceRequestDto requestDto){
+    public Long save(PerformanceRequestDto requestDto, String photo){
 
         /**
          * Artist 조회 + 매핑 필요
@@ -33,6 +33,7 @@ public class PerformanceService {
          */
 
         Performance performance = requestDto.toEntity();
+        performance.addPhoto(photo);
 
         /**
          * S3 이미지 저장 필요

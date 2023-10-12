@@ -36,6 +36,7 @@ public class Performance {
     @OneToMany(mappedBy = "performance", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PerformanceDate> date;
 
+    @Column(length = 1000)
     private String photo;
     private String description;
 
