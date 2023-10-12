@@ -36,14 +36,9 @@ public class PerformanceApiController {
     public ResponseEntity<String> register(
                 @Valid @RequestPart(value = "performance") PerformanceRequestDto requestDto,
                 @RequestPart(required = false, value = "photo") MultipartFile photo) throws IOException {
-
         String photoUrl = (photo == null) ? null : fileService.saveFile(photo);
-
         Long performanceId = performanceService.save(requestDto, photoUrl);
-        if(requestDto.getEarlybirdTicketing() != null || requestDto.getEarlybirdTicketing() != null) {
-            ticketService.save(performanceId, requestDto);
-        }
-
+        ticketService.save(performanceId, requestDto);
         return new ResponseEntity<>("ok", HttpStatus.CREATED);
     }
 

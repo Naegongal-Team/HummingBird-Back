@@ -9,7 +9,6 @@ import com.negongal.hummingbird.repository.PerformanceRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,17 +33,20 @@ public class PerformanceService {
 
         Performance performance = requestDto.toEntity();
         performance.addPhoto(photo);
-
-        /**
-         * S3 이미지 저장 필요
-         */
-
         performanceRepository.save(performance);
-        List<PerformanceDate> dateList = requestDto.getDate().stream()
-                .map(d -> PerformanceDate.builder().performance(performance).date(d).build())
-                .collect(Collectors.toList());
+
+        List<PerformanceDate> dateList = createDate(requestDto.getDate(), performance);
         dateRepository.saveAll(dateList);
+
         return performance.getId();
+    }
+
+    public List<PerformanceDate> createDate(List<LocalDateTime> dateList, Performance performance) {
+        return dateList.stream().map(d -> PerformanceDate.builder()
+                    .performance(performance)
+                    .date(d)
+                    .build())
+                .collect(Collectors.toList());
     }
 
     public List<PerformanceDto> findAll() {
