@@ -1,12 +1,13 @@
 package com.negongal.hummingbird.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.negongal.hummingbird.domain.Performance;
-import com.negongal.hummingbird.domain.Type;
+import com.negongal.hummingbird.domain.TicketType;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,13 +31,15 @@ public class PerformanceDto {
     private String location;
     private String description;
     private Long runtime;
-    private LocalDateTime date;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+    private List<LocalDateTime> date;
     private List<TicketingDto> regularTicketing;
     private List<TicketingDto> earlybirdTicketing;
 
     @Builder
     public PerformanceDto(Long id, String name, String artistName, String location, Long runtime, String description,
-                          LocalDateTime date, String photo, List<TicketingDto> regularTicketing, List<TicketingDto> earlybirdTicketing) {
+                          List<LocalDateTime> date, String photo, List<TicketingDto> regularTicketing, List<TicketingDto> earlybirdTicketing) {
         this.id = id;
         this.name = name;
         this.artistName = artistName;
@@ -50,6 +53,7 @@ public class PerformanceDto {
     }
 
     public static PerformanceDto of(Performance p) {
+        List<LocalDateTime> dateList = p.getDate().stream().map(d -> d.getDate()).collect(Collectors.toList());
         return PerformanceDto.builder()
                 .id(p.getId())
                 .name(p.getName())
@@ -58,13 +62,13 @@ public class PerformanceDto {
                 .location(p.getLocation())
                 .runtime(p.getRuntime())
                 .description(p.getDescription())
-                .date(p.getDate())
+                .date(dateList)
                 .regularTicketing(p.getTicketing().stream()
-                        .filter(t -> t.getType() == Type.REGULAR)
+                        .filter(t -> t.getTicketType() == TicketType.REGULAR)
                         .map(t -> TicketingDto.of(t))
                         .collect(Collectors.toList()))
                 .earlybirdTicketing(p.getTicketing().stream()
-                        .filter(t -> t.getType() == Type.EARLY_BIRD)
+                        .filter(t -> t.getTicketType() == TicketType.EARLY_BIRD)
                         .map(t -> TicketingDto.of(t))
                         .collect(Collectors.toList()))
                 .build();

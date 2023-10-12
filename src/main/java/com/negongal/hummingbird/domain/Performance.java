@@ -1,8 +1,8 @@
 package com.negongal.hummingbird.domain;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,24 +33,24 @@ public class Performance {
     @Column(nullable = false)
     private Long runtime;
 
-    @Column(nullable = false)
-    private LocalDateTime date;
+    @OneToMany(mappedBy = "performance", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PerformanceDate> date;
 
     private String photo;
     private String description;
 
-    @OneToMany(mappedBy = "performance")
+    @OneToMany(mappedBy = "performance", orphanRemoval = true)
     private List<Ticketing> ticketing;
 
     @Builder
-    public Performance(String name, String artistName, String location, Long runtime, String description, LocalDateTime date) {
+    public Performance(String name, String artistName, String location, Long runtime, String description) {
         this.name = name;
         this.artistName = artistName;
         this.location = location;
         this.runtime = runtime;
-        this.date = date;
         this.description = description;
         this.ticketing = new ArrayList<>();
+        this.date = new ArrayList<>();
     }
 
     public void addPhoto(String photo) {

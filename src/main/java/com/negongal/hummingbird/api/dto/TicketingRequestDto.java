@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.negongal.hummingbird.domain.Performance;
 import com.negongal.hummingbird.domain.Ticketing;
-import com.negongal.hummingbird.domain.Type;
+import com.negongal.hummingbird.domain.TicketType;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,11 +21,11 @@ public class TicketingRequestDto {
     private String link;
     private String description;
 
-    public Ticketing toEntity(Performance performance, Type type) {
+    public Ticketing toEntity(Performance performance, TicketType ticketType) {
         if(this.description == null) description = "";
         return Ticketing.builder()
                 .performance(performance)
-                .type(type)
+                .ticketType(ticketType)
                 .date(date)
                 .platform(platform)
                 .link(link)

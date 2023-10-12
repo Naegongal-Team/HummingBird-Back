@@ -1,12 +1,9 @@
 package com.negongal.hummingbird.service;
 
-import com.negongal.hummingbird.api.dto.PerformanceDto;
 import com.negongal.hummingbird.api.dto.PerformanceRequestDto;
-import com.negongal.hummingbird.api.dto.TicketingDto;
-import com.negongal.hummingbird.api.dto.TicketingRequestDto;
 import com.negongal.hummingbird.domain.Performance;
 import com.negongal.hummingbird.domain.Ticketing;
-import com.negongal.hummingbird.domain.Type;
+import com.negongal.hummingbird.domain.TicketType;
 import com.negongal.hummingbird.repository.PerformanceRepository;
 import com.negongal.hummingbird.repository.TicketingRepository;
 import java.util.ArrayList;
@@ -34,14 +31,14 @@ public class TicketingService {
         List<Ticketing> ticketingList = new ArrayList<>();
         if(requestDto.getRegularTicketing() != null) {
             List<Ticketing> rTicketing = requestDto.getRegularTicketing().stream()
-                    .map(t -> t.toEntity(performance, Type.REGULAR))
+                    .map(t -> t.toEntity(performance, TicketType.REGULAR))
                     .collect(Collectors.toList());
             ticketingList.addAll(rTicketing);
         }
 
         if(requestDto.getEarlybirdTicketing() != null) {
             List<Ticketing> eTicketing = requestDto.getEarlybirdTicketing().stream()
-                    .map(t -> t.toEntity(performance, Type.EARLY_BIRD))
+                    .map(t -> t.toEntity(performance, TicketType.EARLY_BIRD))
                     .collect(Collectors.toList());
             ticketingList.addAll(eTicketing);
         }

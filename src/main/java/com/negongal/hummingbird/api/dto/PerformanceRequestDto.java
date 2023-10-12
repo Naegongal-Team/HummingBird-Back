@@ -31,9 +31,8 @@ public class PerformanceRequestDto {
     @NotNull(message = "공연 관람 시간은 필수 값입니다.")
     private Long runtime;
 
-    @NotNull(message = "공연 날짜는 필수 값입니다.")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
-    private LocalDateTime date;
+    private List<LocalDateTime> date;
 
     private List<TicketingRequestDto> regularTicketing;
     private List<TicketingRequestDto> earlybirdTicketing;
@@ -46,7 +45,6 @@ public class PerformanceRequestDto {
                 .location(location)
                 .runtime(runtime)
                 .description(description)
-                .date(date)
                 .build();
     }
 }

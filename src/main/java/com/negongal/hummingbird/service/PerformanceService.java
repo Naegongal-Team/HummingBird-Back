@@ -3,9 +3,13 @@ package com.negongal.hummingbird.service;
 import com.negongal.hummingbird.api.dto.PerformanceDto;
 import com.negongal.hummingbird.api.dto.PerformanceRequestDto;
 import com.negongal.hummingbird.domain.Performance;
+import com.negongal.hummingbird.domain.PerformanceDate;
+import com.negongal.hummingbird.repository.PerformanceDateRepository;
 import com.negongal.hummingbird.repository.PerformanceRepository;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PerformanceService {
 
     private final PerformanceRepository performanceRepository;
+    private final PerformanceDateRepository dateRepository;
 
     @Transactional
     public Long save(PerformanceRequestDto requestDto){
@@ -34,6 +39,10 @@ public class PerformanceService {
          */
 
         performanceRepository.save(performance);
+        List<PerformanceDate> dateList = requestDto.getDate().stream()
+                .map(d -> PerformanceDate.builder().performance(performance).date(d).build())
+                .collect(Collectors.toList());
+        dateRepository.saveAll(dateList);
         return performance.getId();
     }
 
