@@ -9,16 +9,24 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class ArtistService {
 
     private final ArtistRepository artistRepository;
 
-    @Transactional(readOnly = true)
+    /*
+    전체 아티스트 검색 시 Artist의 리스트를 가져온다
+     */
     public Page<Artist> getArtists(Pageable pageable) {
         return artistRepository.findAll(pageable);
     }
 
+    public List<Artist> getArtistByName(String name) {
+        return artistRepository.findByNameContainingOrderByName(name);
+    }
 }

@@ -17,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @SpringBootTest
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -55,6 +57,16 @@ public class ArtistServiceTest {
         Page<Artist> artistList = artistService.getArtists(pageable);
 
         Assert.assertEquals((Long)3L, (Long)artistList.toList().get(0).getId());
+    }
+
+    @Test
+    public void getArtistsByNameTest() {
+        String searchName = "AB";
+        List<Artist> artistSearchByNameList = artistService.getArtistByName(searchName);
+
+        Assert.assertEquals(1, artistSearchByNameList.size());
+        Assert.assertEquals("ABBA", artistSearchByNameList.get(0).getName());
+
     }
 
     private Artist createAndSaveArtist(String name, int popularity, String genres) {

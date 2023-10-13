@@ -43,7 +43,6 @@ public class SpotifyService {
             com.negongal.hummingbird.domain.Artist customArtist = convertToArtist(artist);
             artistRepository.save(customArtist);
         });
-        log.info("Length: {}", artists.length);
     }
 
     private com.negongal.hummingbird.domain.Artist convertToArtist(Artist spotifyArtist) {
