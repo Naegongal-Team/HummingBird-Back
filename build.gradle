@@ -41,6 +41,12 @@ dependencies {
 	//webClient 추가
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	//spring security
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.security:spring-security-test")
+
+	//spring security oauth2 cleint
+	implementation ("org.springframework.boot:spring-boot-starter-oauth2-client")
 }
 
 
