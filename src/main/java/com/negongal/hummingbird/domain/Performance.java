@@ -1,5 +1,6 @@
 package com.negongal.hummingbird.domain;
 
+import com.negongal.hummingbird.api.dto.PerformanceRequestDto;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -40,7 +41,7 @@ public class Performance {
     private String photo;
     private String description;
 
-    @OneToMany(mappedBy = "performance", orphanRemoval = true)
+    @OneToMany(mappedBy = "performance", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ticketing> ticketing;
 
     @Builder
@@ -56,6 +57,18 @@ public class Performance {
 
     public void addPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public void update(String name, String artistName, String location, Long runtime, String description) {
+        this.name = name;
+        this.artistName = artistName;
+        this.location = location;
+        this.runtime = runtime;
+        this.description = description;
+
+        this.photo = null;
+        this.ticketing.clear();
+        this.date.clear();
     }
 
 

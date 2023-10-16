@@ -49,6 +49,16 @@ public class PerformanceService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public void update(Long performanceId, PerformanceRequestDto request, String photo) {
+        Performance findPerformance = performanceRepository.findById(performanceId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 공연입니다."));
+
+        findPerformance.update(request.getName(), request.getArtistName(), request.getLocation(), request.getRuntime(), request.getDescription());
+        findPerformance.addPhoto(photo);
+        dateRepository.saveAll(createDate(request.getDate(), findPerformance));
+    }
+
     public List<PerformanceDto> findAll() {
         return performanceRepository.findAll()
                 .stream().map(p -> PerformanceDto.of(p))

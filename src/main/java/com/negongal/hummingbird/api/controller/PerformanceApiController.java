@@ -15,8 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,9 +52,20 @@ public class PerformanceApiController {
         return new ResponseEntity<>(responseList, HttpStatus.OK);
     }
 
-    @GetMapping("/detail/{performanceId}")
+    @GetMapping("/{performanceId}")
     public ResponseEntity<PerformanceDto> getPerformanceDetail(@PathVariable Long performanceId) {
         PerformanceDto Performance = performanceService.findOne(performanceId);
         return new ResponseEntity<>(Performance, HttpStatus.OK);
+    }
+
+    @PatchMapping(value = "/{performanceId}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<String> updatePerformanceDetail(
+            @PathVariable Long performanceId,
+            @Valid @RequestPart(value = "performance") PerformanceRequestDto requestDto,
+            @RequestPart(required = false, value = "photo") MultipartFile photo) throws IOException {
+        String photoUrl = (photo == null) ? null : fileService.saveFile(photo);
+        performanceService.update(performanceId, requestDto, photoUrl);
+        ticketService.save(performanceId, requestDto);
+        return new ResponseEntity<>("ok", HttpStatus.OK);
     }
 }
