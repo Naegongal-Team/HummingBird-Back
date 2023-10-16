@@ -35,7 +35,7 @@ public class PerformanceService {
         performance.addPhoto(photo);
         performanceRepository.save(performance);
 
-        List<PerformanceDate> dateList = createDate(requestDto.getDate(), performance);
+        List<PerformanceDate> dateList = createDate(requestDto.getDateList(), performance);
         dateRepository.saveAll(dateList);
 
         return performance.getId();
@@ -44,7 +44,7 @@ public class PerformanceService {
     public List<PerformanceDate> createDate(List<LocalDateTime> dateList, Performance performance) {
         return dateList.stream().map(d -> PerformanceDate.builder()
                     .performance(performance)
-                    .date(d)
+                    .startDate(d)
                     .build())
                 .collect(Collectors.toList());
     }
@@ -56,7 +56,7 @@ public class PerformanceService {
 
         findPerformance.update(request.getName(), request.getArtistName(), request.getLocation(), request.getRuntime(), request.getDescription());
         findPerformance.addPhoto(photo);
-        dateRepository.saveAll(createDate(request.getDate(), findPerformance));
+        dateRepository.saveAll(createDate(request.getDateList(), findPerformance));
     }
 
     public List<PerformanceDto> findAll() {

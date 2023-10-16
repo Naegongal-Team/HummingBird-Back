@@ -1,10 +1,10 @@
 package com.negongal.hummingbird.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.negongal.hummingbird.domain.Performance;
-import com.negongal.hummingbird.domain.Ticketing;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
@@ -32,7 +32,8 @@ public class PerformanceRequestDto {
     private Long runtime;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
-    private List<LocalDateTime> date;
+    @JsonProperty("date")
+    private List<LocalDateTime> dateList;
 
     private List<TicketingRequestDto> regularTicketing;
     private List<TicketingRequestDto> earlybirdTicketing;

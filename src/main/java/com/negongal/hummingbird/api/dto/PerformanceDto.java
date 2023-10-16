@@ -53,7 +53,7 @@ public class PerformanceDto {
     }
 
     public static PerformanceDto of(Performance p) {
-        List<LocalDateTime> dateList = p.getDate().stream().map(d -> d.getDate()).collect(Collectors.toList());
+        List<LocalDateTime> dateList = p.getDateList().stream().map(d -> d.getStartDate()).collect(Collectors.toList());
         return PerformanceDto.builder()
                 .id(p.getId())
                 .name(p.getName())

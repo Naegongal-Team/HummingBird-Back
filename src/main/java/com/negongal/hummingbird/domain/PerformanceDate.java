@@ -29,14 +29,14 @@ public class PerformanceDate {
 
     @Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime date;
+    private LocalDateTime startDate;
 
     @Builder
-    public PerformanceDate(Performance performance, LocalDateTime date) {
+    public PerformanceDate(Performance performance, LocalDateTime startDate) {
         this.performance = performance;
-        this.date = date;
+        this.startDate = startDate;
 
         //==연관관계 편의 메서드==//
-        performance.getDate().add(this);
+        performance.getDateList().add(this);
     }
 }

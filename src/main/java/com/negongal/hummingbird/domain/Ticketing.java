@@ -33,17 +33,17 @@ public class Ticketing {
     private TicketType ticketType;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime date;
+    private LocalDateTime startDate;
 
     private String platform;
     private String link;
     private String description;
 
     @Builder
-    public Ticketing(Performance performance, TicketType ticketType, LocalDateTime date, String platform, String link, String description) {
+    public Ticketing(Performance performance, TicketType ticketType, LocalDateTime startDate, String platform, String link, String description) {
         this.performance = performance;
         this.ticketType = ticketType;
-        this.date = date;
+        this.startDate = startDate;
         this.platform = platform;
         this.link = link;
         this.description = description;

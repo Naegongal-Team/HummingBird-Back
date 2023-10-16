@@ -33,7 +33,7 @@ public class TicketingDto {
 
     public static TicketingDto of(Ticketing t) {
         return TicketingDto.builder()
-                .date(t.getDate())
+                .date(t.getStartDate())
                 .platform(t.getPlatform())
                 .link(t.getLink())
                 .description(t.getDescription())
