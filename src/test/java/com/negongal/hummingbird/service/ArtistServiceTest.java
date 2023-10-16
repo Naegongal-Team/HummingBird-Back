@@ -1,5 +1,6 @@
 package com.negongal.hummingbird.service;
 
+import com.negongal.hummingbird.api.dto.ArtistSearchDto;
 import com.negongal.hummingbird.domain.Artist;
 import com.negongal.hummingbird.domain.ArtistLike;
 import com.negongal.hummingbird.repository.ArtistLikeRepository;
@@ -54,7 +55,7 @@ public class ArtistServiceTest {
     @Test
     public void getArtistListTest() {
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Artist> artistList = artistService.getArtists(pageable);
+        Page<Artist> artistList = artistService.findArtists(pageable);
 
         Assert.assertEquals((Long)3L, (Long)artistList.toList().get(0).getId());
     }
@@ -62,7 +63,7 @@ public class ArtistServiceTest {
     @Test
     public void getArtistsByNameTest() {
         String searchName = "AB";
-        List<Artist> artistSearchByNameList = artistService.getArtistByName(searchName);
+        List<ArtistSearchDto> artistSearchByNameList = artistService.findArtistByName(searchName);
 
         Assert.assertEquals(1, artistSearchByNameList.size());
         Assert.assertEquals("ABBA", artistSearchByNameList.get(0).getName());
