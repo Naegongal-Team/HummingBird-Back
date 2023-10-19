@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,8 +61,19 @@ public class PerformanceService {
         dateRepository.saveAll(createDate(request.getDateList(), findPerformance));
     }
 
-    public List<PerformanceDto> findAll() {
-        return performanceRepository.findAll()
+    /**
+     * 공연 조회: 공연 날짜 순 or 티켓팅 날짜 순 or 인기있는 공연 순
+     */
+    public Page<PerformanceDto> findAll(Pageable pageable) {
+        Page<Performance> performancePage = performanceRepository.findAll(pageable);
+        return performancePage.map(p -> PerformanceDto.of(p));
+    }
+
+    /**
+     * 공연 조회: 메인 페이지에서 띄울 개수 제한
+     */
+    public List<PerformanceDto> findSeveral(int size) {
+        return performanceRepository.findSeveral(size)
                 .stream().map(p -> PerformanceDto.of(p))
                 .collect(Collectors.toList());
     }
