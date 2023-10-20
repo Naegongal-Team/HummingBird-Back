@@ -26,7 +26,7 @@ public class ArtistApiController {
 
     @GetMapping
     public ResponseEntity<HashMap<String, Page<ArtistDto>>> artistsList(Pageable pageable) {
-        Page<ArtistDto> artistList = artistService.findArtists(pageable).map(ArtistDto::of);
+        Page<ArtistDto> artistList = artistService.findArtists(pageable);
         HashMap<String, Page<ArtistDto>> response = new HashMap<>();
         response.put("artist_list", artistList);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -39,7 +39,7 @@ public class ArtistApiController {
     }
 
     @GetMapping("/{artistId}")
-    public ResponseEntity<ArtistDto> artistDetails(@PathVariable Long artistId) throws NotFoundException {
+    public ResponseEntity<ArtistDto> artistDetails(@PathVariable String artistId) throws NotFoundException {
         ArtistDto artist = artistService.findArtist(artistId);
         return new ResponseEntity<>(artist, HttpStatus.OK);
     }

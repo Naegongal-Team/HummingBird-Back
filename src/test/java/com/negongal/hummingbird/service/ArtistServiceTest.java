@@ -1,5 +1,6 @@
 package com.negongal.hummingbird.service;
 
+import com.negongal.hummingbird.api.dto.ArtistDto;
 import com.negongal.hummingbird.api.dto.ArtistSearchDto;
 import com.negongal.hummingbird.domain.Artist;
 import com.negongal.hummingbird.domain.ArtistLike;
@@ -34,30 +35,13 @@ public class ArtistServiceTest {
     @Autowired
     private ArtistLikeRepository artistLikeRepository;
 
-    @Before
-    public void artistEntitySetup() {
-        createAndSaveArtist("mock1", 94, "POP");
-        Artist mockArtist2 = createAndSaveArtist("mock2", 92, "DEATH METAL");
-        Artist mockArtist3 = createAndSaveArtist("mock3", 92, "ROCK");
-        createAndSaveArtist("mock4", 90, "BALLAD");
-
-        createAndSaveArtistLike(mockArtist2);
-        createAndSaveArtistLike(mockArtist2);
-        createAndSaveArtistLike(mockArtist3);
-    }
-
-    @After
-    public void clearRepository() {
-        artistLikeRepository.deleteAll();
-        artistRepository.deleteAll();
-    }
 
     @Test
     public void getArtistListTest() {
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Artist> artistList = artistService.findArtists(pageable);
+        Page<ArtistDto> artistList = artistService.findArtists(pageable);
 
-        Assert.assertEquals((Long)3L, (Long)artistList.toList().get(0).getId());
+        Assert.assertEquals("Conan Gray", artistList.toList().get(0).getName());
     }
 
     @Test
@@ -69,22 +53,4 @@ public class ArtistServiceTest {
         Assert.assertEquals("ABBA", artistSearchByNameList.get(0).getName());
 
     }
-
-    private Artist createAndSaveArtist(String name, int popularity, String genres) {
-        Artist artist = Artist.builder()
-                .name(name)
-                .popularity(popularity)
-                .genres(genres)
-                .build();
-        artistRepository.save(artist);
-        return artist;
-    }
-
-    private void createAndSaveArtistLike(Artist artist) {
-        ArtistLike artistLike = ArtistLike.builder()
-                .artist(artist)
-                .build();
-        artistLikeRepository.save(artistLike);
-    }
-
 }

@@ -26,8 +26,8 @@ public class ArtistService {
     /*
     전체 아티스트 검색 시 Artist의 리스트를 가져온다
      */
-    public Page<Artist> findArtists(Pageable pageable) {
-        return artistRepository.findAll(pageable);
+    public Page<ArtistDto> findArtists(Pageable pageable) {
+        return artistRepository.findAll(pageable).map(ArtistDto::of);
     }
 
     /*
@@ -43,7 +43,7 @@ public class ArtistService {
         return artistList;
     }
 
-    public ArtistDto findArtist(Long id) throws NotFoundException {
+    public ArtistDto findArtist(String id) throws NotFoundException {
         Artist artist = artistRepository.findById(id).orElseThrow(NotFoundException::new);
         return ArtistDto.of(artist);
     }

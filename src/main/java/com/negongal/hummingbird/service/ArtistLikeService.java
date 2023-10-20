@@ -21,7 +21,7 @@ public class ArtistLikeService {
     private final ArtistRepository artistRepository;
 
     @Transactional
-    public void save(Long artistId) {
+    public void save(String artistId) {
         Artist artist = artistRepository.findById(artistId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 아티스트입니다."));
 
         /*

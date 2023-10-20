@@ -34,6 +34,7 @@ public class ArtistLikeServiceTest {
     @Before
     public void artistEntitySetUp() {
         Artist mockArtist = Artist.builder()
+                .id("1")
                 .name("Mock Popular")
                 .genres("POP")
                 .popularity(99)
@@ -51,7 +52,7 @@ public class ArtistLikeServiceTest {
     @Test
     public void submitLikeTest() {
         //given
-        Artist mockArtist = artistRepository.findById(1L).orElseThrow(NoSuchElementException::new);
+        Artist mockArtist = artistRepository.findById("1").orElseThrow(NoSuchElementException::new);
         artistLikeService.save(mockArtist.getId());
 
         //when
@@ -59,6 +60,6 @@ public class ArtistLikeServiceTest {
 
         //then
         Assert.assertEquals(1L, artistLikeRepository.count());
-        Assert.assertEquals((Long)1L, (Long)mockArtistLike.getArtist().getId());
+        Assert.assertEquals("1", mockArtistLike.getArtist().getId());
     }
 }

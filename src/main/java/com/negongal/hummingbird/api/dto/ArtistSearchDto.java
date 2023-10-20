@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ArtistSearchDto {
-    private Long id;
+    private String id;
     private String name;
 
     @Builder
-    public ArtistSearchDto(Long id, String name) {
+    public ArtistSearchDto(String id, String name) {
         this.id = id;
         this.name = name;
     }
