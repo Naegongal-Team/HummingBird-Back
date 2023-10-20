@@ -2,6 +2,7 @@ package com.negongal.hummingbird.api.controller;
 
 import com.negongal.hummingbird.api.dto.PerformanceDto;
 import com.negongal.hummingbird.api.dto.PerformanceRequestDto;
+import com.negongal.hummingbird.service.PerformanceLikeService;
 import com.negongal.hummingbird.service.S3Service;
 import com.negongal.hummingbird.service.PerformanceService;
 import com.negongal.hummingbird.service.TicketingService;
@@ -33,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class PerformanceApiController {
 
     private final PerformanceService performanceService;
+    private final PerformanceLikeService performanceLikeService;
     private final TicketingService ticketService;
     private final S3Service fileService;
 
@@ -54,7 +56,7 @@ public class PerformanceApiController {
         return new ResponseEntity<>(responseList, HttpStatus.OK);
     }
 
-    @GetMapping("main")
+    @GetMapping("/main")
     public ResponseEntity<HashMap<String, List<PerformanceDto>>> getPerformanceList(@RequestParam("size") int size) {
         List<PerformanceDto> performanceList = performanceService.findSeveral(size);
         HashMap<String, List<PerformanceDto>> responseList = new HashMap<>();
@@ -76,6 +78,12 @@ public class PerformanceApiController {
         String photoUrl = (photo == null) ? null : fileService.saveFile(photo);
         performanceService.update(performanceId, requestDto, photoUrl);
         ticketService.save(performanceId, requestDto);
+        return new ResponseEntity<>("ok", HttpStatus.OK);
+    }
+
+    @PostMapping("/{performanceId}/like")
+    public ResponseEntity<String> likePerformance(@PathVariable Long performanceId) {
+        performanceLikeService.save(performanceId);
         return new ResponseEntity<>("ok", HttpStatus.OK);
     }
 }

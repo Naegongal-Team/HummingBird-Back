@@ -36,6 +36,9 @@ public class Performance {
     @OneToMany(mappedBy = "performance", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PerformanceDate> dateList;
 
+    @OneToMany(mappedBy = "performance", orphanRemoval = true)
+    private List<PerformanceLike> likeList;
+
     @Column(length = 1000)
     private String photo;
     private String description;
@@ -52,6 +55,7 @@ public class Performance {
         this.description = description;
         this.ticketing = new ArrayList<>();
         this.dateList = new ArrayList<>();
+        this.likeList = new ArrayList<>();
     }
 
     public void addPhoto(String photo) {
