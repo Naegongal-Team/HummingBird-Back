@@ -24,7 +24,7 @@ public class PerformanceDate {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "performance_pk")
+    @JoinColumn(name = "performance_id")
     private Performance performance;
 
     @Column(nullable = false)

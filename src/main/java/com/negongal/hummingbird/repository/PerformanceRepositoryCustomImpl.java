@@ -5,7 +5,12 @@ import static com.negongal.hummingbird.domain.QPerformanceDate.performanceDate;
 import static com.negongal.hummingbird.domain.QTicketing.ticketing;
 
 import com.negongal.hummingbird.domain.Performance;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -36,9 +41,12 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
         }
         else content = findAllOrderByStartDate(pageable);
 
+        LocalDateTime currentDate = LocalDateTime.now();
         Long count = queryFactory
                 .select(performance.count())
                 .from(performance)
+                .leftJoin(performance.dateList, performanceDate)
+                .where(performanceDate.startDate.gt(currentDate))
                 .fetchOne();
 
         return new PageImpl<>(content, pageable, count);
@@ -46,10 +54,12 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
 
     @Override
     public List<Performance> findSeveral(int size) {
+        LocalDateTime currentDate = LocalDateTime.now();
         return queryFactory
                 .select(performance)
                 .from(performance)
                 .leftJoin(performance.dateList, performanceDate)
+                .where(performanceDate.startDate.gt(currentDate)) // 현재 날짜 이후만 join
                 .groupBy(performance)
                 .orderBy(performanceDate.startDate.min().asc())
                 .limit(size)
@@ -57,10 +67,12 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
     }
 
     public List<Performance> findAllOrderByStartDate(Pageable pageable) {
+        LocalDateTime currentDate = LocalDateTime.now();
         return queryFactory
                 .select(performance)
                 .from(performance)
                 .leftJoin(performance.dateList, performanceDate)
+                .where(performanceDate.startDate.gt(currentDate)) // 현재 날짜 이후만 join
                 .groupBy(performance)
                 .orderBy(performanceDate.startDate.min().asc())
                 .offset(pageable.getOffset())   // 페이지 번호
@@ -69,10 +81,12 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
     }
 
     public List<Performance> findAllOrderByTicketingStartDate(Pageable pageable) {
+        LocalDateTime currentDate = LocalDateTime.now();
         return queryFactory
                 .select(performance)
                 .from(performance)
                 .leftJoin(performance.ticketing, ticketing)
+                .where(ticketing.startDate.gt(currentDate)) // 현재 날짜 이후만 join
                 .groupBy(performance)
                 .orderBy(ticketing.startDate.min().asc())
                 .offset(pageable.getOffset())   // 페이지 번호

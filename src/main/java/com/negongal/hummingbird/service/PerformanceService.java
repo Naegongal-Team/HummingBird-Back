@@ -8,6 +8,7 @@ import com.negongal.hummingbird.repository.PerformanceDateRepository;
 import com.negongal.hummingbird.repository.PerformanceRepository;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +55,7 @@ public class PerformanceService {
     @Transactional
     public void update(Long performanceId, PerformanceRequestDto request, String photo) {
         Performance findPerformance = performanceRepository.findById(performanceId)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 공연입니다."));
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 공연입니다."));
 
         findPerformance.update(request.getName(), request.getArtistName(), request.getLocation(), request.getRuntime(), request.getDescription());
         findPerformance.addPhoto(photo);
@@ -80,7 +81,7 @@ public class PerformanceService {
 
     public PerformanceDto findOne(Long performanceId) {
         Performance performance = performanceRepository.findById(performanceId)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 공연입니다."));
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 공연입니다."));
         return PerformanceDto.of(performance);
     }
 }

@@ -26,7 +26,7 @@ public class Ticketing {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "performance_pk")
+    @JoinColumn(name = "performance_id")
     private Performance performance;
 
     @Enumerated(EnumType.STRING)
