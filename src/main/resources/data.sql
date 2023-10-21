@@ -82,3 +82,38 @@ VALUES (111, 105, '2023-10-07 20:30:00', '', 'https://tickets.interpark.com/', '
 INSERT INTO ticketing (id, performance_id, start_date, description, link, platform, ticket_type)
 VALUES (112, 106, '2023-10-21 20:30:00', '', 'https://tickets.interpark.com/', '인터파크24', 'REGULAR');
 
+
+INSERT INTO performance_heart (id, user_id, performance_id)
+VALUES (100, 1, 101);
+INSERT INTO performance_heart (id, user_id, performance_id)
+VALUES (101, 2, 101);
+INSERT INTO performance_heart (id, user_id, performance_id)
+VALUES (102, 3, 101);
+INSERT INTO performance_heart (id, user_id, performance_id)
+VALUES (103, 4, 101);
+
+INSERT INTO performance_heart (id, user_id, performance_id)
+VALUES (104, 1, 102);
+INSERT INTO performance_heart (id, user_id, performance_id)
+VALUES (105, 2, 102);
+INSERT INTO performance_heart (id, user_id, performance_id)
+VALUES (106, 3, 102);
+INSERT INTO performance_heart (id, user_id, performance_id)
+VALUES (107, 4, 102);
+INSERT INTO performance_heart (id, user_id, performance_id)
+VALUES (108, 5, 102);
+
+INSERT INTO performance_heart (id, user_id, performance_id)
+VALUES (109, 1, 103);
+INSERT INTO performance_heart (id, user_id, performance_id)
+VALUES (111, 2, 103);
+
+INSERT INTO performance_heart (id, user_id, performance_id)
+VALUES (110, 1, 104);
+
+INSERT INTO performance_heart (id, user_id, performance_id)
+VALUES (112, 1, 105);
+INSERT INTO performance_heart (id, user_id, performance_id)
+VALUES (113, 2, 105);
+INSERT INTO performance_heart (id, user_id, performance_id)
+VALUES (114, 3, 105);
