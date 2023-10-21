@@ -1,17 +1,17 @@
 INSERT INTO Performance (id, name, artist_name, location, runtime, photo, description)
-VALUES (100, '샘 스미스 내한공연', '샘 스미스', '일산 킨텍스 제1전시장 4,5홀', 90, '', '');
+VALUES (100, '샘 스미스 내한공연', '샘 스미스', '일산 킨텍스 제1전시장 4,5홀', 90, 'photo.url', 'description');
 INSERT INTO Performance (id, name, artist_name, location, runtime, photo, description)
-VALUES (101, '포스트 말론 내한공연', '포스트 말론', '서울', 90, '', '');
+VALUES (101, '포스트 말론 내한공연', '포스트 말론', '서울', 90, 'photo.url', 'description');
 INSERT INTO Performance (id, name, artist_name, location, runtime, photo, description)
-VALUES (102, '찰리 푸스', '찰리 푸스', '대전', 90, '', '');
+VALUES (102, '찰리 푸스', '찰리 푸스', '대전', 90, 'photo.url', 'description');
 INSERT INTO Performance (id, name, artist_name, location, runtime, photo, description)
-VALUES (103, '아리아나그란데', '아리아나그란데', '대전', 90, '', '');
+VALUES (103, '아리아나그란데', '아리아나그란데', '대전', 90, 'photo.url', 'description');
 INSERT INTO Performance (id, name, artist_name, location, runtime, photo, description)
-VALUES (104, '찰리 푸스 2', '찰리 푸스', '대전', 90, '', '');
+VALUES (104, '찰리 푸스 2', '찰리 푸스', '대전', 90, 'photo.url', 'description');
 INSERT INTO Performance (id, name, artist_name, location, runtime, photo, description)
-VALUES (105, '샘 스미스 2', '샘 스미스', '대전', 90, '', '');
+VALUES (105, '샘 스미스 2', '샘 스미스', '대전', 90, 'photo.url', 'description');
 INSERT INTO Performance (id, name, artist_name, location, runtime, photo, description)
-VALUES (106, '포스트 말론 2', '포스트 말론', '대전', 90, '', '');
+VALUES (106, '포스트 말론 2', '포스트 말론', '대전', 90, 'photo.url', 'description');
 
 INSERT INTO performance_date (id, performance_id, start_date)
 VALUES (100, 100, '2023-10-20 18:00');

@@ -1,5 +1,6 @@
 package com.negongal.hummingbird.service;
 
+import com.negongal.hummingbird.api.dto.PerformanceDetailDto;
 import com.negongal.hummingbird.api.dto.PerformanceDto;
 import com.negongal.hummingbird.api.dto.PerformanceRequestDto;
 import com.negongal.hummingbird.domain.Performance;
@@ -66,22 +67,19 @@ public class PerformanceService {
      * 공연 조회: 공연 날짜 순 or 티켓팅 날짜 순 or 인기있는 공연 순
      */
     public Page<PerformanceDto> findAll(Pageable pageable) {
-        Page<Performance> performancePage = performanceRepository.findAll(pageable);
-        return performancePage.map(p -> PerformanceDto.of(p));
+        return performanceRepository.findAllCustom(pageable);
     }
 
     /**
      * 공연 조회: 메인 페이지에서 띄울 개수 제한
      */
     public List<PerformanceDto> findSeveral(int size) {
-        return performanceRepository.findSeveral(size)
-                .stream().map(p -> PerformanceDto.of(p))
-                .collect(Collectors.toList());
+        return performanceRepository.findSeveral(size);
     }
 
-    public PerformanceDto findOne(Long performanceId) {
+    public PerformanceDetailDto findOne(Long performanceId) {
         Performance performance = performanceRepository.findById(performanceId)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 공연입니다."));
-        return PerformanceDto.of(performance);
+        return PerformanceDetailDto.of(performance);
     }
 }

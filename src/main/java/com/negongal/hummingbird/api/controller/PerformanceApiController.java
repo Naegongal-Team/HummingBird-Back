@@ -1,5 +1,6 @@
 package com.negongal.hummingbird.api.controller;
 
+import com.negongal.hummingbird.api.dto.PerformanceDetailDto;
 import com.negongal.hummingbird.api.dto.PerformanceDto;
 import com.negongal.hummingbird.api.dto.PerformanceRequestDto;
 import com.negongal.hummingbird.service.PerformanceLikeService;
@@ -65,8 +66,8 @@ public class PerformanceApiController {
     }
 
     @GetMapping("/{performanceId}")
-    public ResponseEntity<PerformanceDto> getPerformanceDetail(@PathVariable Long performanceId) {
-        PerformanceDto Performance = performanceService.findOne(performanceId);
+    public ResponseEntity<PerformanceDetailDto> getPerformanceDetail(@PathVariable Long performanceId) {
+        PerformanceDetailDto Performance = performanceService.findOne(performanceId);
         return new ResponseEntity<>(Performance, HttpStatus.OK);
     }
 

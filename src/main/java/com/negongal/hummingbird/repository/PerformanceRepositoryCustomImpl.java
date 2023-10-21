@@ -4,13 +4,10 @@ import static com.negongal.hummingbird.domain.QPerformance.performance;
 import static com.negongal.hummingbird.domain.QPerformanceDate.performanceDate;
 import static com.negongal.hummingbird.domain.QTicketing.ticketing;
 
-import com.negongal.hummingbird.domain.Performance;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
+import com.negongal.hummingbird.api.dto.PerformanceDto;
+import com.negongal.hummingbird.api.dto.QPerformanceDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,8 +21,8 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<Performance> findAll(Pageable pageable) {
-        List<Performance> content = null;
+    public Page<PerformanceDto> findAllCustom(Pageable pageable) {
+        List<PerformanceDto> content = null;
 
         if(pageable.getSort().isSorted()) {
             Order order = pageable.getSort().stream().findAny().get();
@@ -53,10 +50,11 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
     }
 
     @Override
-    public List<Performance> findSeveral(int size) {
+    public List<PerformanceDto> findSeveral(int size) {
         LocalDateTime currentDate = LocalDateTime.now();
         return queryFactory
-                .select(performance)
+                .select(new QPerformanceDto(
+                        performance.id, performance.name, performance.artistName, performance.photo, performanceDate.startDate.min()))
                 .from(performance)
                 .leftJoin(performance.dateList, performanceDate)
                 .where(performanceDate.startDate.gt(currentDate)) // 현재 날짜 이후만 join
@@ -66,10 +64,11 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
                 .fetch();
     }
 
-    public List<Performance> findAllOrderByStartDate(Pageable pageable) {
+    public List<PerformanceDto> findAllOrderByStartDate(Pageable pageable) {
         LocalDateTime currentDate = LocalDateTime.now();
         return queryFactory
-                .select(performance)
+                .select(new QPerformanceDto(
+                        performance.id, performance.name, performance.artistName, performance.photo, performanceDate.startDate.min()))
                 .from(performance)
                 .leftJoin(performance.dateList, performanceDate)
                 .where(performanceDate.startDate.gt(currentDate)) // 현재 날짜 이후만 join
@@ -80,10 +79,11 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
                 .fetch();
     }
 
-    public List<Performance> findAllOrderByTicketingStartDate(Pageable pageable) {
+    public List<PerformanceDto> findAllOrderByTicketingStartDate(Pageable pageable) {
         LocalDateTime currentDate = LocalDateTime.now();
         return queryFactory
-                .select(performance)
+                .select(new QPerformanceDto(
+                        performance.id, performance.name, performance.artistName, performance.photo, ticketing.startDate.min()))
                 .from(performance)
                 .leftJoin(performance.ticketing, ticketing)
                 .where(ticketing.startDate.gt(currentDate)) // 현재 날짜 이후만 join
