@@ -49,6 +49,6 @@ public class Ticketing {
         this.description = description;
 
         //==연관관계 편의 메서드==//
-        performance.getTicketing().add(this);
+        performance.getTicketingList().add(this);
     }
 }

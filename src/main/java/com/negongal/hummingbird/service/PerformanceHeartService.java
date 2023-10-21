@@ -1,8 +1,8 @@
 package com.negongal.hummingbird.service;
 
 import com.negongal.hummingbird.domain.Performance;
-import com.negongal.hummingbird.domain.PerformanceLike;
-import com.negongal.hummingbird.repository.PerformanceLikeRepository;
+import com.negongal.hummingbird.domain.PerformanceHeart;
+import com.negongal.hummingbird.repository.PerformanceHeartRepository;
 import com.negongal.hummingbird.repository.PerformanceRepository;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class PerformanceLikeService {
-    private final PerformanceLikeRepository performanceLikeRepository;
+public class PerformanceHeartService {
+    private final PerformanceHeartRepository performanceHeartRepository;
     private final PerformanceRepository performanceRepository;
 
     @Transactional
@@ -27,11 +27,11 @@ public class PerformanceLikeService {
         Performance performance = performanceRepository.findById(performanceId)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 공연입니다."));
 
-        PerformanceLike performanceLike = PerformanceLike.builder()
+        PerformanceHeart performanceHeart = PerformanceHeart.builder()
                 .performance(performance)
                 .userId(userId)
                 .build();
 
-        performanceLikeRepository.save(performanceLike);
+        performanceHeartRepository.save(performanceHeart);
     }
 }

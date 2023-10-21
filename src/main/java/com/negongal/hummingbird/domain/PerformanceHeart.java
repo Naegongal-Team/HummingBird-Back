@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Table
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PerformanceLike {
+public class PerformanceHeart {
 
     @Id
     @GeneratedValue
@@ -34,10 +34,10 @@ public class PerformanceLike {
 
 
     @Builder
-    public PerformanceLike(Performance performance, Long userId) {
+    public PerformanceHeart(Performance performance, Long userId) {
         this.performance = performance;
         this.userId = userId;
 
-        this.performance.getLikeList().add(this);
+        this.performance.getHeartList().add(this);
     }
 }

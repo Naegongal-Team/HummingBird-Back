@@ -33,18 +33,19 @@ public class Performance {
     @Column(nullable = false)
     private Long runtime;
 
+    @Column(length = 1000)
+    private String photo;
+
+    private String description;
+
+    @OneToMany(mappedBy = "performance", orphanRemoval = true)
+    private List<PerformanceHeart> heartList;
+
     @OneToMany(mappedBy = "performance", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PerformanceDate> dateList;
 
-    @OneToMany(mappedBy = "performance", orphanRemoval = true)
-    private List<PerformanceLike> likeList;
-
-    @Column(length = 1000)
-    private String photo;
-    private String description;
-
     @OneToMany(mappedBy = "performance", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Ticketing> ticketing;
+    private List<Ticketing> ticketingList;
 
     @Builder
     public Performance(String name, String artistName, String location, Long runtime, String description) {
@@ -53,9 +54,9 @@ public class Performance {
         this.location = location;
         this.runtime = runtime;
         this.description = description;
-        this.ticketing = new ArrayList<>();
+        this.ticketingList = new ArrayList<>();
         this.dateList = new ArrayList<>();
-        this.likeList = new ArrayList<>();
+        this.heartList = new ArrayList<>();
     }
 
     public void addPhoto(String photo) {
@@ -70,9 +71,8 @@ public class Performance {
         this.description = description;
 
         this.photo = null;
-        this.ticketing.clear();
+        this.ticketingList.clear();
         this.dateList.clear();
     }
-
 
 }

@@ -3,7 +3,7 @@ package com.negongal.hummingbird.api.controller;
 import com.negongal.hummingbird.api.dto.PerformanceDetailDto;
 import com.negongal.hummingbird.api.dto.PerformanceDto;
 import com.negongal.hummingbird.api.dto.PerformanceRequestDto;
-import com.negongal.hummingbird.service.PerformanceLikeService;
+import com.negongal.hummingbird.service.PerformanceHeartService;
 import com.negongal.hummingbird.service.S3Service;
 import com.negongal.hummingbird.service.PerformanceService;
 import com.negongal.hummingbird.service.TicketingService;
@@ -35,12 +35,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class PerformanceApiController {
 
     private final PerformanceService performanceService;
-    private final PerformanceLikeService performanceLikeService;
+    private final PerformanceHeartService performanceHeartService;
     private final TicketingService ticketService;
     private final S3Service fileService;
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<String> register(
+    public ResponseEntity<String> performanceAdd(
                 @Valid @RequestPart(value = "performance") PerformanceRequestDto requestDto,
                 @RequestPart(required = false, value = "photo") MultipartFile photo) throws IOException {
         String photoUrl = (photo == null) ? null : fileService.saveFile(photo);
@@ -50,7 +50,7 @@ public class PerformanceApiController {
     }
 
     @GetMapping
-    public ResponseEntity<HashMap<String, Page<PerformanceDto>>> getPerformanceList(Pageable pageable) {
+    public ResponseEntity<HashMap<String, Page<PerformanceDto>>> performanceList(Pageable pageable) {
         Page<PerformanceDto> performanceList = performanceService.findAll(pageable);
         HashMap<String, Page<PerformanceDto>> responseList = new HashMap<>();
         responseList.put("performance_list", performanceList);
@@ -58,7 +58,7 @@ public class PerformanceApiController {
     }
 
     @GetMapping("/main")
-    public ResponseEntity<HashMap<String, List<PerformanceDto>>> getPerformanceList(@RequestParam("size") int size) {
+    public ResponseEntity<HashMap<String, List<PerformanceDto>>> performanceList(@RequestParam("size") int size) {
         List<PerformanceDto> performanceList = performanceService.findSeveral(size);
         HashMap<String, List<PerformanceDto>> responseList = new HashMap<>();
         responseList.put("performance_list", performanceList);
@@ -66,13 +66,13 @@ public class PerformanceApiController {
     }
 
     @GetMapping("/{performanceId}")
-    public ResponseEntity<PerformanceDetailDto> getPerformanceDetail(@PathVariable Long performanceId) {
+    public ResponseEntity<PerformanceDetailDto> performanceDetails(@PathVariable Long performanceId) {
         PerformanceDetailDto Performance = performanceService.findOne(performanceId);
         return new ResponseEntity<>(Performance, HttpStatus.OK);
     }
 
     @PatchMapping(value = "/{performanceId}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<String> updatePerformanceDetail(
+    public ResponseEntity<String> performanceModify(
             @PathVariable Long performanceId,
             @Valid @RequestPart(value = "performance") PerformanceRequestDto requestDto,
             @RequestPart(required = false, value = "photo") MultipartFile photo) throws IOException {
@@ -83,8 +83,8 @@ public class PerformanceApiController {
     }
 
     @PostMapping("/{performanceId}/like")
-    public ResponseEntity<String> likePerformance(@PathVariable Long performanceId) {
-        performanceLikeService.save(performanceId);
+    public ResponseEntity<String> performanceLikeAdd(@PathVariable Long performanceId) {
+        performanceHeartService.save(performanceId);
         return new ResponseEntity<>("ok", HttpStatus.OK);
     }
 }
