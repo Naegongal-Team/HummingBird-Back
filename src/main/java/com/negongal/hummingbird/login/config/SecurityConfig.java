@@ -1,9 +1,9 @@
-package com.negongal.hummingbird.auth.config;
+package com.negongal.hummingbird.login.config;
 
-import com.negongal.hummingbird.auth.oauth2.Oauth2FailureHandler;
-import com.negongal.hummingbird.auth.oauth2.Oauth2SuccessHandler;
-import com.negongal.hummingbird.auth.jwt.JwtAuthenticationFilter;
-import com.negongal.hummingbird.auth.oauth2.Oauth2UserService;
+import com.negongal.hummingbird.login.oauth2.handler.Oauth2AuthenticationFailureHandler;
+import com.negongal.hummingbird.login.oauth2.handler.Oauth2AuthenticationSuccessHandler;
+import com.negongal.hummingbird.login.jwt.JwtAuthenticationFilter;
+import com.negongal.hummingbird.login.oauth2.Oauth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,11 +20,8 @@ public class SecurityConfig {
 
     private final Oauth2UserService oauth2UserService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final Oauth2SuccessHandler oauth2SuccessHandler;
-    private final Oauth2FailureHandler oauth2FailureHandler;
-
-//    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-//    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final Oauth2AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler;
+    private final Oauth2AuthenticationFailureHandler oauth2AuthenticationFailureHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -38,7 +35,8 @@ public class SecurityConfig {
 
         http
                 .authorizeRequests()
-                .antMatchers("/login**", "/oauth/**","/").permitAll()
+                .antMatchers("/","/css/**","/images/**","/js/**","/favicon.ico","/h2-console/**").permitAll()
+                .antMatchers("/login**").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated();
 
@@ -48,15 +46,20 @@ public class SecurityConfig {
                 .baseUri("/oauth/callback/*")
                 .and()
                 .userInfoEndpoint()
-//                .userService(oauth2UserServiceV2);
                 .userService(oauth2UserService)
                 .and()
-                .successHandler(oauth2SuccessHandler)
-                .failureHandler(oauth2FailureHandler);
+                .successHandler(oauth2AuthenticationSuccessHandler)
+                .failureHandler(oauth2AuthenticationFailureHandler);
 
-//        http.exceptionHandling()
-//                .authenticationEntryPoint(jwtAuthenticationEntryPoint)	// 401
-//                .accessDeniedHandler(jwtAccessDeniedHandler);
+        http
+                .logout()
+                .logoutUrl("/logout")
+                .clearAuthentication(true)
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+                .deleteCookies("refresh")
+                .logoutSuccessUrl("/login");
+
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
