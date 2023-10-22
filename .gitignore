@@ -199,3 +199,10 @@ Temporary Items
 /.gradle/
 /.idea/
 HELP.md
+
+# ignore properties file
+src/main/resources/application-aws.proper ties
+application-aws.properties
+
+# data.sql
+src/main/resources/data.sql
