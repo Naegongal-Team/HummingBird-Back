@@ -1,24 +1,18 @@
 package com.negongal.hummingbird.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.negongal.hummingbird.api.dto.ArtistDto;
-import com.negongal.hummingbird.domain.Artist;
-import com.negongal.hummingbird.domain.ArtistLike;
-import com.negongal.hummingbird.repository.ArtistLikeRepository;
-import com.negongal.hummingbird.repository.ArtistRepository;
+import com.negongal.hummingbird.domain.artist.api.ArtistApiController;
+import com.negongal.hummingbird.domain.artist.dao.ArtistLikeRepository;
+import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;

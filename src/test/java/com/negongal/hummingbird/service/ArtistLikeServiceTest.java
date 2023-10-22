@@ -1,9 +1,10 @@
 package com.negongal.hummingbird.service;
 
-import com.negongal.hummingbird.domain.Artist;
-import com.negongal.hummingbird.domain.ArtistLike;
-import com.negongal.hummingbird.repository.ArtistLikeRepository;
-import com.negongal.hummingbird.repository.ArtistRepository;
+import com.negongal.hummingbird.domain.artist.domain.Artist;
+import com.negongal.hummingbird.domain.artist.domain.ArtistLike;
+import com.negongal.hummingbird.domain.artist.application.ArtistLikeService;
+import com.negongal.hummingbird.domain.artist.dao.ArtistLikeRepository;
+import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

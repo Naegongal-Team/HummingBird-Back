@@ -1,14 +1,11 @@
 package com.negongal.hummingbird.service;
 
-import com.negongal.hummingbird.api.dto.ArtistDto;
-import com.negongal.hummingbird.api.dto.ArtistSearchDto;
-import com.negongal.hummingbird.domain.Artist;
-import com.negongal.hummingbird.domain.ArtistLike;
-import com.negongal.hummingbird.repository.ArtistLikeRepository;
-import com.negongal.hummingbird.repository.ArtistRepository;
-import org.junit.After;
+import com.negongal.hummingbird.domain.artist.application.ArtistService;
+import com.negongal.hummingbird.domain.artist.dto.ArtistDto;
+import com.negongal.hummingbird.domain.artist.dto.ArtistSearchDto;
+import com.negongal.hummingbird.domain.artist.dao.ArtistLikeRepository;
+import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
