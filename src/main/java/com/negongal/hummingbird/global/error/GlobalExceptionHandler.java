@@ -1,6 +1,6 @@
-package com.negongal.hummingbird.common.error;
+package com.negongal.hummingbird.global.error;
 
-import com.negongal.hummingbird.common.error.exception.HummingbirdException;
+import com.negongal.hummingbird.global.error.exception.HummingbirdException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
