@@ -1,9 +1,9 @@
 package com.negongal.hummingbird.service;
 
 import com.negongal.hummingbird.domain.artist.domain.Artist;
-import com.negongal.hummingbird.domain.artist.domain.ArtistLike;
-import com.negongal.hummingbird.domain.artist.application.ArtistLikeService;
-import com.negongal.hummingbird.domain.artist.dao.ArtistLikeRepository;
+import com.negongal.hummingbird.domain.artist.domain.ArtistHeart;
+import com.negongal.hummingbird.domain.artist.application.ArtistHeartService;
+import com.negongal.hummingbird.domain.artist.dao.ArtistHeartRepository;
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
 import org.junit.After;
 import org.junit.Assert;
@@ -20,16 +20,16 @@ import java.util.NoSuchElementException;
 @SpringBootTest
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
-public class ArtistLikeServiceTest {
+public class ArtistHeartServiceTest {
 
     @Autowired
-    private ArtistLikeService artistLikeService;
+    private ArtistHeartService artistHeartService;
 
     @Autowired
     private ArtistRepository artistRepository;
 
     @Autowired
-    private ArtistLikeRepository artistLikeRepository;
+    private ArtistHeartRepository artistHeartRepository;
 
 
     @Before
@@ -46,7 +46,7 @@ public class ArtistLikeServiceTest {
 
     @After
     public void clearRepository() {
-        artistLikeRepository.deleteAll();
+        artistHeartRepository.deleteAll();
         artistRepository.deleteAll();
     }
 
@@ -54,13 +54,13 @@ public class ArtistLikeServiceTest {
     public void submitLikeTest() {
         //given
         Artist mockArtist = artistRepository.findById("1").orElseThrow(NoSuchElementException::new);
-        artistLikeService.save(mockArtist.getId());
+        artistHeartService.save(mockArtist.getId());
 
         //when
-        ArtistLike mockArtistLike = artistLikeRepository.findById(1L).orElseThrow(NoSuchElementException::new);
+        ArtistHeart mockArtistHeart = artistHeartRepository.findById(1L).orElseThrow(NoSuchElementException::new);
 
         //then
-        Assert.assertEquals(1L, artistLikeRepository.count());
-        Assert.assertEquals("1", mockArtistLike.getArtist().getId());
+        Assert.assertEquals(1L, artistHeartRepository.count());
+        Assert.assertEquals("1", mockArtistHeart.getArtist().getId());
     }
 }

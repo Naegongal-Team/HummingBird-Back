@@ -3,7 +3,7 @@ package com.negongal.hummingbird.service;
 import com.negongal.hummingbird.domain.artist.application.ArtistService;
 import com.negongal.hummingbird.domain.artist.dto.ArtistDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistSearchDto;
-import com.negongal.hummingbird.domain.artist.dao.ArtistLikeRepository;
+import com.negongal.hummingbird.domain.artist.dao.ArtistHeartRepository;
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
 import org.junit.Assert;
 import org.junit.Test;
@@ -30,7 +30,7 @@ public class ArtistServiceTest {
     private ArtistRepository artistRepository;
 
     @Autowired
-    private ArtistLikeRepository artistLikeRepository;
+    private ArtistHeartRepository artistHeartRepository;
 
 
     @Test

@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED) @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder @Getter @ToString
-public class ArtistLike {
+public class ArtistHeart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

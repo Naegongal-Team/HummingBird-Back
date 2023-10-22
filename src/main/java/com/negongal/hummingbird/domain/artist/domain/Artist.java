@@ -23,7 +23,7 @@ public class Artist {
         private int popularity;
 
         @OneToMany(mappedBy = "artist")
-        private List<ArtistLike> artistLikes;
+        private List<ArtistHeart> artistHearts;
 
         @OneToMany(mappedBy = "artist")
         private List<Track> artistTopTracks;

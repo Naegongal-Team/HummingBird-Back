@@ -2,7 +2,7 @@ package com.negongal.hummingbird.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.negongal.hummingbird.domain.artist.api.ArtistApiController;
-import com.negongal.hummingbird.domain.artist.dao.ArtistLikeRepository;
+import com.negongal.hummingbird.domain.artist.dao.ArtistHeartRepository;
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
 import org.junit.After;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ class ArtistApiControllerTest {
     private ArtistRepository artistRepository;
 
     @Autowired
-    private ArtistLikeRepository artistLikeRepository;
+    private ArtistHeartRepository artistHeartRepository;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -41,7 +41,7 @@ class ArtistApiControllerTest {
 
     @After
     public void clearRepository() {
-        artistLikeRepository.deleteAll();
+        artistHeartRepository.deleteAll();
         artistRepository.deleteAll();
     }
 
