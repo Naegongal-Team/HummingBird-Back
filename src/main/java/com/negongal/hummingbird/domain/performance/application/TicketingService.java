@@ -1,12 +1,12 @@
-package com.negongal.hummingbird.service;
+package com.negongal.hummingbird.domain.performance.application;
 
-import com.negongal.hummingbird.api.dto.PerformanceRequestDto;
-import com.negongal.hummingbird.api.dto.TicketingRequestDto;
-import com.negongal.hummingbird.domain.Performance;
-import com.negongal.hummingbird.domain.Ticketing;
-import com.negongal.hummingbird.domain.TicketType;
-import com.negongal.hummingbird.repository.PerformanceRepository;
-import com.negongal.hummingbird.repository.TicketingRepository;
+import com.negongal.hummingbird.domain.performance.dto.PerformanceRequestDto;
+import com.negongal.hummingbird.domain.performance.dto.TicketingRequestDto;
+import com.negongal.hummingbird.domain.performance.dao.PerformanceRepository;
+import com.negongal.hummingbird.domain.performance.dao.TicketingRepository;
+import com.negongal.hummingbird.domain.performance.domain.Performance;
+import com.negongal.hummingbird.domain.performance.domain.TicketType;
+import com.negongal.hummingbird.domain.performance.domain.Ticketing;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

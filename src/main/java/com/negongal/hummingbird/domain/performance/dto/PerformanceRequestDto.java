@@ -1,10 +1,10 @@
-package com.negongal.hummingbird.api.dto;
+package com.negongal.hummingbird.domain.performance.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.negongal.hummingbird.domain.Performance;
+import com.negongal.hummingbird.domain.performance.domain.Performance;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.NotBlank;

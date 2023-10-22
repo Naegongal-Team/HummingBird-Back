@@ -1,4 +1,4 @@
-package com.negongal.hummingbird.domain;
+package com.negongal.hummingbird.domain.performance.domain;
 
 import java.time.LocalDateTime;
 import javax.persistence.Entity;

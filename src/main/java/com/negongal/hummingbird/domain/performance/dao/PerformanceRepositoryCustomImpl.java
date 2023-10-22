@@ -1,15 +1,11 @@
-package com.negongal.hummingbird.repository;
+package com.negongal.hummingbird.domain.performance.dao;
 
 import static com.negongal.hummingbird.domain.QPerformance.performance;
 import static com.negongal.hummingbird.domain.QPerformanceDate.performanceDate;
-import static com.negongal.hummingbird.domain.QPerformanceHeart.performanceHeart;
 import static com.negongal.hummingbird.domain.QTicketing.ticketing;
 
-import com.negongal.hummingbird.api.dto.PerformanceDto;
+import com.negongal.hummingbird.domain.performance.dto.PerformanceDto;
 import com.negongal.hummingbird.api.dto.QPerformanceDto;
-import com.negongal.hummingbird.domain.PerformanceHeart;
-import com.negongal.hummingbird.domain.QPerformanceHeart;
-import com.querydsl.core.types.Path;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.util.List;

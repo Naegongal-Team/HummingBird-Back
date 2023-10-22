@@ -1,4 +1,4 @@
-package com.negongal.hummingbird.domain;
+package com.negongal.hummingbird.domain.performance.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

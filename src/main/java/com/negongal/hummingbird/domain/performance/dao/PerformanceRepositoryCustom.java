@@ -1,6 +1,6 @@
-package com.negongal.hummingbird.repository;
+package com.negongal.hummingbird.domain.performance.dao;
 
-import com.negongal.hummingbird.api.dto.PerformanceDto;
+import com.negongal.hummingbird.domain.performance.dto.PerformanceDto;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

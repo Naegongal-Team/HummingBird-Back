@@ -201,5 +201,8 @@ Temporary Items
 HELP.md
 
 # ignore properties file
-src/main/resources/application-aws.properties
+src/main/resources/application-aws.proper ties
 application-aws.properties
+
+# data.sql
+src/main/resources/data.sql

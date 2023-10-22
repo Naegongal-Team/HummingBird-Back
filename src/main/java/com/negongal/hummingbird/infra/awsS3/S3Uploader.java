@@ -1,4 +1,4 @@
-package com.negongal.hummingbird.service;
+package com.negongal.hummingbird.infra.awsS3;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
-public class S3Service {
+public class S3Uploader {
 
     private final AmazonS3 amazonS3;
 

@@ -1,9 +1,9 @@
-package com.negongal.hummingbird.service;
+package com.negongal.hummingbird.domain.performance.application;
 
-import com.negongal.hummingbird.domain.Performance;
-import com.negongal.hummingbird.domain.PerformanceHeart;
-import com.negongal.hummingbird.repository.PerformanceHeartRepository;
-import com.negongal.hummingbird.repository.PerformanceRepository;
+import com.negongal.hummingbird.domain.performance.dao.PerformanceRepository;
+import com.negongal.hummingbird.domain.performance.domain.Performance;
+import com.negongal.hummingbird.domain.performance.domain.PerformanceHeart;
+import com.negongal.hummingbird.domain.performance.dao.PerformanceHeartRepository;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

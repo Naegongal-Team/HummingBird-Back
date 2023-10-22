@@ -1,12 +1,12 @@
-package com.negongal.hummingbird.api.controller;
+package com.negongal.hummingbird.domain.performance.api;
 
-import com.negongal.hummingbird.api.dto.PerformanceDetailDto;
-import com.negongal.hummingbird.api.dto.PerformanceDto;
-import com.negongal.hummingbird.api.dto.PerformanceRequestDto;
-import com.negongal.hummingbird.service.PerformanceHeartService;
-import com.negongal.hummingbird.service.S3Service;
-import com.negongal.hummingbird.service.PerformanceService;
-import com.negongal.hummingbird.service.TicketingService;
+import com.negongal.hummingbird.infra.awsS3.S3Uploader;
+import com.negongal.hummingbird.domain.performance.dto.PerformanceDetailDto;
+import com.negongal.hummingbird.domain.performance.dto.PerformanceDto;
+import com.negongal.hummingbird.domain.performance.dto.PerformanceRequestDto;
+import com.negongal.hummingbird.domain.performance.application.PerformanceHeartService;
+import com.negongal.hummingbird.domain.performance.application.PerformanceService;
+import com.negongal.hummingbird.domain.performance.application.TicketingService;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -37,13 +37,13 @@ public class PerformanceApiController {
     private final PerformanceService performanceService;
     private final PerformanceHeartService performanceHeartService;
     private final TicketingService ticketService;
-    private final S3Service fileService;
+    private final S3Uploader uploader;
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<String> performanceAdd(
                 @Valid @RequestPart(value = "performance") PerformanceRequestDto requestDto,
                 @RequestPart(required = false, value = "photo") MultipartFile photo) throws IOException {
-        String photoUrl = (photo == null) ? null : fileService.saveFile(photo);
+        String photoUrl = (photo == null) ? null : uploader.saveFile(photo);
         Long performanceId = performanceService.save(requestDto, photoUrl);
         ticketService.save(performanceId, requestDto);
         return new ResponseEntity<>("ok", HttpStatus.CREATED);
@@ -76,7 +76,7 @@ public class PerformanceApiController {
             @PathVariable Long performanceId,
             @Valid @RequestPart(value = "performance") PerformanceRequestDto requestDto,
             @RequestPart(required = false, value = "photo") MultipartFile photo) throws IOException {
-        String photoUrl = (photo == null) ? null : fileService.saveFile(photo);
+        String photoUrl = (photo == null) ? null : uploader.saveFile(photo);
         performanceService.update(performanceId, requestDto, photoUrl);
         ticketService.save(performanceId, requestDto);
         return new ResponseEntity<>("ok", HttpStatus.OK);

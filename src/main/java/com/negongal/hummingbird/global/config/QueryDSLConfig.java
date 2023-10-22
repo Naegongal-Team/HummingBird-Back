@@ -1,4 +1,4 @@
-package com.negongal.hummingbird.config;
+package com.negongal.hummingbird.global.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import javax.persistence.EntityManager;

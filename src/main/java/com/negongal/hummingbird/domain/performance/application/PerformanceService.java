@@ -1,12 +1,12 @@
-package com.negongal.hummingbird.service;
+package com.negongal.hummingbird.domain.performance.application;
 
-import com.negongal.hummingbird.api.dto.PerformanceDetailDto;
-import com.negongal.hummingbird.api.dto.PerformanceDto;
-import com.negongal.hummingbird.api.dto.PerformanceRequestDto;
-import com.negongal.hummingbird.domain.Performance;
-import com.negongal.hummingbird.domain.PerformanceDate;
-import com.negongal.hummingbird.repository.PerformanceDateRepository;
-import com.negongal.hummingbird.repository.PerformanceRepository;
+import com.negongal.hummingbird.domain.performance.dto.PerformanceRequestDto;
+import com.negongal.hummingbird.domain.performance.dao.PerformanceDateRepository;
+import com.negongal.hummingbird.domain.performance.domain.Performance;
+import com.negongal.hummingbird.domain.performance.dto.PerformanceDetailDto;
+import com.negongal.hummingbird.domain.performance.dto.PerformanceDto;
+import com.negongal.hummingbird.domain.performance.domain.PerformanceDate;
+import com.negongal.hummingbird.domain.performance.dao.PerformanceRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;

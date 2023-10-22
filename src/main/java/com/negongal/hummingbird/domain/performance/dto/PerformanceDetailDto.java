@@ -1,4 +1,4 @@
-package com.negongal.hummingbird.api.dto;
+package com.negongal.hummingbird.domain.performance.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.negongal.hummingbird.domain.Performance;
-import com.negongal.hummingbird.domain.TicketType;
+import com.negongal.hummingbird.domain.performance.domain.Performance;
+import com.negongal.hummingbird.domain.performance.domain.TicketType;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
