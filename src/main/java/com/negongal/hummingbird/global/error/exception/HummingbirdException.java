@@ -1,6 +1,6 @@
-package com.negongal.hummingbird.common.error.exception;
+package com.negongal.hummingbird.global.error.exception;
 
-import com.negongal.hummingbird.common.error.ErrorCode;
+import com.negongal.hummingbird.global.error.ErrorCode;
 import lombok.Getter;
 
 @Getter

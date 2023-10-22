@@ -1,4 +1,4 @@
-package com.negongal.hummingbird.common.error;
+package com.negongal.hummingbird.global.error;
 
 import lombok.Builder;
 import lombok.Getter;
