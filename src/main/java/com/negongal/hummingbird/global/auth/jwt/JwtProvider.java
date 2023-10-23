@@ -1,6 +1,6 @@
 package com.negongal.hummingbird.global.auth.jwt;
 
-import com.negongal.hummingbird.domain.user.repository.UserRepository;
+import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.global.auth.oauth2.CustomUserDetail;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;

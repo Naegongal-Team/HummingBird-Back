@@ -2,7 +2,7 @@ package com.negongal.hummingbird.global.auth.oauth2;
 
 import com.negongal.hummingbird.domain.user.domain.User;
 import com.negongal.hummingbird.global.auth.oauth2.userInfo.GoogleUserInfo;
-import com.negongal.hummingbird.domain.user.repository.UserRepository;
+import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.global.auth.oauth2.userInfo.KakaoUserInfo;
 import com.negongal.hummingbird.global.auth.oauth2.userInfo.Oauth2UserInfo;
 import lombok.RequiredArgsConstructor;

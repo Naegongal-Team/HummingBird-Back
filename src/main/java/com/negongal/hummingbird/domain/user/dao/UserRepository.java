@@ -1,4 +1,4 @@
-package com.negongal.hummingbird.domain.user.repository;
+package com.negongal.hummingbird.domain.user.dao;
 
 import com.negongal.hummingbird.domain.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;

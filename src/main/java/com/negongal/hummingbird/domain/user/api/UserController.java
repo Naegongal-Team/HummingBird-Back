@@ -1,6 +1,6 @@
-package com.negongal.hummingbird.domain.user.controller;
+package com.negongal.hummingbird.domain.user.api;
 
-import com.negongal.hummingbird.domain.user.service.UserService;
+import com.negongal.hummingbird.domain.user.application.UserService;
 import com.negongal.hummingbird.domain.user.dto.UserDetailDto;
 import com.negongal.hummingbird.domain.user.dto.UserUpdateDto;
 import com.negongal.hummingbird.global.auth.jwt.JwtProviderV2;

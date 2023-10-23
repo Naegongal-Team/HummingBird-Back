@@ -1,4 +1,4 @@
-package com.negongal.hummingbird.domain.user.service;
+package com.negongal.hummingbird.domain.user.application;
 
 import com.negongal.hummingbird.domain.user.exception.AccessDeniedException;
 import com.negongal.hummingbird.domain.user.exception.UserNotFoundException;
@@ -6,7 +6,7 @@ import com.negongal.hummingbird.domain.user.domain.Role;
 import com.negongal.hummingbird.domain.user.dto.UserDetailDto;
 import com.negongal.hummingbird.domain.user.dto.UserUpdateDto;
 import com.negongal.hummingbird.domain.user.domain.User;
-import com.negongal.hummingbird.domain.user.repository.UserRepository;
+import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
