@@ -208,3 +208,5 @@ application-aws.properties
 
 # data.sql
 src/main/resources/data.sql
+
+application-oauth2.properties
