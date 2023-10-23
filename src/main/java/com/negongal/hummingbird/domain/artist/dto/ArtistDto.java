@@ -48,7 +48,7 @@ public class ArtistDto {
                 .image(artist.getImage())
                 .genres(artist.getGenres())
                 .popularity(artist.getPopularity())
-                .artistLikes(artist.getArtistHearts())
+                .artistHearts(artist.getArtistHearts())
                 .artistTopTracks(artist.getArtistTopTracks().stream()
                         .map(track -> TrackDto.of(track))
                         .collect(Collectors.toList()))

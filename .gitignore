@@ -194,8 +194,6 @@ Temporary Items
 # iCloud generated files
 *.icloud
 
-config.properties
-
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij,macos,git
 /build/
 /.gradle/
@@ -203,10 +201,6 @@ config.properties
 HELP.md
 
 # ignore properties file
-src/main/resources/application-aws.proper ties
 application-aws.properties
-
-# data.sql
-src/main/resources/data.sql
-
 application-oauth2.properties
+config.properties
