@@ -199,3 +199,4 @@ Temporary Items
 /.gradle/
 /.idea/
 HELP.md
+application-oauth2.properties
