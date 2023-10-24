@@ -4,7 +4,7 @@ import com.negongal.hummingbird.global.error.ErrorCode;
 import lombok.Getter;
 
 @Getter
-public class HummingbirdException extends RuntimeException {
+public abstract class HummingbirdException extends RuntimeException {
 
     private final ErrorCode errorCode;
 
