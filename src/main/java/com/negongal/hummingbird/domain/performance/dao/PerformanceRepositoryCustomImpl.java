@@ -6,6 +6,8 @@ import static com.negongal.hummingbird.domain.performance.domain.QTicketing.tick
 
 import com.negongal.hummingbird.domain.performance.dto.PerformanceDto;
 import com.negongal.hummingbird.domain.performance.dto.QPerformanceDto;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -50,19 +52,26 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
     }
 
     @Override
-    public List<PerformanceDto> findSeveral(int size) {
+    public List<PerformanceDto> findSeveral(int size, String sort) {
         LocalDateTime currentDate = LocalDateTime.now();
-        return queryFactory
+
+        JPQLQuery<PerformanceDto> query = queryFactory
                 .select(new QPerformanceDto(
                         performance.id, performance.name, performance.artistName, performance.photo, performanceDate.startDate.min()))
                 .from(performance)
                 .leftJoin(performance.dateList, performanceDate)
-                .where(performanceDate.startDate.gt(currentDate)) // 현재 날짜 이후만 join
-                .groupBy(performance)
-                .orderBy(performanceDate.startDate.min().asc())
-                .limit(size)
-                .fetch();
+                .where(performanceDate.startDate.gt(currentDate))
+                .groupBy(performance);
+
+        if ("heart".equals(sort)) {
+            query.orderBy(performance.heartList.size().desc());
+        } else {
+            query.orderBy(performanceDate.startDate.min().asc());
+        }
+
+        return query.limit(size).fetch();
     }
+
 
     public List<PerformanceDto> findAllOrderByStartDate(Pageable pageable) {
         LocalDateTime currentDate = LocalDateTime.now();

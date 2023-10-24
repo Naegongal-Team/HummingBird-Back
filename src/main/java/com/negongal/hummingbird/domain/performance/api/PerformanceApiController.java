@@ -58,8 +58,8 @@ public class PerformanceApiController {
     }
 
     @GetMapping("/main")
-    public ResponseEntity<HashMap<String, List<PerformanceDto>>> performanceList(@RequestParam("size") int size) {
-        List<PerformanceDto> performanceList = performanceService.findSeveral(size);
+    public ResponseEntity<HashMap<String, List<PerformanceDto>>> performanceList(@RequestParam("size") int size, @RequestParam("sort") String sort) {
+        List<PerformanceDto> performanceList = performanceService.findSeveral(size, sort);
         HashMap<String, List<PerformanceDto>> responseList = new HashMap<>();
         responseList.put("performance_list", performanceList);
         return new ResponseEntity<>(responseList, HttpStatus.OK);

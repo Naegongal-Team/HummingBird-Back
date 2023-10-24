@@ -73,8 +73,8 @@ public class PerformanceService {
     /**
      * 공연 조회: 메인 페이지에서 띄울 개수 제한
      */
-    public List<PerformanceDto> findSeveral(int size) {
-        return performanceRepository.findSeveral(size);
+    public List<PerformanceDto> findSeveral(int size, String sort) {
+        return performanceRepository.findSeveral(size, sort);
     }
 
     public PerformanceDetailDto findOne(Long performanceId) {
