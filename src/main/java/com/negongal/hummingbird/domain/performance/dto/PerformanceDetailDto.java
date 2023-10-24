@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.negongal.hummingbird.domain.performance.domain.Performance;
 import com.negongal.hummingbird.domain.performance.domain.TicketType;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
@@ -53,7 +54,7 @@ public class PerformanceDetailDto {
     }
 
     public static PerformanceDetailDto of(Performance p) {
-        List<LocalDateTime> dateList = p.getDateList().stream().map(d -> d.getStartDate()).collect(Collectors.toList());
+        List<LocalDateTime> dateList = p.getDateList().stream().map(d -> d.getStartDate()).sorted().collect(Collectors.toList());
         return PerformanceDetailDto.builder()
                 .id(p.getId())
                 .name(p.getName())
@@ -66,10 +67,12 @@ public class PerformanceDetailDto {
                 .regularTicketing(p.getTicketingList().stream()
                         .filter(t -> t.getTicketType() == TicketType.REGULAR)
                         .map(t -> TicketingDto.of(t))
+                        .sorted(Comparator.comparing(TicketingDto::getDate))
                         .collect(Collectors.toList()))
                 .earlybirdTicketing(p.getTicketingList().stream()
                         .filter(t -> t.getTicketType() == TicketType.EARLY_BIRD)
                         .map(t -> TicketingDto.of(t))
+                        .sorted(Comparator.comparing(TicketingDto::getDate))
                         .collect(Collectors.toList()))
                 .build();
     }
