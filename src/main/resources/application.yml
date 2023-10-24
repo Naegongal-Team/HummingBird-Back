@@ -1,0 +1,50 @@
+spring:
+  output:
+    ansi:
+      enabled: always
+
+  h2:
+    console:
+      enabled: true
+      path: /h2
+
+  # spring boot 2.5.x \uC774\uC0C1 \uCD08\uAE30 \uB370\uC774\uD130 \uC124\uC815
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
+
+  # script \uD30C\uC77C\uC774 hibernate \uCD08\uAE30\uD654 \uC774\uD6C4 \uB3D9\uC791\uD558\uAC8C \uD558\uAE30 \uC704\uD55C \uC635\uC158
+  jpa:
+    defer-datasource-initialization: true
+    # hibernate
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
+    open-in-view: false
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:tcp://localhost/~/testdb
+    username: sa
+
+  # file upload max size
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  config:
+    import: application-aws.yml, application-oauth2.yml, config.yml
+
+
+#logging:
+#  level:
+#    org:
+#      hibernate:
+#        sql: debug
+#        type: trace

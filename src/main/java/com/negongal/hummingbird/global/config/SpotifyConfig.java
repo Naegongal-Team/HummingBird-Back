@@ -15,7 +15,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 
 @Slf4j
-@PropertySource("classpath:config.properties")
+@PropertySource("classpath:config.yml")
 @Configuration
 public class SpotifyConfig {
 

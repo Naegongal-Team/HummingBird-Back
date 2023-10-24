@@ -201,6 +201,6 @@ Temporary Items
 HELP.md
 
 # ignore properties file
-application-aws.properties
-application-oauth2.properties
-config.properties
+application-aws.yml
+application-oauth2.yml
+config.yml
