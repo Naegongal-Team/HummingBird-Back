@@ -12,12 +12,14 @@ import lombok.Getter;
 public class ApiResponse<T> {
     private ResponseStatus status;
     private T data;
+    private String code;
     private String message;
 
     @Builder
-    public ApiResponse(ResponseStatus status, T data, String message) {
+    public ApiResponse(ResponseStatus status, T data, String code, String message) {
         this.status = status;
         this.data = data;
+        this.code = code;
         this.message = message;
     }
 }
