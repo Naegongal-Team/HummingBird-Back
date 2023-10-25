@@ -6,7 +6,6 @@ import static com.negongal.hummingbird.domain.performance.domain.QTicketing.tick
 
 import com.negongal.hummingbird.domain.performance.dto.PerformanceDto;
 import com.negongal.hummingbird.domain.performance.dto.QPerformanceDto;
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
@@ -26,10 +25,13 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
     public Page<PerformanceDto> findAllCustom(Pageable pageable) {
         List<PerformanceDto> content = null;
 
+        Long count = -1L;
+
         if(pageable.getSort().isSorted()) {
             Order order = pageable.getSort().stream().findAny().get();
             if(order.getProperty().equals("ticketing")) {
                 content = findAllOrderByTicketingStartDate(pageable);
+                count = countTicketingPerformanceList();
             }
             else if(order.getProperty().equals("date")) {
                 content = findAllOrderByStartDate(pageable);
@@ -40,13 +42,7 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
         }
         else content = findAllOrderByStartDate(pageable);
 
-        LocalDateTime currentDate = LocalDateTime.now();
-        Long count = queryFactory
-                .select(performance.count())
-                .from(performance)
-                .leftJoin(performance.dateList, performanceDate)
-                .where(performanceDate.startDate.gt(currentDate))
-                .fetchOne();
+        if(count == -1L) count = countDatePerformanceList();
 
         return new PageImpl<>(content, pageable, count);
     }
@@ -116,5 +112,27 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
                 .offset(pageable.getOffset())   // 페이지 번호
                 .limit(pageable.getPageSize())  // 페이지 사이즈
                 .fetch();
+    }
+
+    public Long countDatePerformanceList() {
+        LocalDateTime currentDate = LocalDateTime.now();
+        return queryFactory
+                .select(performance.count())
+                .from(performance)
+                .leftJoin(performance.dateList, performanceDate)
+                .where(performanceDate.startDate.gt(currentDate))
+                .groupBy(performance)
+                .fetchCount();
+    }
+
+    public Long countTicketingPerformanceList() {
+        LocalDateTime currentDate = LocalDateTime.now();
+        return queryFactory
+                .select(performance.count())
+                .from(performance)
+                .leftJoin(performance.ticketingList, ticketing)
+                .where(ticketing.startDate.gt(currentDate))
+                .groupBy(performance)
+                .fetchCount();
     }
 }

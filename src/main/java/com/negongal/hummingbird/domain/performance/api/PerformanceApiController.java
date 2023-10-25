@@ -1,5 +1,6 @@
 package com.negongal.hummingbird.domain.performance.api;
 
+import com.negongal.hummingbird.domain.performance.dto.PerformancePageDto;
 import com.negongal.hummingbird.infra.awsS3.S3Uploader;
 import com.negongal.hummingbird.domain.performance.dto.PerformanceDetailDto;
 import com.negongal.hummingbird.domain.performance.dto.PerformanceDto;
@@ -50,11 +51,9 @@ public class PerformanceApiController {
     }
 
     @GetMapping
-    public ResponseEntity<HashMap<String, Page<PerformanceDto>>> performanceList(Pageable pageable) {
-        Page<PerformanceDto> performanceList = performanceService.findAll(pageable);
-        HashMap<String, Page<PerformanceDto>> responseList = new HashMap<>();
-        responseList.put("performance_list", performanceList);
-        return new ResponseEntity<>(responseList, HttpStatus.OK);
+    public ResponseEntity<PerformancePageDto> performanceList(Pageable pageable) {
+        PerformancePageDto performancePageList = performanceService.findAll(pageable);
+        return new ResponseEntity<>(performancePageList, HttpStatus.OK);
     }
 
     @GetMapping("/main")

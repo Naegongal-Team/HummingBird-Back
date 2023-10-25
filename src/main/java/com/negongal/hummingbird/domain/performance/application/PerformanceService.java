@@ -1,5 +1,7 @@
 package com.negongal.hummingbird.domain.performance.application;
 
+import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
+import com.negongal.hummingbird.domain.performance.dto.PerformancePageDto;
 import com.negongal.hummingbird.domain.performance.dto.PerformanceRequestDto;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceDateRepository;
 import com.negongal.hummingbird.domain.performance.domain.Performance;
@@ -26,6 +28,7 @@ public class PerformanceService {
 
     private final PerformanceRepository performanceRepository;
     private final PerformanceDateRepository dateRepository;
+    private final ArtistRepository artistRepository;
 
     @Transactional
     public Long save(PerformanceRequestDto requestDto, String photo){
@@ -66,8 +69,15 @@ public class PerformanceService {
     /**
      * 공연 조회: 공연 날짜 순 or 티켓팅 날짜 순 or 인기있는 공연 순
      */
-    public Page<PerformanceDto> findAll(Pageable pageable) {
-        return performanceRepository.findAllCustom(pageable);
+    public PerformancePageDto findAll(Pageable pageable) {
+        Page<PerformanceDto> dtoPage = performanceRepository.findAllCustom(pageable);
+        return PerformancePageDto.builder()
+                .performanceDto(dtoPage.getContent())
+                .totalPages(dtoPage.getTotalPages())
+                .totalElements(dtoPage.getTotalElements())
+                .isLast(dtoPage.isLast())
+                .currPage(dtoPage.getPageable().getPageNumber())
+                .build();
     }
 
     /**
