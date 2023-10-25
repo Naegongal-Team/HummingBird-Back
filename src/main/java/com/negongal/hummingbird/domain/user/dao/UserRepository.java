@@ -14,6 +14,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     public Optional<User> findByOauth2Id(String oauthId);
 
+    public Optional<User> findByNickname(String nickname);
+
 
     @Transactional
     @Modifying
