@@ -1,5 +1,7 @@
 package com.negongal.hummingbird.domain.user.domain;
 
+import com.negongal.hummingbird.domain.performance.domain.PerformanceHeart;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +34,9 @@ public class User {
 
 //    @Convert()
 //    private LocalDateTime createdDate;
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<PerformanceHeart> performanceHeartList;
 
     @Builder //생성을 Builder 패턴으로 하기 위해서
     public User(String oauth2Id, String nickname, String provider, Role role, LocalDateTime createdDate) {

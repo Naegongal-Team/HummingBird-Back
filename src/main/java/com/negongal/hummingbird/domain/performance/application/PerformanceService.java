@@ -1,6 +1,7 @@
 package com.negongal.hummingbird.domain.performance.application;
 
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
+import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.performance.dto.PerformancePageDto;
 import com.negongal.hummingbird.domain.performance.dto.PerformanceRequestDto;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceDateRepository;
@@ -9,6 +10,7 @@ import com.negongal.hummingbird.domain.performance.dto.PerformanceDetailDto;
 import com.negongal.hummingbird.domain.performance.dto.PerformanceDto;
 import com.negongal.hummingbird.domain.performance.domain.PerformanceDate;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceRepository;
+import com.wrapper.spotify.exceptions.detailed.NotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -31,14 +33,11 @@ public class PerformanceService {
     private final ArtistRepository artistRepository;
 
     @Transactional
-    public Long save(PerformanceRequestDto requestDto, String photo){
+    public Long save(PerformanceRequestDto requestDto, String photo) {
+        Artist artist = artistRepository.findByName(requestDto.getArtistName())
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않은 가수 입니다."));
 
-        /**
-         * Artist 조회 + 매핑 필요
-         * requestDto.getArtistName()
-         */
-
-        Performance performance = requestDto.toEntity();
+        Performance performance = requestDto.toEntity(artist);
         performance.addPhoto(photo);
         performanceRepository.save(performance);
 
@@ -61,7 +60,10 @@ public class PerformanceService {
         Performance findPerformance = performanceRepository.findById(performanceId)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 공연입니다."));
 
-        findPerformance.update(request.getName(), request.getArtistName(), request.getLocation(), request.getRuntime(), request.getDescription());
+        Artist artist = artistRepository.findByName(request.getArtistName())
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않은 가수 입니다."));
+
+        findPerformance.update(request.getName(), artist, request.getLocation(), request.getRuntime(), request.getDescription());
         findPerformance.addPhoto(photo);
         dateRepository.saveAll(createDate(request.getDateList(), findPerformance));
     }

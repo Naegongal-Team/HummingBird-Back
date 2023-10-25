@@ -53,14 +53,14 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
 
         JPQLQuery<PerformanceDto> query = queryFactory
                 .select(new QPerformanceDto(
-                        performance.id, performance.name, performance.artistName, performance.photo, performanceDate.startDate.min()))
+                        performance.id, performance.name, performance.artist.name, performance.photo, performanceDate.startDate.min()))
                 .from(performance)
                 .leftJoin(performance.dateList, performanceDate)
                 .where(performanceDate.startDate.gt(currentDate))
                 .groupBy(performance);
 
         if ("heart".equals(sort)) {
-            query.orderBy(performance.heartList.size().desc());
+            query.orderBy(performance.performanceHeartList.size().desc());
         } else {
             query.orderBy(performanceDate.startDate.min().asc());
         }
@@ -73,7 +73,7 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
         LocalDateTime currentDate = LocalDateTime.now();
         return queryFactory
                 .select(new QPerformanceDto(
-                        performance.id, performance.name, performance.artistName, performance.photo, performanceDate.startDate.min()))
+                        performance.id, performance.name, performance.artist.name, performance.photo, performanceDate.startDate.min()))
                 .from(performance)
                 .leftJoin(performance.dateList, performanceDate)
                 .where(performanceDate.startDate.gt(currentDate)) // 현재 날짜 이후만 join
@@ -88,7 +88,7 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
         LocalDateTime currentDate = LocalDateTime.now();
         return queryFactory
                 .select(new QPerformanceDto(
-                        performance.id, performance.name, performance.artistName, performance.photo, ticketing.startDate.min()))
+                        performance.id, performance.name, performance.artist.name, performance.photo, ticketing.startDate.min()))
                 .from(performance)
                 .leftJoin(performance.ticketingList, ticketing)
                 .where(ticketing.startDate.gt(currentDate)) // 현재 날짜 이후만 join
@@ -103,12 +103,12 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
         LocalDateTime currentDate = LocalDateTime.now();
         return queryFactory
                 .select(new QPerformanceDto(
-                        performance.id, performance.name, performance.artistName, performance.photo, performanceDate.startDate.min()))
+                        performance.id, performance.name, performance.artist.name, performance.photo, performanceDate.startDate.min()))
                 .from(performance)
                 .leftJoin(performance.dateList, performanceDate)
                 .where(performanceDate.startDate.gt(currentDate)) // 현재 날짜 이후만 join
                 .groupBy(performance)
-                .orderBy(performance.heartList.size().desc())
+                .orderBy(performance.performanceHeartList.size().desc())
                 .offset(pageable.getOffset())   // 페이지 번호
                 .limit(pageable.getPageSize())  // 페이지 사이즈
                 .fetch();
