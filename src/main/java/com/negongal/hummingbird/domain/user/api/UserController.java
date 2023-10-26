@@ -9,7 +9,6 @@ import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -81,18 +80,6 @@ public class UserController {
     public ResponseEntity<Collection<? extends GrantedAuthority>> detailAuthority() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        return new ResponseEntity<>(authorities, HttpStatus.OK);
-    }
-
-    @PostMapping("/user/authority")
-    public ResponseEntity<Collection<? extends GrantedAuthority>> modifyAuthorityAsAdmin(HttpServletRequest request) {
-        String accessToken = request.getHeader("Authorization").substring(7);;
-        Claims claims = jwtProvider.parseClaims(accessToken);
-        String oauthId = claims.getSubject();
-        Authentication authentication1 = userService.modifyAuthority(oauthId);
-
-        Collection<? extends GrantedAuthority> authorities = authentication1.getAuthorities();
-
         return new ResponseEntity<>(authorities, HttpStatus.OK);
     }
 
