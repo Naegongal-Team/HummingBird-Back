@@ -1,5 +1,7 @@
 package com.negongal.hummingbird.domain.performance.application;
 
+import static com.negongal.hummingbird.global.error.ErrorCode.*;
+
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
 import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.performance.dto.PerformancePageDto;
@@ -10,7 +12,7 @@ import com.negongal.hummingbird.domain.performance.dto.PerformanceDetailDto;
 import com.negongal.hummingbird.domain.performance.dto.PerformanceDto;
 import com.negongal.hummingbird.domain.performance.domain.PerformanceDate;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceRepository;
-import com.wrapper.spotify.exceptions.detailed.NotFoundException;
+import com.negongal.hummingbird.global.error.exception.NotExistException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -35,7 +37,7 @@ public class PerformanceService {
     @Transactional
     public Long save(PerformanceRequestDto requestDto, String photo) {
         Artist artist = artistRepository.findByName(requestDto.getArtistName())
-                .orElseThrow(() -> new NoSuchElementException("존재하지 않은 가수 입니다."));
+                .orElseThrow(() -> new NotExistException(ARTIST_IS_NOT_EXIST));
 
         Performance performance = requestDto.toEntity(artist);
         performance.addPhoto(photo);
@@ -58,10 +60,10 @@ public class PerformanceService {
     @Transactional
     public void update(Long performanceId, PerformanceRequestDto request, String photo) {
         Performance findPerformance = performanceRepository.findById(performanceId)
-                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 공연입니다."));
+                .orElseThrow(() -> new NotExistException(PERFORMANCE_IS_NOT_EXIST));
 
         Artist artist = artistRepository.findByName(request.getArtistName())
-                .orElseThrow(() -> new NoSuchElementException("존재하지 않은 가수 입니다."));
+                .orElseThrow(() -> new NotExistException(ARTIST_IS_NOT_EXIST));
 
         findPerformance.update(request.getName(), artist, request.getLocation(), request.getRuntime(), request.getDescription());
         findPerformance.addPhoto(photo);
@@ -91,7 +93,7 @@ public class PerformanceService {
 
     public PerformanceDetailDto findOne(Long performanceId) {
         Performance performance = performanceRepository.findById(performanceId)
-                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 공연입니다."));
+                .orElseThrow(() -> new NotExistException(PERFORMANCE_IS_NOT_EXIST));
         return PerformanceDetailDto.of(performance);
     }
 }
