@@ -47,7 +47,7 @@ public class JwtProvider {
 
         CustomUserDetail user = (CustomUserDetail) authentication.getPrincipal();
 
-        String oauthId = user.getName();
+        String userId = user.getName();
         String provider = user.getProvider();
         String nickname = user.getNickname();
         String role = authentication.getAuthorities().stream()
@@ -56,7 +56,7 @@ public class JwtProvider {
 
         String accessToken = Jwts.builder()
                                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
-                                .setSubject(oauthId)
+                                .setSubject(userId)
                                 .claim(AUTHORITIES_KEY, role)
                                 .claim(PROVIDER, provider)
                                 .claim(NICKNAME, nickname)
@@ -94,11 +94,11 @@ public class JwtProvider {
 
     private void saveRefreshToken(Authentication authentication, String refreshToken) {
         CustomUserDetail user = (CustomUserDetail) authentication.getPrincipal();
-        String oauthId = user.getName();
+        String userId = user.getName();
         String provider = user.getProvider();
         log.info("provider={}", provider);
 
-        userRepository.updateRefreshToken(oauthId, provider, refreshToken);
+        userRepository.updateRefreshToken(userId, provider, refreshToken);
     }
 
     // Access Token을 검사하고 얻은 정보로 Authentication 객체 생성
@@ -110,7 +110,7 @@ public class JwtProvider {
                         .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
         CustomUserDetail principal = new CustomUserDetail(
-                claims.getSubject(),
+                Long.valueOf(claims.getSubject()),
                 String.valueOf(claims.get(PROVIDER)),
                 String.valueOf(claims.get(NICKNAME)),
                 authorities);

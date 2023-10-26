@@ -23,13 +23,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final S3Uploader uploader;
 
-    public void addUserNicknameAndImage(String oauthId, UserDto saveParam, String profileImage) {
-        User findUser = userRepository.findByOauth2Id(oauthId).orElseThrow(UserNotFoundException::new);
+    public void addUserNicknameAndImage(Long userId, UserDto saveParam, String profileImage) {
+        User findUser = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         findUser.updateNicknameAndProfileImage(saveParam.getNickname(), profileImage);
     }
 
-    public void modifyUserNicknameAndImage(String oauthId, UserDto updateParam, String profileImage) throws IOException {
-        User findUser = userRepository.findByOauth2Id(oauthId).orElseThrow(UserNotFoundException::new);
+    public void modifyUserNicknameAndImage(Long userId, UserDto updateParam, String profileImage) throws IOException {
+        User findUser = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         String file = findUser.getProfileImage();
         if(!file.isEmpty()){
             uploader.deleteFile(file);
@@ -40,11 +40,6 @@ public class UserService {
     public UserDetailDto findUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
-        return UserDetailDto.of(user);
-    }
-
-    public UserDetailDto findByOauthId(String oauthId) {
-        User user = userRepository.findByOauth2Id(oauthId).orElseThrow(UserNotFoundException::new);
         return UserDetailDto.of(user);
     }
 

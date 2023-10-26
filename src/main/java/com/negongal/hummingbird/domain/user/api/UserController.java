@@ -3,6 +3,7 @@ package com.negongal.hummingbird.domain.user.api;
 import com.negongal.hummingbird.domain.user.application.UserService;
 import com.negongal.hummingbird.domain.user.dto.UserDetailDto;
 import com.negongal.hummingbird.domain.user.dto.UserDto;
+import com.negongal.hummingbird.global.auth.oauth2.CustomUserDetail;
 import com.negongal.hummingbird.infra.awsS3.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,10 +31,9 @@ public class UserController {
 
 
     @GetMapping("/user/info")
-    public ResponseEntity<UserDetailDto> userDetail(Authentication authentication) {
-        String oauthId = authentication.getName();
-        UserDetailDto user = userService.findByOauthId(oauthId);
-
+    public ResponseEntity<UserDetailDto> userDetail(@AuthenticationPrincipal CustomUserDetail userDetail) {
+        Long userId = userDetail.getUserId();
+        UserDetailDto user = userService.findUser(userId);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -45,11 +47,11 @@ public class UserController {
     public ResponseEntity<UserDto> userNicknameAndPhotoAdd(
             @Valid @RequestPart(value = "user") UserDto saveParam,
             @RequestPart(required = false, value = "profileImage") MultipartFile profileImage,
-            Authentication authentication) throws IOException {
-        String oauthId = authentication.getName();
+            @AuthenticationPrincipal CustomUserDetail userDetail) throws IOException {
+        Long userId = userDetail.getUserId();
 
         String photoUrl = (profileImage == null) ? null : uploader.saveFile(profileImage);
-        userService.addUserNicknameAndImage(oauthId, saveParam, photoUrl);
+        userService.addUserNicknameAndImage(userId, saveParam, photoUrl);
 
         return new ResponseEntity<>(saveParam, HttpStatus.CREATED);
     }
@@ -58,11 +60,11 @@ public class UserController {
     public ResponseEntity<UserDto> userNicknameAndPhotoModify(
             @Valid @RequestPart(value = "user") UserDto updateParam,
             @RequestPart(required = false, value = "photo") MultipartFile photo,
-            Authentication authentication) throws IOException {
-        String oauthId = authentication.getName();
+            @AuthenticationPrincipal CustomUserDetail userDetail) throws IOException {
+        Long userId = userDetail.getUserId();
 
         String photoUrl = (photo == null) ? null : uploader.saveFile(photo);
-        userService.modifyUserNicknameAndImage(oauthId, updateParam, photoUrl);
+        userService.modifyUserNicknameAndImage(userId, updateParam, photoUrl);
 
         return new ResponseEntity<>(updateParam, HttpStatus.OK);
     }

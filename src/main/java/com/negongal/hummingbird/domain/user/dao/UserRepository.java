@@ -12,8 +12,6 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     public Optional<User> findByOauth2IdAndProvider(String oauthId, String provider);
 
-    public Optional<User> findByOauth2Id(String oauthId);
-
     public Optional<User> findByNickname(String nickname);
 
 
