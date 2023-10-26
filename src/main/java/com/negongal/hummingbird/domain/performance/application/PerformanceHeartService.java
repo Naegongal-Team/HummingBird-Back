@@ -8,7 +8,9 @@ import com.negongal.hummingbird.domain.performance.domain.PerformanceHeart;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceHeartRepository;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.domain.user.domain.User;
+import com.negongal.hummingbird.global.error.exception.AlreadyExistException;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,11 +26,19 @@ public class PerformanceHeartService {
     @Transactional
     public void save(Long performanceId) {
         Long userId = 100L;   /** 토큰에서 현재 로그인 유저 id 가져오기 **/
+
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotExistException(USER_IS_NOT_EXIST));
+                .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
 
         Performance performance = performanceRepository.findById(performanceId)
-                .orElseThrow(() -> new NotExistException(PERFORMANCE_IS_NOT_EXIST));
+                .orElseThrow(() -> new NotExistException(PERFORMANCE_NOT_EXIST));
+
+        Optional<PerformanceHeart> findHeart = performanceHeartRepository
+                .findByUserAndPerformance(user, performance);
+
+        if(findHeart.isPresent()) { // 이미 하트 누른 경우
+            throw new AlreadyExistException(PERFORMANCE_HEART_ALREADY_EXIST);
+        }
 
         PerformanceHeart performanceHeart = PerformanceHeart.builder()
                 .performance(performance)
@@ -36,5 +46,22 @@ public class PerformanceHeartService {
                 .build();
 
         performanceHeartRepository.save(performanceHeart);
+    }
+
+    @Transactional
+    public void delete(Long performanceId) {
+        Long userId = 100L;   /** 토큰에서 현재 로그인 유저 id 가져오기 **/
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
+
+        Performance performance = performanceRepository.findById(performanceId)
+                .orElseThrow(() -> new NotExistException(PERFORMANCE_NOT_EXIST));
+
+        PerformanceHeart performanceHeart = performanceHeartRepository
+                .findByUserAndPerformance(user, performance)
+                .orElseThrow(() -> new NotExistException(PERFORMANCE_HEART_NOT_EXIST));
+
+        performanceHeartRepository.delete(performanceHeart);
     }
 }

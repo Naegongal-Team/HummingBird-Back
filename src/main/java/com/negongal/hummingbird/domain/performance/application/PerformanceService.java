@@ -15,7 +15,6 @@ import com.negongal.hummingbird.domain.performance.dao.PerformanceRepository;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +36,7 @@ public class PerformanceService {
     @Transactional
     public Long save(PerformanceRequestDto requestDto, String photo) {
         Artist artist = artistRepository.findByName(requestDto.getArtistName())
-                .orElseThrow(() -> new NotExistException(ARTIST_IS_NOT_EXIST));
+                .orElseThrow(() -> new NotExistException(ARTIST_NOT_EXIST));
 
         Performance performance = requestDto.toEntity(artist);
         performance.addPhoto(photo);
@@ -60,10 +59,10 @@ public class PerformanceService {
     @Transactional
     public void update(Long performanceId, PerformanceRequestDto request, String photo) {
         Performance findPerformance = performanceRepository.findById(performanceId)
-                .orElseThrow(() -> new NotExistException(PERFORMANCE_IS_NOT_EXIST));
+                .orElseThrow(() -> new NotExistException(PERFORMANCE_NOT_EXIST));
 
         Artist artist = artistRepository.findByName(request.getArtistName())
-                .orElseThrow(() -> new NotExistException(ARTIST_IS_NOT_EXIST));
+                .orElseThrow(() -> new NotExistException(ARTIST_NOT_EXIST));
 
         findPerformance.update(request.getName(), artist, request.getLocation(), request.getRuntime(), request.getDescription());
         findPerformance.addPhoto(photo);
@@ -93,7 +92,7 @@ public class PerformanceService {
 
     public PerformanceDetailDto findOne(Long performanceId) {
         Performance performance = performanceRepository.findById(performanceId)
-                .orElseThrow(() -> new NotExistException(PERFORMANCE_IS_NOT_EXIST));
+                .orElseThrow(() -> new NotExistException(PERFORMANCE_NOT_EXIST));
         return PerformanceDetailDto.of(performance);
     }
 }

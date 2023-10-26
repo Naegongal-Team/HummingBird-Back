@@ -85,8 +85,9 @@ public class PerformanceApiController {
     }
 
     @PostMapping("/{performanceId}/heart")
-    public ApiResponse<?> performanceHeartAdd(@PathVariable Long performanceId) {
-        performanceHeartService.save(performanceId);
+    public ApiResponse<?> performanceHeartAdd(@PathVariable Long performanceId, @RequestParam boolean check) {
+        if(check) performanceHeartService.save(performanceId);
+        else performanceHeartService.delete(performanceId);
         return ResponseUtils.success();
     }
 }
