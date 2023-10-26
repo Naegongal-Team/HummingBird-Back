@@ -15,14 +15,14 @@ import java.util.Map;
 @Getter
 public class CustomUserDetail implements OAuth2User {
 
-    private String oauthId;
+    private Long userId;
     private String provider;
     private String nickname;
     private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
 
-    public CustomUserDetail(String oauthId, String provider, String nickname, Collection<? extends GrantedAuthority> authorities) {
-        this.oauthId = oauthId;
+    public CustomUserDetail(Long userId, String provider, String nickname, Collection<? extends GrantedAuthority> authorities) {
+        this.userId = userId;
         this.provider=provider;
         this.nickname=nickname;
         this.authorities = authorities;
@@ -40,7 +40,7 @@ public class CustomUserDetail implements OAuth2User {
         }
 
         return new CustomUserDetail(
-                user.getOauth2Id(),
+                user.getUserId(),
                 user.getProvider(),
                 user.getNickname(),
                 authorities
@@ -65,7 +65,7 @@ public class CustomUserDetail implements OAuth2User {
 
     @Override
     public String getName() {
-        return String.valueOf(oauthId);
+        return String.valueOf(userId);
     }
 
     public void setAttributes(Map<String, Object> attributes) {

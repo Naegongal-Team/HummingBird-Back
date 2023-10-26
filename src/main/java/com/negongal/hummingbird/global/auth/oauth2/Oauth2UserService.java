@@ -27,10 +27,6 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
 
         OAuth2User oauth2User = super.loadUser(userRequest);
 
-        String userNameAttributeName = userRequest.getClientRegistration()
-                .getProviderDetails()
-                .getUserInfoEndpoint()
-                .getUserNameAttributeName();
         Oauth2UserInfo oAuth2UserInfo = null;
         Map<String, Object> userAttributes = oauth2User.getAttributes();
 
@@ -42,7 +38,6 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
             log.info("카카오 로그인 요청");
             oAuth2UserInfo = new KakaoUserInfo(userAttributes);
         }
-
 
         User user = saveOrUpdate(oAuth2UserInfo);
 
