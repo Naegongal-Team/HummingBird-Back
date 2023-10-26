@@ -10,8 +10,8 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.stereotype.Component;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
@@ -41,7 +41,7 @@ public class JwtProvider {
         this.userRepository = userRepository;
     }
 
-    public String createAccessToken(Authentication authentication) {
+    public String createAccessToken(Authentication authentication, HttpServletResponse response) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + ACCESS_TOKEN_EXPIRE_LENGTH);
 
@@ -54,16 +54,18 @@ public class JwtProvider {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
-        return Jwts.builder()
-                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
-                .setSubject(oauthId)
-                .claim(AUTHORITIES_KEY, role)
-                .claim(PROVIDER, provider)
-                .claim(NICKNAME, nickname)
-                .setIssuer("naegongal")
-                .setIssuedAt(now)
-                .setExpiration(validity)
-                .compact();
+        String accessToken = Jwts.builder()
+                                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+                                .setSubject(oauthId)
+                                .claim(AUTHORITIES_KEY, role)
+                                .claim(PROVIDER, provider)
+                                .claim(NICKNAME, nickname)
+                                .setIssuer("naegongal")
+                                .setIssuedAt(now)
+                                .setExpiration(validity)
+                                .compact();
+        response.setHeader("Authorization", accessToken);
+        return accessToken;
     }
 
     public void createRefreshToken(Authentication authentication, HttpServletResponse response) {
@@ -131,11 +133,12 @@ public class JwtProvider {
     }
 
     // Access Token 만료시 갱신때 사용할 정보를 얻기 위해 Claim 리턴
-    private Claims parseClaims(String accessToken) {
+    public Claims parseClaims(String accessToken) {
         try {
             return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(accessToken).getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
     }
+
 }

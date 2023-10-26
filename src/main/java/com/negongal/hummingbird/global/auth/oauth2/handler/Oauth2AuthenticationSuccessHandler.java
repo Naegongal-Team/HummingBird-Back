@@ -1,6 +1,6 @@
 package com.negongal.hummingbird.global.auth.oauth2.handler;
 
-import com.negongal.hummingbird.global.auth.jwt.JwtProviderV2;
+import com.negongal.hummingbird.global.auth.jwt.JwtProvider;
 import com.negongal.hummingbird.global.auth.oauth2.CustomUserDetail;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final JwtProviderV2 tokenProvider;
+    private final JwtProvider tokenProvider;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
