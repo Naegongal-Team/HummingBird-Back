@@ -49,8 +49,7 @@ public class UserController {
         return userService.findByNickname(nickname);
     }
 
-    @PostMapping( value = "/user/info",
-            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping( value = "/user/info")
     public ResponseEntity<UserDto> userNicknameAndPhotoAdd(
             @Valid @RequestPart(value = "user") UserDto saveParam,
             @RequestPart(required = false, value = "profileImage") MultipartFile profileImage, HttpServletRequest request) throws IOException {
