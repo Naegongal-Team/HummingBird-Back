@@ -1,4 +1,4 @@
-package com.negongal.hummingbird.service;
+package com.negongal.hummingbird.domain.artist.application;
 
 import com.negongal.hummingbird.domain.artist.application.ArtistService;
 import com.negongal.hummingbird.domain.artist.dto.ArtistDto;

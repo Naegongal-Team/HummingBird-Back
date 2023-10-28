@@ -1,4 +1,4 @@
-package com.negongal.hummingbird.service;
+package com.negongal.hummingbird.domain.artist.application;
 
 import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.artist.domain.ArtistHeart;
@@ -31,24 +31,6 @@ public class ArtistHeartServiceTest {
     @Autowired
     private ArtistHeartRepository artistHeartRepository;
 
-
-    @Before
-    public void artistEntitySetUp() {
-        Artist mockArtist = Artist.builder()
-                .id("1")
-                .name("Mock Popular")
-                .genres("POP")
-                .popularity(99)
-                .build();
-
-        artistRepository.save(mockArtist);
-    }
-
-    @After
-    public void clearRepository() {
-        artistHeartRepository.deleteAll();
-        artistRepository.deleteAll();
-    }
 
     @Test
     public void submitLikeTest() {

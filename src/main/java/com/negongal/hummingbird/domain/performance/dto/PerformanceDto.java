@@ -6,9 +6,11 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.negongal.hummingbird.domain.performance.domain.Performance;
 import com.querydsl.core.annotations.QueryProjection;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +30,7 @@ public class PerformanceDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime date;
 
+    @Builder
     @QueryProjection
     public PerformanceDto(Long id, String name, String artistName, String photo, LocalDateTime date) {
         this.id = id;
@@ -35,6 +38,15 @@ public class PerformanceDto {
         this.artistName = artistName;
         this.photo = photo;
         this.date = date;
+    }
+
+    public static PerformanceDto of(Performance p) {
+        return PerformanceDto.builder()
+                .id(p.getId())
+                .name(p.getName())
+                .artistName(p.getArtistName())
+                .photo(p.getPhoto())
+                .build();
     }
 
 }

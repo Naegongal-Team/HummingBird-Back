@@ -1,14 +1,21 @@
 package com.negongal.hummingbird.domain.artist.application;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
 import com.negongal.hummingbird.domain.artist.dao.TrackRepository;
+import com.negongal.hummingbird.domain.artist.dto.ArtistSearchDto;
 import com.neovisionaries.i18n.CountryCode;
 import com.wrapper.spotify.exceptions.SpotifyWebApiException;
 import com.wrapper.spotify.model_objects.specification.Artist;
 import com.wrapper.spotify.model_objects.specification.Image;
+import com.wrapper.spotify.model_objects.specification.Paging;
 import com.wrapper.spotify.model_objects.specification.Track;
 import com.wrapper.spotify.requests.data.artists.GetArtistsTopTracksRequest;
 import com.wrapper.spotify.requests.data.artists.GetSeveralArtistsRequest;
+import com.wrapper.spotify.requests.data.search.simplified.SearchArtistsRequest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.core5.http.ParseException;
@@ -59,19 +66,37 @@ public class SpotifyService {
         getArtistSpotifyTrack();
     }
 
+    public List<ArtistSearchDto> searchArtists(String artistName)
+            throws IOException, ParseException, SpotifyWebApiException {
+        SearchArtistsRequest searchArtistsRequest = spotifyApi.searchArtists(artistName)
+                .limit(10)
+                .build();
+        Paging<Artist> artistPaging = searchArtistsRequest.execute();
+
+        return Arrays.stream(artistPaging.getItems())
+                .map(artist -> ArtistSearchDto.builder()
+                        .id(artist.getId())
+                        .name(artist.getName())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
     private void getArtistSpotifyTrack() throws IOException, ParseException, SpotifyWebApiException {
         for (String artist : artistIds) {
             GetArtistsTopTracksRequest getArtistsTopTracksRequest = spotifyApi
                     .getArtistsTopTracks(artist, countryCode)
                     .build();
 
-            Stream<Track> tracks = Arrays.stream(getArtistsTopTracksRequest.execute()).limit(3);
+            Stream<Track> tracks = Arrays.stream(getArtistsTopTracksRequest.execute())
+                    .limit(3);
             convertSpotifyToCustomTrack(tracks, artist);
         }
     }
 
     private void convertSpotifyToCustomTrack(Stream<Track> spotifyTracks, String artistId) {
-        com.negongal.hummingbird.domain.artist.domain.Artist artist = artistRepository.findById(artistId).orElseThrow(NoSuchElementException::new);
+        com.negongal.hummingbird.domain.artist.domain.Artist artist = artistRepository.findById(artistId)
+                .orElseThrow(NoSuchElementException::new);
+
         spotifyTracks.forEach(track -> {
             com.negongal.hummingbird.domain.artist.domain.Track customTrack = com.negongal.hummingbird.domain.artist.domain.Track.builder()
                     .albumName(track.getAlbum().getName())
@@ -86,8 +111,10 @@ public class SpotifyService {
 
     private com.negongal.hummingbird.domain.artist.domain.Artist converSpotifyToCustomArtist(Artist spotifyArtist) {
         String spotifyArtistId = spotifyArtist.getId();
-        String spotifyArtistGenre = Arrays.stream(spotifyArtist.getGenres()).findFirst().orElseThrow(NoSuchElementException::new);
-        Image spotifyArtistImage = Arrays.stream(spotifyArtist.getImages()).findFirst().orElseThrow(NoSuchElementException::new);
+        List<String> spotifyArtistGenre = new ArrayList<>(List.of(spotifyArtist.getGenres()));
+        Image spotifyArtistImage = Arrays.stream(spotifyArtist.getImages())
+                .findFirst()
+                .orElseThrow(NoSuchElementException::new);
         String spotifyArtistUrl = spotifyArtistImage.getUrl();
 
         return com.negongal.hummingbird.domain.artist.domain.Artist.builder()

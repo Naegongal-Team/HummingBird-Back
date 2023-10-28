@@ -7,6 +7,7 @@ import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
 import com.wrapper.spotify.exceptions.detailed.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Assert;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
