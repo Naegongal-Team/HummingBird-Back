@@ -3,16 +3,16 @@ package com.negongal.hummingbird.domain.user.api;
 import com.negongal.hummingbird.domain.user.application.UserService;
 import com.negongal.hummingbird.domain.user.dto.UserDetailDto;
 import com.negongal.hummingbird.domain.user.dto.UserDto;
+import com.negongal.hummingbird.global.auth.jwt.JwtProvider;
 import com.negongal.hummingbird.global.auth.oauth2.CustomUserDetail;
+import com.negongal.hummingbird.global.common.response.ApiResponse;
+import com.negongal.hummingbird.global.common.response.ResponseUtils;
 import com.negongal.hummingbird.infra.awsS3.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,10 +31,10 @@ public class UserController {
 
 
     @GetMapping("/user/info")
-    public ResponseEntity<UserDetailDto> userDetail(@AuthenticationPrincipal CustomUserDetail userDetail) {
+    public ApiResponse<?> userDetail(@AuthenticationPrincipal CustomUserDetail userDetail) {
         Long userId = userDetail.getUserId();
         UserDetailDto user = userService.findUser(userId);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return ResponseUtils.success(user);
     }
 
     @PostMapping("/user/nickname-check")
@@ -43,8 +43,8 @@ public class UserController {
         return userService.findByNickname(nickname);
     }
 
-    @PostMapping( value = "/user/info")
-    public ResponseEntity<UserDto> userNicknameAndPhotoAdd(
+    @PostMapping(value = "/user/info")
+    public ApiResponse<?> userNicknameAndPhotoAdd(
             @Valid @RequestPart(value = "user") UserDto saveParam,
             @RequestPart(required = false, value = "profileImage") MultipartFile profileImage,
             @AuthenticationPrincipal CustomUserDetail userDetail) throws IOException {
@@ -53,11 +53,11 @@ public class UserController {
         String photoUrl = (profileImage == null) ? null : uploader.saveFile(profileImage);
         userService.addUserNicknameAndImage(userId, saveParam, photoUrl);
 
-        return new ResponseEntity<>(saveParam, HttpStatus.CREATED);
+        return ResponseUtils.success();
     }
 
     @PatchMapping("/user/info")
-    public ResponseEntity<UserDto> userNicknameAndPhotoModify(
+    public ApiResponse<?> userNicknameAndPhotoModify(
             @Valid @RequestPart(value = "user") UserDto updateParam,
             @RequestPart(required = false, value = "photo") MultipartFile photo,
             @AuthenticationPrincipal CustomUserDetail userDetail) throws IOException {
@@ -66,18 +66,18 @@ public class UserController {
         String photoUrl = (photo == null) ? null : uploader.saveFile(photo);
         userService.modifyUserNicknameAndImage(userId, updateParam, photoUrl);
 
-        return new ResponseEntity<>(updateParam, HttpStatus.OK);
+        return ResponseUtils.success();
     }
 
     @GetMapping("/user/authority")
-    public ResponseEntity<Collection<? extends GrantedAuthority>> detailAuthority(Authentication authentication) {
+    public ApiResponse<?> detailAuthority(Authentication authentication) {
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        return new ResponseEntity<>(authorities, HttpStatus.OK);
+        return ResponseUtils.success(authorities);
     }
 
     @GetMapping("/admin/info")
-    public String adminDetail() {
-        return "admin page";
+    public ApiResponse<?> adminDetail() {
+        return ResponseUtils.success();
     }
 
 }
