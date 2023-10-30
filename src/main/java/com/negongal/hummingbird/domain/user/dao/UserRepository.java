@@ -17,8 +17,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Transactional
     @Modifying
-    @Query("UPDATE User u SET u.refreshToken=:token WHERE u.oauth2Id=:id AND u.provider=:provider")
-    void updateRefreshToken(@Param("id") String id,
+    @Query("UPDATE User u SET u.refreshToken=:token WHERE u.userId=:id AND u.provider=:provider")
+    void updateRefreshToken(@Param("id") Long id,
                             @Param("provider") String provider,
                             @Param("token") String token);
 
