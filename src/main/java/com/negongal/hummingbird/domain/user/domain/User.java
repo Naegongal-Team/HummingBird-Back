@@ -18,11 +18,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-
     private String oauth2Id;
     private String nickname;
     private String provider;
-    //가져올지 말지..
     private String profileImage;
 
     @Enumerated(EnumType.STRING)
@@ -44,9 +42,8 @@ public class User {
         this.profileImage = profileImage;
     }
 
-
-    public void updateAuthority(Role role) {
-        this.role = role;
+    public void deleteRefreshToken() {
+        this.refreshToken = null;
     }
 
 }
