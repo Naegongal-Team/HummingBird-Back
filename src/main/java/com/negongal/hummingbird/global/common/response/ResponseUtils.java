@@ -1,12 +1,17 @@
 package com.negongal.hummingbird.global.common.response;
 
-import com.negongal.hummingbird.global.error.exception.HummingbirdException;
 import java.util.Map;
 
 public class ResponseUtils {
     /**
      * 성공
      */
+    public static <T>ApiResponse success() {
+        return ApiResponse.builder()
+                .status(ResponseStatus.SUCCESS)
+                .build();
+    }
+
     public static <T>ApiResponse<T> success(String key, T object) {
         return success(Map.of(key, object));
     }
