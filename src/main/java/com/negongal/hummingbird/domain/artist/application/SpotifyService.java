@@ -10,6 +10,7 @@ import com.wrapper.spotify.model_objects.specification.Artist;
 import com.wrapper.spotify.model_objects.specification.Image;
 import com.wrapper.spotify.model_objects.specification.Paging;
 import com.wrapper.spotify.model_objects.specification.Track;
+import com.wrapper.spotify.requests.data.artists.GetArtistRequest;
 import com.wrapper.spotify.requests.data.artists.GetArtistsTopTracksRequest;
 import com.wrapper.spotify.requests.data.artists.GetSeveralArtistsRequest;
 import com.wrapper.spotify.requests.data.search.simplified.SearchArtistsRequest;
@@ -79,6 +80,13 @@ public class SpotifyService {
                         .name(artist.getName())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    public void saveArtist(String artistId) throws IOException, ParseException, SpotifyWebApiException {
+        GetArtistRequest getArtistRequest = spotifyApi.getArtist(artistId).build();
+        Artist artist = getArtistRequest.execute();
+        com.negongal.hummingbird.domain.artist.domain.Artist customArtist = converSpotifyToCustomArtist(artist);
+        artistRepository.save(customArtist);
     }
 
     private void getArtistSpotifyTrack() throws IOException, ParseException, SpotifyWebApiException {
