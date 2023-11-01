@@ -4,11 +4,13 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserUpdateDto {
+public class UserDto {
 
+    @NotNull(message = "닉네임은 필수 값입니다.")
     private String nickname;
-    private String profileImage;
 
 }

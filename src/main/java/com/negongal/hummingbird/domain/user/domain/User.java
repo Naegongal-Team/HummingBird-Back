@@ -32,25 +32,23 @@ public class User {
 
     private String refreshToken;
 
-//    @Convert()
-//    private LocalDateTime createdDate;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<PerformanceHeart> performanceHeartList;
 
     @Builder //생성을 Builder 패턴으로 하기 위해서
-    public User(String oauth2Id, String nickname, String provider, Role role, LocalDateTime createdDate) {
+    public User(String oauth2Id, String nickname, String provider, Role role) {
         this.oauth2Id = oauth2Id;
         this.provider = provider;
         this.nickname = nickname;
         this.role = role;
-//        this.createdDate = createdDate;
     }
 
-    public void updateNickname(String nickname, String profileImage) {
+    public void updateNicknameAndProfileImage(String nickname, String profileImage) {
         this.nickname = nickname;
         this.profileImage = profileImage;
     }
+
 
     public void updateAuthority(Role role) {
         this.role = role;

@@ -1,6 +1,7 @@
 package com.negongal.hummingbird.global.auth.oauth2.handler;
 
-import com.negongal.hummingbird.global.auth.jwt.JwtProviderV2;
+import com.negongal.hummingbird.global.auth.jwt.JwtProvider;
+import com.negongal.hummingbird.global.auth.oauth2.CustomUserDetail;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -17,7 +18,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final JwtProviderV2 tokenProvider;
+    private final JwtProvider tokenProvider;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -26,7 +27,13 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         tokenProvider.createRefreshToken(authentication, response);
         log.info("access token={}", accessToken);
 
-        handle(request, response, authentication);
+        String targetUrl="/";
+        CustomUserDetail user = (CustomUserDetail) authentication.getPrincipal();
+        if(user.getNickname() == null) {
+            //처음 로그인하는 사용자일 경우 닉네임 설정 페이지로 이동
+            targetUrl = "/user/form";
+        }
+        getRedirectStrategy().sendRedirect(request, response, targetUrl);
         clearAuthenticationAttributes(request);
 
     }

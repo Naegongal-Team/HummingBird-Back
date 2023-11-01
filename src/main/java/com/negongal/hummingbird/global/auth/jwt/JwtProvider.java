@@ -10,8 +10,8 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.stereotype.Component;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
@@ -41,29 +41,31 @@ public class JwtProvider {
         this.userRepository = userRepository;
     }
 
-    public String createAccessToken(Authentication authentication) {
+    public String createAccessToken(Authentication authentication, HttpServletResponse response) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + ACCESS_TOKEN_EXPIRE_LENGTH);
 
         CustomUserDetail user = (CustomUserDetail) authentication.getPrincipal();
 
-        String oauthId = user.getName();
+        String userId = user.getName();
         String provider = user.getProvider();
         String nickname = user.getNickname();
         String role = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
-        return Jwts.builder()
-                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
-                .setSubject(oauthId)
-                .claim(AUTHORITIES_KEY, role)
-                .claim(PROVIDER, provider)
-                .claim(NICKNAME, nickname)
-                .setIssuer("naegongal")
-                .setIssuedAt(now)
-                .setExpiration(validity)
-                .compact();
+        String accessToken = Jwts.builder()
+                                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+                                .setSubject(userId)
+                                .claim(AUTHORITIES_KEY, role)
+                                .claim(PROVIDER, provider)
+                                .claim(NICKNAME, nickname)
+                                .setIssuer("naegongal")
+                                .setIssuedAt(now)
+                                .setExpiration(validity)
+                                .compact();
+        response.setHeader("Authorization", accessToken);
+        return accessToken;
     }
 
     public void createRefreshToken(Authentication authentication, HttpServletResponse response) {
@@ -92,11 +94,11 @@ public class JwtProvider {
 
     private void saveRefreshToken(Authentication authentication, String refreshToken) {
         CustomUserDetail user = (CustomUserDetail) authentication.getPrincipal();
-        String oauthId = user.getName();
+        String userId = user.getName();
         String provider = user.getProvider();
         log.info("provider={}", provider);
 
-        userRepository.updateRefreshToken(oauthId, provider, refreshToken);
+        userRepository.updateRefreshToken(userId, provider, refreshToken);
     }
 
     // Access Token을 검사하고 얻은 정보로 Authentication 객체 생성
@@ -108,7 +110,7 @@ public class JwtProvider {
                         .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
         CustomUserDetail principal = new CustomUserDetail(
-                claims.getSubject(),
+                Long.valueOf(claims.getSubject()),
                 String.valueOf(claims.get(PROVIDER)),
                 String.valueOf(claims.get(NICKNAME)),
                 authorities);
@@ -131,11 +133,12 @@ public class JwtProvider {
     }
 
     // Access Token 만료시 갱신때 사용할 정보를 얻기 위해 Claim 리턴
-    private Claims parseClaims(String accessToken) {
+    public Claims parseClaims(String accessToken) {
         try {
             return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(accessToken).getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
     }
+
 }
