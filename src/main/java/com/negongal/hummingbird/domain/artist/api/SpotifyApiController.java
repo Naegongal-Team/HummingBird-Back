@@ -9,9 +9,12 @@ import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.hc.core5.http.ParseException;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -26,5 +29,13 @@ public class SpotifyApiController {
             throws IOException, ParseException, SpotifyWebApiException {
         List<ArtistSearchDto> searchedArtists = spotifyService.searchArtists(artistName);
         return ResponseUtils.success(searchedArtists);
+    }
+
+    @PostMapping("/{artistId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiResponse spotifyArtistSave(@PathVariable String artistId)
+            throws IOException, ParseException, SpotifyWebApiException {
+        spotifyService.saveArtist(artistId);
+        return ResponseUtils.success("성공적으로 저장되었습니다");
     }
 }

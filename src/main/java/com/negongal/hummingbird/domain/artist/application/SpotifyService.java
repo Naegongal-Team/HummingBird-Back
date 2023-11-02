@@ -72,10 +72,19 @@ public class SpotifyService {
     }
 
     public void saveArtist(String artistId) throws IOException, ParseException, SpotifyWebApiException {
+        checkPresentArtistInRepository(artistId);
         GetArtistRequest getArtistRequest = spotifyApi.getArtist(artistId).build();
         Artist artist = getArtistRequest.execute();
         com.negongal.hummingbird.domain.artist.domain.Artist customArtist = converSpotifyToCustomArtist(artist);
         artistRepository.save(customArtist);
+    }
+
+    private void checkPresentArtistInRepository(String artistId) {
+        Optional<com.negongal.hummingbird.domain.artist.domain.Artist> searchArtist = artistRepository.findById(
+                artistId);
+        if(searchArtist.isPresent()) {
+            throw new IllegalArgumentException("이미 존재하는 사용자입니다.");
+        }
     }
 
     private void getArtistSpotifyTrack() throws IOException, ParseException, SpotifyWebApiException {
