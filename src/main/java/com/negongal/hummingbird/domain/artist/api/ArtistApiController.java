@@ -1,5 +1,6 @@
 package com.negongal.hummingbird.domain.artist.api;
 
+import com.negongal.hummingbird.domain.artist.dto.ArtistDetailDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistSearchDto;
 import com.negongal.hummingbird.domain.artist.application.ArtistService;
@@ -36,8 +37,8 @@ public class ArtistApiController {
     }
 
     @GetMapping("/{artistId}")
-    public ResponseEntity<ArtistDto> artistDetails(@PathVariable String artistId) throws NotFoundException {
-        ArtistDto artist = artistService.findArtist(artistId);
+    public ResponseEntity<ArtistDetailDto> artistDetails(@PathVariable String artistId) throws NotFoundException {
+        ArtistDetailDto artist = artistService.findArtist(artistId);
         return new ResponseEntity<>(artist, HttpStatus.OK);
     }
 

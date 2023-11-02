@@ -1,5 +1,6 @@
 package com.negongal.hummingbird.domain.artist.application;
 
+import com.negongal.hummingbird.domain.artist.dto.ArtistDetailDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistSearchDto;
 import com.negongal.hummingbird.domain.artist.domain.Artist;
@@ -47,9 +48,9 @@ public class ArtistService {
     /*
     아티스트 단건 조회
      */
-    public ArtistDto findArtist(String id) throws NotFoundException {
+    public ArtistDetailDto findArtist(String id) throws NotFoundException {
         Artist artist = artistRepository.findById(id).orElseThrow(NotFoundException::new);
-        return ArtistDto.of(artist);
+        return ArtistDetailDto.of(artist);
     }
 
 

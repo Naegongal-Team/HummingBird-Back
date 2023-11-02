@@ -1,22 +1,15 @@
 package com.negongal.hummingbird.domain.artist.application;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
-import com.negongal.hummingbird.domain.artist.dao.TrackRepository;
+import com.negongal.hummingbird.domain.artist.dao.*;
 import com.negongal.hummingbird.domain.artist.dto.ArtistSearchDto;
 import com.neovisionaries.i18n.CountryCode;
 import com.wrapper.spotify.exceptions.SpotifyWebApiException;
-import com.wrapper.spotify.model_objects.specification.Artist;
-import com.wrapper.spotify.model_objects.specification.Image;
-import com.wrapper.spotify.model_objects.specification.Paging;
-import com.wrapper.spotify.model_objects.specification.Track;
-import com.wrapper.spotify.requests.data.artists.GetArtistRequest;
-import com.wrapper.spotify.requests.data.artists.GetArtistsTopTracksRequest;
-import com.wrapper.spotify.requests.data.artists.GetSeveralArtistsRequest;
+import com.wrapper.spotify.model_objects.specification.*;
+import com.wrapper.spotify.requests.data.artists.*;
 import com.wrapper.spotify.requests.data.search.simplified.SearchArtistsRequest;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.core5.http.ParseException;
@@ -25,12 +18,8 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.NoSuchElementException;
-import java.util.stream.Stream;
 
 import static com.negongal.hummingbird.global.config.SpotifyConfig.spotifyApi;
 

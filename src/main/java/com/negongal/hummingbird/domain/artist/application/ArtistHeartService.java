@@ -22,7 +22,8 @@ public class ArtistHeartService {
 
     @Transactional
     public void save(String artistId) {
-        Artist artist = artistRepository.findById(artistId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 아티스트입니다."));
+        Artist artist = artistRepository.findById(artistId)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 아티스트입니다."));
 
         /*
         사용자가 생성될 경우 사용자와 관련된 로직 생성, 우선 그대로 저장

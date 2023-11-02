@@ -1,4 +1,4 @@
-package com.negongal.hummingbird.api.controller;
+package com.negongal.hummingbird.domain.artist.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.negongal.hummingbird.domain.artist.api.ArtistApiController;
@@ -22,9 +22,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @RunWith(SpringJUnit4ClassRunner.class)
 class ArtistApiControllerTest {
-
-    @Autowired
-    private ArtistApiController artistApiController;
 
     @Autowired
     private ArtistRepository artistRepository;
