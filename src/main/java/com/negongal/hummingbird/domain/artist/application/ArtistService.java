@@ -1,5 +1,7 @@
 package com.negongal.hummingbird.domain.artist.application;
 
+import com.negongal.hummingbird.domain.artist.dao.ArtistHeartRepository;
+import com.negongal.hummingbird.domain.artist.domain.ArtistHeart;
 import com.negongal.hummingbird.domain.artist.dto.ArtistDetailDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistSearchDto;
@@ -24,6 +26,8 @@ import java.util.stream.Collectors;
 public class ArtistService {
 
     private final ArtistRepository artistRepository;
+
+    private final ArtistHeartRepository artistHeartRepository;
 
     /*
     전체 아티스트 검색 시 Artist의 리스트를 가져온다
@@ -51,6 +55,10 @@ public class ArtistService {
     public ArtistDetailDto findArtist(String id) throws NotFoundException {
         Artist artist = artistRepository.findById(id).orElseThrow(NotFoundException::new);
         return ArtistDetailDto.of(artist);
+    }
+
+    public Page<ArtistDto> findLikeArtist(Long userId, Pageable pageable) {
+        return artistHeartRepository.findArtistsByUserId(userId, pageable).map(ArtistDto::of);
     }
 
 

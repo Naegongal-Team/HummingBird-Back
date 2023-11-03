@@ -4,6 +4,8 @@ import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.artist.domain.ArtistHeart;
 import com.negongal.hummingbird.domain.artist.dao.ArtistHeartRepository;
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
+import com.negongal.hummingbird.domain.user.dao.UserRepository;
+import com.negongal.hummingbird.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,18 +22,27 @@ public class ArtistHeartService {
 
     private final ArtistRepository artistRepository;
 
+    private final UserRepository userRepository;
+
     @Transactional
-    public void save(String artistId) {
+    public void save(Long userId, String artistId) {
         Artist artist = artistRepository.findById(artistId)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 아티스트입니다."));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저입니다."));
 
-        /*
-        사용자가 생성될 경우 사용자와 관련된 로직 생성, 우선 그대로 저장
-         */
         ArtistHeart artistHeart = ArtistHeart.builder()
                 .artist(artist)
+                .user(user)
                 .build();
 
         artistHeartRepository.save(artistHeart);
+    }
+
+    @Transactional
+    public void delete(Long userId, String artistId) {
+        ArtistHeart artistHeart = artistHeartRepository.findByUserUserIdAndArtistId(userId, artistId);
+
+        artistHeartRepository.delete(artistHeart);
     }
 }
