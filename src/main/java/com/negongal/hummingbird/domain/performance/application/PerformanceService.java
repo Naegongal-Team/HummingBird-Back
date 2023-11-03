@@ -95,4 +95,8 @@ public class PerformanceService {
                 .orElseThrow(() -> new NotExistException(PERFORMANCE_NOT_EXIST));
         return PerformanceDetailDto.of(performance);
     }
+
+    public List<PerformanceDto> findByArtist(String artistId, boolean scheduled) {
+        return performanceRepository.findByArtist(artistId, scheduled);
+    }
 }

@@ -69,7 +69,7 @@ public class PerformanceHeartService {
         performanceHeartRepository.delete(performanceHeart);
     }
 
-    public PerformancePageDto findAllByUserHeart(Pageable pageable) {
+    public PerformancePageDto findByUserHeart(Pageable pageable) {
         Long userId = 103L;   /** SecurityUtil.getCurrentUserId(); **/
 
         Page<PerformanceDto> dtoPage = performanceHeartRepository.findAllByUserHeart(pageable, userId);

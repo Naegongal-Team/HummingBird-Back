@@ -5,13 +5,17 @@ VALUES (101, 'The Vamps 내한공연', '7gAppWoH7pcYmphCVTXkzs', '서울', 90, '
 INSERT INTO Performance (id, name, artist_id, location, runtime, photo, description)
 VALUES (102, 'Peder Elias 내한공연', '56zJ6PZ3mNPBiBqglW2KxL', '대전', 90, 'photo.url', 'description');
 INSERT INTO Performance (id, name, artist_id, location, runtime, photo, description)
-VALUES (103, 'Harry Styles 내한 공연', '6KImCVD70vtIoJWnq6nGn3', '대전', 90, 'photo.url', 'description');
+VALUES (103, 'Harry Styles 내한 공연', '6KImCVD70vtIoJWnq6nGn3', '서울', 90, 'photo.url', 'description');
 INSERT INTO Performance (id, name, artist_id, location, runtime, photo, description)
 VALUES (104, '찰리 푸스 내한 공연', '6VuMaDnrHyPL1p4EHjYLi7', '대전', 90, 'photo.url', 'description');
 INSERT INTO Performance (id, name, artist_id, location, runtime, photo, description)
 VALUES (105, '샘 스미스 내한 공연', '2wY79sveU1sp5g7SokKOiI', '대전', 90, 'photo.url', 'description');
 INSERT INTO Performance (id, name, artist_id, location, runtime, photo, description)
 VALUES (106, '포스트 말론 내한 공연', '246dkjvS1zLTtiykXe5h60', '대전', 90, 'photo.url', 'description');
+INSERT INTO Performance (id, name, artist_id, location, runtime, photo, description)
+VALUES (107, 'Harry Styles 이전 내한 공연 1', '6KImCVD70vtIoJWnq6nGn3', '부산', 90, 'photo.url', 'description');
+INSERT INTO Performance (id, name, artist_id, location, runtime, photo, description)
+VALUES (108, 'Harry Styles 이전 내한 공연 2', '6KImCVD70vtIoJWnq6nGn3', '대전', 90, 'photo.url', 'description');
 
 INSERT INTO performance_date (id, performance_id, start_date)
 VALUES (100, 100, '2023-11-20 18:00');
@@ -49,6 +53,16 @@ INSERT INTO performance_date (id, performance_id, start_date)
 VALUES (112, 106, '2023-11-13 17:00');
 INSERT INTO performance_date (id, performance_id, start_date)
 VALUES (113, 106, '2023-11-14 18:00');
+
+INSERT INTO performance_date (id, performance_id, start_date)
+VALUES (115, 107, '2022-10-13 17:00');
+INSERT INTO performance_date (id, performance_id, start_date)
+VALUES (116, 107, '2022-10-13 17:00');
+
+INSERT INTO performance_date (id, performance_id, start_date)
+VALUES (117, 108, '2023-04-11 18:00');
+INSERT INTO performance_date (id, performance_id, start_date)
+VALUES (118, 108, '2023-04-12 17:00');
 
 
 INSERT INTO ticketing (id, performance_id, start_date, link, platform, ticket_type)

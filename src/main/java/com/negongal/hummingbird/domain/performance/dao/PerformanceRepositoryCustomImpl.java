@@ -7,6 +7,7 @@ import static com.negongal.hummingbird.domain.performance.domain.QTicketing.tick
 import com.negongal.hummingbird.domain.performance.dto.PerformanceDto;
 import com.negongal.hummingbird.domain.performance.dto.QPerformanceDto;
 import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,14 +24,6 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
     private static final String START_DATE = "date";
     private static final String TICKETING = "ticketing";
     private static final String HEART_COUNT = "heart";
-
-    public String getSort(Pageable pageable) {
-        if(pageable.getSort().isSorted()) {
-            Order order = pageable.getSort().stream().findAny().get();
-            return order.getProperty();
-        }
-        return START_DATE;
-    }
 
     @Override
     public Page<PerformanceDto> findAllCustom(Pageable pageable) {
@@ -51,6 +44,31 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
     public List<PerformanceDto> findSeveral(int size, String sort) {
         JPQLQuery<PerformanceDto> query = getDtoQuery(sort);
         return query.limit(size).fetch();
+    }
+
+    @Override
+    public List<PerformanceDto> findByArtist(String artistId, boolean scheduled) {
+        LocalDateTime currentDate = LocalDateTime.now();
+        return queryFactory
+                .select(new QPerformanceDto(
+                        performance.id, performance.name, performance.artist.name, performance.photo,
+                        performanceDate.startDate.min()))
+                .from(performance)
+                .innerJoin(performance.dateList, performanceDate)
+                .where(performance.artist.id.eq(artistId))
+                .groupBy(performance.id, performance.name, performance.artist.name, performance.photo)
+                .having(
+                        scheduled ? performanceDate.startDate.max().after(currentDate) :
+                                performanceDate.startDate.max().before(currentDate)
+                ).fetch();
+    }
+
+    public String getSort(Pageable pageable) {
+        if(pageable.getSort().isSorted()) {
+            Order order = pageable.getSort().stream().findAny().get();
+            return order.getProperty();
+        }
+        return START_DATE;
     }
 
     public JPQLQuery<Long> countPerformanceList(String sort) {
@@ -89,7 +107,7 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
                         performanceDate.startDate.min()))
                 .from(performance)
                 .leftJoin(performance.dateList, performanceDate)
-                .where(performanceDate.startDate.gt(currentDate)) // 현재 날짜 이후만 join
+                .where(performanceDate.startDate.goe(currentDate)) // 현재 날짜 이후만 join
                 .groupBy(performance);
     }
 
@@ -101,7 +119,7 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
                         ticketing.startDate.min()))
                 .from(performance)
                 .leftJoin(performance.ticketingList, ticketing)
-                .where(ticketing.startDate.gt(currentDate)) // 현재 날짜 이후만 join
+                .where(ticketing.startDate.goe(currentDate)) // 현재 날짜 이후만 join
                 .groupBy(performance);
     }
 

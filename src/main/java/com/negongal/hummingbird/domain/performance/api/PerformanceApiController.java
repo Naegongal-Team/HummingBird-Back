@@ -95,7 +95,14 @@ public class PerformanceApiController {
     @GetMapping("/user/heart")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<?> performanceHeartList(Pageable pageable) {
-        PerformancePageDto performancePageList = performanceHeartService.findAllByUserHeart(pageable);
+        PerformancePageDto performancePageList = performanceHeartService.findByUserHeart(pageable);
         return ResponseUtils.success(performancePageList);
+    }
+
+    @GetMapping("/artist/{artistId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<?> artistPerformanceList(@PathVariable String artistId, @RequestParam boolean scheduled) { // 예정된 공연
+        List<PerformanceDto> performanceList = performanceService.findByArtist(artistId, scheduled);
+        return ResponseUtils.success("performance_list", performanceList);
     }
 }
