@@ -44,7 +44,7 @@ public class Performance {
 
     private String description;
 
-    @OneToMany(mappedBy = "performance", orphanRemoval = true)
+    @OneToMany(mappedBy = "performance", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PerformanceHeart> performanceHeartList;
 
     @OneToMany(mappedBy = "performance", cascade = CascadeType.ALL, orphanRemoval = true)

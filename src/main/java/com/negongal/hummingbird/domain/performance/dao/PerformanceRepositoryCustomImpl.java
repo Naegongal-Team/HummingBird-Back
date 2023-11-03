@@ -20,119 +20,89 @@ import org.springframework.data.domain.Sort.Order;
 public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
+    private static final String START_DATE = "date";
+    private static final String TICKETING = "ticketing";
+    private static final String HEART_COUNT = "heart";
+
+    public String getSort(Pageable pageable) {
+        if(pageable.getSort().isSorted()) {
+            Order order = pageable.getSort().stream().findAny().get();
+            return order.getProperty();
+        }
+        return START_DATE;
+    }
 
     @Override
     public Page<PerformanceDto> findAllCustom(Pageable pageable) {
-        List<PerformanceDto> content = null;
+        long offset = pageable.getOffset();
+        int pageSize = pageable.getPageSize();
+        String sort = getSort(pageable);
 
-        Long count = -1L;
+        JPQLQuery<PerformanceDto> dtoQuery = getDtoQuery(sort);
+        Long count = countPerformanceList(sort).fetchCount();
 
-        if(pageable.getSort().isSorted()) {
-            Order order = pageable.getSort().stream().findAny().get();
-            if(order.getProperty().equals("ticketing")) {
-                content = findAllOrderByTicketingStartDate(pageable);
-                count = countTicketingPerformanceList();
-            }
-            else if(order.getProperty().equals("date")) {
-                content = findAllOrderByStartDate(pageable);
-            }
-            else if(order.getProperty().equals("heart")) { // 인기 있는 공연순 추가 예정
-                content = findAllOrderByHeart(pageable);
-            }
-        }
-        else content = findAllOrderByStartDate(pageable);
+        dtoQuery.offset(offset);
+        dtoQuery.limit(pageSize);
 
-        if(count == -1L) count = countDatePerformanceList();
-
-        return new PageImpl<>(content, pageable, count);
+        return new PageImpl<>(dtoQuery.fetch(), pageable, count);
     }
 
     @Override
     public List<PerformanceDto> findSeveral(int size, String sort) {
-        LocalDateTime currentDate = LocalDateTime.now();
-
-        JPQLQuery<PerformanceDto> query = queryFactory
-                .select(new QPerformanceDto(
-                        performance.id, performance.name, performance.artist.name, performance.photo, performanceDate.startDate.min()))
-                .from(performance)
-                .leftJoin(performance.dateList, performanceDate)
-                .where(performanceDate.startDate.gt(currentDate))
-                .groupBy(performance);
-
-        if ("heart".equals(sort)) {
-            query.orderBy(performance.performanceHeartList.size().desc());
-        } else {
-            query.orderBy(performanceDate.startDate.min().asc());
-        }
-
+        JPQLQuery<PerformanceDto> query = getDtoQuery(sort);
         return query.limit(size).fetch();
     }
 
+    public JPQLQuery<Long> countPerformanceList(String sort) {
+        JPQLQuery<PerformanceDto> dtoQuery = null;
+        if(sort.equals(TICKETING)) {
+            dtoQuery = getTicketingDtoQuery();
+        }
+        else {
+            dtoQuery = getBasicDtoQuery();
+        }
+        return dtoQuery.select(performance.count());
+    }
 
-    public List<PerformanceDto> findAllOrderByStartDate(Pageable pageable) {
+    public JPQLQuery<PerformanceDto> getDtoQuery(String sort) {
+        if(sort.equals(TICKETING)) {
+            JPQLQuery<PerformanceDto> dtoQuery = getTicketingDtoQuery();
+            dtoQuery.orderBy(ticketing.startDate.min().asc());
+            return dtoQuery;
+        }
+
+        JPQLQuery<PerformanceDto> dtoQuery = getBasicDtoQuery();
+        if (sort.equals(HEART_COUNT)) {
+            dtoQuery.orderBy(performance.performanceHeartList.size().desc());
+        }
+        else if(sort.equals(START_DATE)){
+            dtoQuery.orderBy(performanceDate.startDate.min().asc());
+        }
+        return dtoQuery;
+    }
+
+    public JPQLQuery<PerformanceDto> getBasicDtoQuery() {
         LocalDateTime currentDate = LocalDateTime.now();
         return queryFactory
                 .select(new QPerformanceDto(
-                        performance.id, performance.name, performance.artist.name, performance.photo, performanceDate.startDate.min()))
+                        performance.id, performance.name, performance.artist.name, performance.photo,
+                        performanceDate.startDate.min()))
                 .from(performance)
                 .leftJoin(performance.dateList, performanceDate)
                 .where(performanceDate.startDate.gt(currentDate)) // 현재 날짜 이후만 join
-                .groupBy(performance)
-                .orderBy(performanceDate.startDate.min().asc())
-                .offset(pageable.getOffset())   // 페이지 번호
-                .limit(pageable.getPageSize())  // 페이지 사이즈
-                .fetch();
+                .groupBy(performance);
     }
 
-    public List<PerformanceDto> findAllOrderByTicketingStartDate(Pageable pageable) {
+    public JPQLQuery<PerformanceDto> getTicketingDtoQuery() {
         LocalDateTime currentDate = LocalDateTime.now();
         return queryFactory
                 .select(new QPerformanceDto(
-                        performance.id, performance.name, performance.artist.name, performance.photo, ticketing.startDate.min()))
+                        performance.id, performance.name, performance.artist.name, performance.photo,
+                        ticketing.startDate.min()))
                 .from(performance)
                 .leftJoin(performance.ticketingList, ticketing)
                 .where(ticketing.startDate.gt(currentDate)) // 현재 날짜 이후만 join
-                .groupBy(performance)
-                .orderBy(ticketing.startDate.min().asc())
-                .offset(pageable.getOffset())   // 페이지 번호
-                .limit(pageable.getPageSize())  // 페이지 사이즈
-                .fetch();
+                .groupBy(performance);
     }
 
-    public List<PerformanceDto> findAllOrderByHeart(Pageable pageable) {
-        LocalDateTime currentDate = LocalDateTime.now();
-        return queryFactory
-                .select(new QPerformanceDto(
-                        performance.id, performance.name, performance.artist.name, performance.photo, performanceDate.startDate.min()))
-                .from(performance)
-                .leftJoin(performance.dateList, performanceDate)
-                .where(performanceDate.startDate.gt(currentDate)) // 현재 날짜 이후만 join
-                .groupBy(performance)
-                .orderBy(performance.performanceHeartList.size().desc())
-                .offset(pageable.getOffset())   // 페이지 번호
-                .limit(pageable.getPageSize())  // 페이지 사이즈
-                .fetch();
-    }
-
-    public Long countDatePerformanceList() {
-        LocalDateTime currentDate = LocalDateTime.now();
-        return queryFactory
-                .select(performance.count())
-                .from(performance)
-                .leftJoin(performance.dateList, performanceDate)
-                .where(performanceDate.startDate.gt(currentDate))
-                .groupBy(performance)
-                .fetchCount();
-    }
-
-    public Long countTicketingPerformanceList() {
-        LocalDateTime currentDate = LocalDateTime.now();
-        return queryFactory
-                .select(performance.count())
-                .from(performance)
-                .leftJoin(performance.ticketingList, ticketing)
-                .where(ticketing.startDate.gt(currentDate))
-                .groupBy(performance)
-                .fetchCount();
-    }
 }

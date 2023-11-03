@@ -26,7 +26,6 @@ public class PerformancePageDto {
     private int currPage; // 현재 페이지 번호
 
     @Builder
-
     public PerformancePageDto(List<PerformanceDto> performanceDto, int totalPages, Long totalElements, boolean isLast,
                               int currPage) {
         this.performanceDto = performanceDto;
