@@ -51,36 +51,36 @@ INSERT INTO performance_date (id, performance_id, start_date)
 VALUES (113, 106, '2023-11-14 18:00');
 
 
-INSERT INTO ticketing (id, performance_id, start_date, description, link, platform, ticket_type)
-VALUES (100, 100, '2023-10-01 20:30:00', '', 'http://m.ticket.yes24.com/Perf/46461', '예스24', 'REGULAR');
-INSERT INTO ticketing (id, performance_id, start_date, description, link, platform, ticket_type)
-VALUES (101, 100, '2023-10-02 20:30:00', '', 'https://tickets.interpark.com/', '인터파크24', 'REGULAR');
-INSERT INTO ticketing (id, performance_id, start_date, description, link, platform, ticket_type)
-VALUES (102, 100, '2023-10-28 20:30:00', '얼리버드 아티스트 선예매', 'http://m.ticket.yes24.com/Perf/46461', '예스24', 'EARLY_BIRD');
-INSERT INTO ticketing (id, performance_id, start_date, description, link, platform, ticket_type)
-VALUES (103, 100, '2023-10-30 19:00:00', '얼리버드 라네코 선예매', 'https://tickets.interpark.com/', '인터파크24', 'EARLY_BIRD');
+INSERT INTO ticketing (id, performance_id, start_date, link, platform, ticket_type)
+VALUES (100, 100, '2023-10-01 20:30:00', 'http://m.ticket.yes24.com/Perf/46461', '예스24', 'REGULAR');
+INSERT INTO ticketing (id, performance_id, start_date, link, platform, ticket_type)
+VALUES (101, 100, '2023-10-02 20:30:00', 'https://tickets.interpark.com/', '인터파크24', 'REGULAR');
+INSERT INTO ticketing (id, performance_id, start_date, link, platform, ticket_type)
+VALUES (102, 100, '2023-10-28 20:30:00', 'http://m.ticket.yes24.com/Perf/46461', '예스24', 'EARLY_BIRD');
+INSERT INTO ticketing (id, performance_id, start_date, link, platform, ticket_type)
+VALUES (103, 100, '2023-10-30 19:00:00', 'https://tickets.interpark.com/', '인터파크24', 'EARLY_BIRD');
 
-INSERT INTO ticketing (id, performance_id, start_date, description, link, platform, ticket_type)
-VALUES (104, 101, '2023-11-30 20:30:00', '', 'http://m.ticket.yes24.com/Perf/46461', '예스24', 'REGULAR');
-INSERT INTO ticketing (id, performance_id, start_date, description, link, platform, ticket_type)
-VALUES (105, 101, '2023-11-29 20:30:00', '', 'https://tickets.interpark.com/', '인터파크24', 'REGULAR');
+INSERT INTO ticketing (id, performance_id, start_date, link, platform, ticket_type)
+VALUES (104, 101, '2023-11-30 20:30:00', 'http://m.ticket.yes24.com/Perf/46461', '예스24', 'REGULAR');
+INSERT INTO ticketing (id, performance_id, start_date, link, platform, ticket_type)
+VALUES (105, 101, '2023-11-29 20:30:00', 'https://tickets.interpark.com/', '인터파크24', 'REGULAR');
 
-INSERT INTO ticketing (id, performance_id, start_date, description, link, platform, ticket_type)
-VALUES (106, 102, '2023-11-02 20:30:00', '', 'http://m.ticket.yes24.com/Perf/46461', '예스24', 'REGULAR');
-INSERT INTO ticketing (id, performance_id, start_date, description, link, platform, ticket_type)
-VALUES (107, 102, '2023-11-26 20:30:00', '얼리버드 아티스트 선예매', 'http://m.ticket.yes24.com/Perf/46461', '예스24', 'EARLY_BIRD');
+INSERT INTO ticketing (id, performance_id, start_date, link, platform, ticket_type)
+VALUES (106, 102, '2023-11-02 20:30:00', 'http://m.ticket.yes24.com/Perf/46461', '예스24', 'REGULAR');
+INSERT INTO ticketing (id, performance_id, start_date, link, platform, ticket_type)
+VALUES (107, 102, '2023-11-26 20:30:00', 'http://m.ticket.yes24.com/Perf/46461', '예스24', 'EARLY_BIRD');
 
-INSERT INTO ticketing (id, performance_id, start_date, description, link, platform, ticket_type)
-VALUES (108, 103, '2023-11-03 20:30:00', '', 'https://tickets.interpark.com/', '인터파크24', 'REGULAR');
-INSERT INTO ticketing (id, performance_id, start_date, description, link, platform, ticket_type)
-VALUES (109, 103, '2023-11-27 19:00:00', '얼리버드 라네코 선예매', 'https://tickets.interpark.com/', '인터파크24', 'EARLY_BIRD');
+INSERT INTO ticketing (id, performance_id, start_date, link, platform, ticket_type)
+VALUES (108, 103, '2023-11-03 20:30:00', 'https://tickets.interpark.com/', '인터파크24', 'REGULAR');
+INSERT INTO ticketing (id, performance_id, start_date, link, platform, ticket_type)
+VALUES (109, 103, '2023-11-27 19:00:00', 'https://tickets.interpark.com/', '인터파크24', 'EARLY_BIRD');
 
-INSERT INTO ticketing (id, performance_id, start_date, description, link, platform, ticket_type)
-VALUES (110, 104, '2023-11-11 20:30:00', '', 'https://tickets.interpark.com/', '인터파크24', 'REGULAR');
-INSERT INTO ticketing (id, performance_id, start_date, description, link, platform, ticket_type)
-VALUES (111, 105, '2023-11-07 20:30:00', '', 'https://tickets.interpark.com/', '인터파크24', 'REGULAR');
-INSERT INTO ticketing (id, performance_id, start_date, description, link, platform, ticket_type)
-VALUES (112, 106, '2023-11-21 20:30:00', '', 'https://tickets.interpark.com/', '인터파크24', 'REGULAR');
+INSERT INTO ticketing (id, performance_id, start_date, link, platform, ticket_type)
+VALUES (110, 104, '2023-11-11 20:30:00', 'https://tickets.interpark.com/', '인터파크24', 'REGULAR');
+INSERT INTO ticketing (id, performance_id, start_date, link, platform, ticket_type)
+VALUES (111, 105, '2023-11-07 20:30:00', 'https://tickets.interpark.com/', '인터파크24', 'REGULAR');
+INSERT INTO ticketing (id, performance_id, start_date, link, platform, ticket_type)
+VALUES (112, 106, '2023-11-21 20:30:00', 'https://tickets.interpark.com/', '인터파크24', 'REGULAR');
 
 INSERT INTO USERS(user_id, nickname, oauth2id, profile_image, provider, refresh_token, role)
 VALUES (100, '', '', '', '', '', 'USER');

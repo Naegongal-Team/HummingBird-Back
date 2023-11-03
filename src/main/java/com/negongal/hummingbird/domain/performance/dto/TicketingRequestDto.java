@@ -21,17 +21,14 @@ public class TicketingRequestDto {
     private LocalDateTime startDate;
     private String platform;
     private String link;
-    private String description;
 
     public Ticketing toEntity(Performance performance, TicketType ticketType) {
-        if(this.description == null) description = "";
         return Ticketing.builder()
                 .performance(performance)
                 .ticketType(ticketType)
                 .startDate(startDate)
                 .platform(platform)
                 .link(link)
-                .description(description)
                 .build();
     }
 }
