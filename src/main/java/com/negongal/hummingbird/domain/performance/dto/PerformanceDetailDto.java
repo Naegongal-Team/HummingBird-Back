@@ -38,8 +38,12 @@ public class PerformanceDetailDto {
     private List<TicketingDto> regularTicketing;
     private List<TicketingDto> earlybirdTicketing;
 
+    @JsonProperty("is_heart_pressed")
+    private boolean heartPressed;
+    private boolean past;
+
     @Builder
-    public PerformanceDetailDto(Long id, String name, String artistName, String location, Long runtime, String description,
+    public PerformanceDetailDto(Long id, String name, String artistName, String location, Long runtime, String description, boolean heartPressed,
                                 List<LocalDateTime> date, String photo, List<TicketingDto> regularTicketing, List<TicketingDto> earlybirdTicketing) {
         this.id = id;
         this.name = name;
@@ -51,9 +55,12 @@ public class PerformanceDetailDto {
         this.date = date;
         this.regularTicketing = regularTicketing;
         this.earlybirdTicketing = earlybirdTicketing;
+
+        this.past = (date.get(date.size() - 1).isBefore(LocalDateTime.now())) ? true : false;
+        this.heartPressed = heartPressed;
     }
 
-    public static PerformanceDetailDto of(Performance p) {
+    public static PerformanceDetailDto of(Performance p, boolean heartPressed) {
         List<LocalDateTime> dateList = p.getDateList().stream().map(d -> d.getStartDate()).sorted().collect(Collectors.toList());
         return PerformanceDetailDto.builder()
                 .id(p.getId())
@@ -74,6 +81,7 @@ public class PerformanceDetailDto {
                         .map(t -> TicketingDto.of(t))
                         .sorted(Comparator.comparing(TicketingDto::getDate))
                         .collect(Collectors.toList()))
+                .heartPressed(heartPressed)
                 .build();
     }
 }

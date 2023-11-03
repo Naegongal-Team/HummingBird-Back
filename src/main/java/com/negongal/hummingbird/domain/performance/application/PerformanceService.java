@@ -4,6 +4,8 @@ import static com.negongal.hummingbird.global.error.ErrorCode.*;
 
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
 import com.negongal.hummingbird.domain.artist.domain.Artist;
+import com.negongal.hummingbird.domain.performance.dao.PerformanceHeartRepository;
+import com.negongal.hummingbird.domain.performance.domain.PerformanceHeart;
 import com.negongal.hummingbird.domain.performance.dto.PerformancePageDto;
 import com.negongal.hummingbird.domain.performance.dto.PerformanceRequestDto;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceDateRepository;
@@ -12,9 +14,12 @@ import com.negongal.hummingbird.domain.performance.dto.PerformanceDetailDto;
 import com.negongal.hummingbird.domain.performance.dto.PerformanceDto;
 import com.negongal.hummingbird.domain.performance.domain.PerformanceDate;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceRepository;
+import com.negongal.hummingbird.domain.user.dao.UserRepository;
+import com.negongal.hummingbird.domain.user.domain.User;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +35,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class PerformanceService {
 
     private final PerformanceRepository performanceRepository;
+    private final PerformanceHeartRepository performanceHeartRepository;
     private final PerformanceDateRepository dateRepository;
     private final ArtistRepository artistRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public Long save(PerformanceRequestDto requestDto, String photo) {
@@ -91,9 +98,15 @@ public class PerformanceService {
     }
 
     public PerformanceDetailDto findOne(Long performanceId) {
+        Long userId = 101L;   /** SecurityUtil.getCurrentUserId(); **/
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
+
         Performance performance = performanceRepository.findById(performanceId)
                 .orElseThrow(() -> new NotExistException(PERFORMANCE_NOT_EXIST));
-        return PerformanceDetailDto.of(performance);
+
+        boolean heartPressed = performanceHeartRepository.findByUserAndPerformance(user, performance).isPresent();
+
+        return PerformanceDetailDto.of(performance, heartPressed);
     }
 
     public List<PerformanceDto> findByArtist(String artistId, boolean scheduled) {
