@@ -50,7 +50,7 @@ public class UserController {
             @AuthenticationPrincipal CustomUserDetail userDetail) throws IOException {
         Long userId = userDetail.getUserId();
 
-        String photoUrl = (profileImage == null) ? null : uploader.saveFile(profileImage);
+        String photoUrl = (profileImage == null) ? null : uploader.saveUserImage(profileImage);
         userService.addUserNicknameAndImage(userId, saveParam, photoUrl);
 
         return ResponseUtils.success();
@@ -63,7 +63,7 @@ public class UserController {
             @AuthenticationPrincipal CustomUserDetail userDetail) throws IOException {
         Long userId = userDetail.getUserId();
 
-        String photoUrl = (photo == null) ? null : uploader.saveFile(photo);
+        String photoUrl = (photo == null) ? null : uploader.saveUserImage(photo);
         userService.modifyUserNicknameAndImage(userId, updateParam, photoUrl);
 
         return ResponseUtils.success();
