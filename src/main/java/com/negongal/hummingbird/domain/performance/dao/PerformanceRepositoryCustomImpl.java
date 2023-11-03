@@ -108,7 +108,7 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
                 .from(performance)
                 .leftJoin(performance.dateList, performanceDate)
                 .where(performanceDate.startDate.goe(currentDate)) // 현재 날짜 이후만 join
-                .groupBy(performance);
+                .groupBy(performance.id, performance.name, performance.artist.name, performance.photo);
     }
 
     public JPQLQuery<PerformanceDto> getTicketingDtoQuery() {
@@ -120,7 +120,7 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
                 .from(performance)
                 .leftJoin(performance.ticketingList, ticketing)
                 .where(ticketing.startDate.goe(currentDate)) // 현재 날짜 이후만 join
-                .groupBy(performance);
+                .groupBy(performance.id, performance.name, performance.artist.name, performance.photo);
     }
 
 }
