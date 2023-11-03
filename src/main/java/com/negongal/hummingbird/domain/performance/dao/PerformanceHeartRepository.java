@@ -8,8 +8,7 @@ import java.util.logging.LoggingPermission;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface PerformanceHeartRepository extends JpaRepository<PerformanceHeart, Long> {
+public interface PerformanceHeartRepository extends JpaRepository<PerformanceHeart, Long>, PerformanceHeartRepositoryCustom {
 
-//    @Query("SELECT h FROM PerformanceHeart h WHERE h.userId = :userId AND h.performanceId = :performanceId")
     Optional<PerformanceHeart> findByUserAndPerformance(User user, Performance performance);
 }

@@ -11,16 +11,13 @@ import com.negongal.hummingbird.domain.performance.application.PerformanceHeartS
 import com.negongal.hummingbird.domain.performance.application.PerformanceService;
 import com.negongal.hummingbird.domain.performance.application.TicketingService;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,18 +59,21 @@ public class PerformanceApiController {
     }
 
     @GetMapping("/main")
+    @ResponseStatus(HttpStatus.OK)
     public ApiResponse<?> performanceList(@RequestParam("size") int size, @RequestParam("sort") String sort) {
         List<PerformanceDto> performanceList = performanceService.findSeveral(size, sort);
         return ResponseUtils.success("performance_list", performanceList);
     }
 
     @GetMapping("/{performanceId}")
+    @ResponseStatus(HttpStatus.OK)
     public ApiResponse<?> performanceDetails(@PathVariable Long performanceId) {
         PerformanceDetailDto Performance = performanceService.findOne(performanceId);
         return ResponseUtils.success(Performance);
     }
 
     @PatchMapping(value = "/{performanceId}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @ResponseStatus(HttpStatus.OK)
     public ApiResponse<?> performanceModify(
             @PathVariable Long performanceId,
             @Valid @RequestPart(value = "performance") PerformanceRequestDto requestDto,
@@ -85,9 +85,17 @@ public class PerformanceApiController {
     }
 
     @PostMapping("/{performanceId}/heart")
+    @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<?> performanceHeartAdd(@PathVariable Long performanceId, @RequestParam boolean check) {
         if(check) performanceHeartService.save(performanceId);
         else performanceHeartService.delete(performanceId);
         return ResponseUtils.success();
+    }
+
+    @GetMapping("/user/heart")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<?> performanceHeartList(Pageable pageable) {
+        PerformancePageDto performancePageList = performanceHeartService.findAllByUserHeart(pageable);
+        return ResponseUtils.success(performancePageList);
     }
 }
