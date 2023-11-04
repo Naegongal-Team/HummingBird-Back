@@ -44,7 +44,7 @@ public class PerformanceDto {
         return PerformanceDto.builder()
                 .id(p.getId())
                 .name(p.getName())
-                .artistName(p.getArtistName())
+                .artistName(p.getArtist().getName())
                 .photo(p.getPhoto())
                 .build();
     }

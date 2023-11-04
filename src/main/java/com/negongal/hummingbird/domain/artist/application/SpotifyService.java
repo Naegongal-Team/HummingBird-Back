@@ -132,7 +132,7 @@ public class SpotifyService {
         return com.negongal.hummingbird.domain.artist.domain.Artist.builder()
                 .id(spotifyArtistId)
                 .name(spotifyArtist.getName())
-                .genres(spotifyArtistGenre)
+                .genreList(spotifyArtistGenre)
                 .popularity(spotifyArtist.getPopularity())
                 .image(spotifyArtistUrl)
                 .build();

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.artist.domain.ArtistHeart;
-import com.negongal.hummingbird.domain.artist.domain.Track;
 import com.negongal.hummingbird.domain.performance.dto.PerformanceDto;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,11 +48,11 @@ public class ArtistDetailDto {
                 .id(artist.getId())
                 .name(artist.getName())
                 .image(artist.getImage())
-                .genres(artist.getGenres())
-                .topTracks(artist.getArtistTopTracks().stream()
+                .genres(artist.getGenreList())
+                .topTracks(artist.getArtistTopTrackList().stream()
                         .map(track -> TrackDto.of(track))
                         .collect(Collectors.toList()))
-                .performances(artist.getPerformances().stream()
+                .performances(artist.getPerformanceList().stream()
                         .map(performance -> PerformanceDto.of(performance))
                         .collect(Collectors.toList()))
                 .build();

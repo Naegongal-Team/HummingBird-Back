@@ -44,9 +44,9 @@ public class ArtistDto {
                 .id(artist.getId())
                 .name(artist.getName())
                 .image(artist.getImage())
-                .genres(artist.getGenres())
+                .genres(artist.getGenreList())
                 .popularity(artist.getPopularity())
-                .artistHearts(artist.getArtistHearts())
+                .artistHearts(artist.getArtistHeartList())
                 .build();
     }
 

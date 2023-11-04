@@ -25,14 +25,14 @@ public class Artist {
 
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "GENRES", joinColumns = @JoinColumn(name = "artist_id"))
-    private List<String> genres;
+    private List<String> genreList;
 
     @OneToMany(mappedBy = "artist", orphanRemoval = true)
-    private List<ArtistHeart> artistHearts;
+    private List<ArtistHeart> artistHeartList;
 
     @OneToMany(mappedBy = "artist", orphanRemoval = true)
-    private List<Track> artistTopTracks;
+    private List<Track> artistTopTrackList;
 
     @OneToMany(mappedBy = "artist")
-    private List<Performance> performances;
+    private List<Performance> performanceList;
 }
