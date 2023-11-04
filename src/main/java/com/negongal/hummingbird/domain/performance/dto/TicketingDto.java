@@ -21,14 +21,12 @@ public class TicketingDto {
     private LocalDateTime date;
     private String platform;
     private String link;
-    private String description;
 
     @Builder
-    public TicketingDto(LocalDateTime date, String platform, String link, String description) {
+    public TicketingDto(LocalDateTime date, String platform, String link) {
         this.date = date;
         this.platform = platform;
         this.link = link;
-        this.description = description;
     }
 
     public static TicketingDto of(Ticketing t) {
@@ -36,7 +34,6 @@ public class TicketingDto {
                 .date(t.getStartDate())
                 .platform(t.getPlatform())
                 .link(t.getLink())
-                .description(t.getDescription())
                 .build();
     }
 }

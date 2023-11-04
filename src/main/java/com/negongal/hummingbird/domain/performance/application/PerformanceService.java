@@ -1,5 +1,12 @@
 package com.negongal.hummingbird.domain.performance.application;
 
+import static com.negongal.hummingbird.global.error.ErrorCode.*;
+
+import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
+import com.negongal.hummingbird.domain.artist.domain.Artist;
+import com.negongal.hummingbird.domain.performance.dao.PerformanceHeartRepository;
+import com.negongal.hummingbird.domain.performance.domain.PerformanceHeart;
+import com.negongal.hummingbird.domain.performance.dto.PerformancePageDto;
 import com.negongal.hummingbird.domain.performance.dto.PerformanceRequestDto;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceDateRepository;
 import com.negongal.hummingbird.domain.performance.domain.Performance;
@@ -7,9 +14,12 @@ import com.negongal.hummingbird.domain.performance.dto.PerformanceDetailDto;
 import com.negongal.hummingbird.domain.performance.dto.PerformanceDto;
 import com.negongal.hummingbird.domain.performance.domain.PerformanceDate;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceRepository;
+import com.negongal.hummingbird.domain.user.dao.UserRepository;
+import com.negongal.hummingbird.domain.user.domain.User;
+import com.negongal.hummingbird.global.error.exception.NotExistException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,17 +35,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class PerformanceService {
 
     private final PerformanceRepository performanceRepository;
+    private final PerformanceHeartRepository performanceHeartRepository;
     private final PerformanceDateRepository dateRepository;
+    private final ArtistRepository artistRepository;
+    private final UserRepository userRepository;
 
     @Transactional
-    public Long save(PerformanceRequestDto requestDto, String photo){
+    public Long save(PerformanceRequestDto requestDto, String photo) {
+        Artist artist = artistRepository.findByName(requestDto.getArtistName())
+                .orElseThrow(() -> new NotExistException(ARTIST_NOT_EXIST));
 
-        /**
-         * Artist 조회 + 매핑 필요
-         * requestDto.getArtistName()
-         */
-
-        Performance performance = requestDto.toEntity();
+        Performance performance = requestDto.toEntity(artist);
         performance.addPhoto(photo);
         performanceRepository.save(performance);
 
@@ -56,9 +66,12 @@ public class PerformanceService {
     @Transactional
     public void update(Long performanceId, PerformanceRequestDto request, String photo) {
         Performance findPerformance = performanceRepository.findById(performanceId)
-                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 공연입니다."));
+                .orElseThrow(() -> new NotExistException(PERFORMANCE_NOT_EXIST));
 
-        findPerformance.update(request.getName(), request.getArtistName(), request.getLocation(), request.getRuntime(), request.getDescription());
+        Artist artist = artistRepository.findByName(request.getArtistName())
+                .orElseThrow(() -> new NotExistException(ARTIST_NOT_EXIST));
+
+        findPerformance.update(request.getName(), artist, request.getLocation(), request.getRuntime(), request.getDescription());
         findPerformance.addPhoto(photo);
         dateRepository.saveAll(createDate(request.getDateList(), findPerformance));
     }
@@ -66,20 +79,37 @@ public class PerformanceService {
     /**
      * 공연 조회: 공연 날짜 순 or 티켓팅 날짜 순 or 인기있는 공연 순
      */
-    public Page<PerformanceDto> findAll(Pageable pageable) {
-        return performanceRepository.findAllCustom(pageable);
+    public PerformancePageDto findAll(Pageable pageable) {
+        Page<PerformanceDto> dtoPage = performanceRepository.findAllCustom(pageable);
+        return PerformancePageDto.builder()
+                .performanceDto(dtoPage.getContent())
+                .totalPages(dtoPage.getTotalPages())
+                .totalElements(dtoPage.getTotalElements())
+                .isLast(dtoPage.isLast())
+                .currPage(dtoPage.getPageable().getPageNumber())
+                .build();
     }
 
     /**
      * 공연 조회: 메인 페이지에서 띄울 개수 제한
      */
-    public List<PerformanceDto> findSeveral(int size) {
-        return performanceRepository.findSeveral(size);
+    public List<PerformanceDto> findSeveral(int size, String sort) {
+        return performanceRepository.findSeveral(size, sort);
     }
 
     public PerformanceDetailDto findOne(Long performanceId) {
+        Long userId = 101L;   /** SecurityUtil.getCurrentUserId(); **/
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
+
         Performance performance = performanceRepository.findById(performanceId)
-                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 공연입니다."));
-        return PerformanceDetailDto.of(performance);
+                .orElseThrow(() -> new NotExistException(PERFORMANCE_NOT_EXIST));
+
+        boolean heartPressed = performanceHeartRepository.findByUserAndPerformance(user, performance).isPresent();
+
+        return PerformanceDetailDto.of(performance, heartPressed);
+    }
+
+    public List<PerformanceDto> findByArtist(String artistId, boolean scheduled) {
+        return performanceRepository.findByArtist(artistId, scheduled);
     }
 }

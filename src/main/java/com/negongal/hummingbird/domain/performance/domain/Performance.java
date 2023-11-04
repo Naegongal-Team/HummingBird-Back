@@ -29,7 +29,9 @@ public class Performance {
     @Column(nullable = false)
     private String name;
 
-    private String artistName;  /** Artist 매핑 필요 **/
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "artist_id")
+    private Artist artist;
 
     @Column(nullable = false)
     private String location;
@@ -42,8 +44,8 @@ public class Performance {
 
     private String description;
 
-    @OneToMany(mappedBy = "performance", orphanRemoval = true)
-    private List<PerformanceHeart> heartList;
+    @OneToMany(mappedBy = "performance", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PerformanceHeart> performanceHeartList;
 
     @OneToMany(mappedBy = "performance", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PerformanceDate> dateList;
@@ -56,24 +58,26 @@ public class Performance {
     private Artist artist;
 
     @Builder
-    public Performance(String name, String artistName, String location, Long runtime, String description) {
+    public Performance(String name, Artist artist, String location, Long runtime, String description) {
         this.name = name;
-        this.artistName = artistName;
+        this.artist = artist;
         this.location = location;
         this.runtime = runtime;
         this.description = description;
         this.ticketingList = new ArrayList<>();
         this.dateList = new ArrayList<>();
-        this.heartList = new ArrayList<>();
+        this.performanceHeartList = new ArrayList<>();
+
+        this.artist.getPerformanceList().add(this);
     }
 
     public void addPhoto(String photo) {
         this.photo = photo;
     }
 
-    public void update(String name, String artistName, String location, Long runtime, String description) {
+    public void update(String name, Artist artist, String location, Long runtime, String description) {
         this.name = name;
-        this.artistName = artistName;
+        this.artist = artist;
         this.location = location;
         this.runtime = runtime;
         this.description = description;
@@ -81,6 +85,7 @@ public class Performance {
         this.photo = null;
         this.ticketingList.clear();
         this.dateList.clear();
+        this.artist.getPerformanceList().add(this);
     }
 
 }

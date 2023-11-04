@@ -1,5 +1,6 @@
 package com.negongal.hummingbird.infra.awsS3;
 
+import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import java.io.IOException;
@@ -32,6 +33,14 @@ public class S3Uploader {
         }
 
         return amazonS3.getUrl(bucket, filename).toString();
+    }
+
+    public void deleteFile(String filename) throws IOException {
+        try {
+            amazonS3.deleteObject(bucket, filename);
+        } catch (SdkClientException e) {
+            throw new RuntimeException("이미지 삭제에 실패했습니다");
+        }
     }
 
     public String createFilename(String originalFilename) {

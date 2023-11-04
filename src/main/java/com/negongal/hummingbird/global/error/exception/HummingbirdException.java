@@ -6,16 +6,16 @@ import lombok.Getter;
 @Getter
 public abstract class HummingbirdException extends RuntimeException {
 
-    private final ErrorCode code;
+    private final ErrorCode errorCode;
 
-    public HummingbirdException(ErrorCode code, String message) {
-        super(code.getMessage() +  ": " + message);
-        this.code = code;
+    public HummingbirdException(ErrorCode errorCode, String message) {
+        super(errorCode.getMessage() +  ": " + message);
+        this.errorCode = errorCode;
     }
 
-    public HummingbirdException(ErrorCode code) {
-        super(code.getMessage());
-        this.code = code;
+    public HummingbirdException(ErrorCode errorCode) {
+        super(errorCode.getMessage());
+        this.errorCode = errorCode;
     }
 
     @Override

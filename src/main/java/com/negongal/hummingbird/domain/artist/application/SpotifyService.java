@@ -28,7 +28,7 @@ import se.michaelthelin.spotify.requests.data.search.simplified.SearchArtistsReq
 
 import static com.negongal.hummingbird.global.config.SpotifyConfig.spotifyApi;
 
-@PropertySource("classpath:config.properties")
+@PropertySource("classpath:config.yml")
 @DependsOn("spotifyConfig")
 @Slf4j
 @Transactional
