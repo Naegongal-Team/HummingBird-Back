@@ -16,7 +16,6 @@ public class Artist {
     @Id
     private String id;
 
-<<<<<<< HEAD
     @Column(nullable = false, unique = true)
     private String name;
 
