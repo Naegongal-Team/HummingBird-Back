@@ -7,10 +7,12 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED) @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder @Getter @ToString
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
+@Getter
+@ToString
 public class Artist {
-
     @Id
     private String id;
 
@@ -19,17 +21,18 @@ public class Artist {
 
     private String image;
 
-    private String genres;
-
     private int popularity;
 
-    @OneToMany(mappedBy = "artist")
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "GENRES", joinColumns = @JoinColumn(name = "artist_id"))
+    private List<String> genres;
+
+    @OneToMany(mappedBy = "artist", orphanRemoval = true)
     private List<ArtistHeart> artistHearts;
 
-    @OneToMany(mappedBy = "artist")
+    @OneToMany(mappedBy = "artist", orphanRemoval = true)
     private List<Track> artistTopTracks;
 
     @OneToMany(mappedBy = "artist")
-    private List<Performance> performanceList;
-
+    private List<Performance> performances;
 }

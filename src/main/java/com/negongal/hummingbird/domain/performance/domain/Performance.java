@@ -53,6 +53,10 @@ public class Performance {
     @OneToMany(mappedBy = "performance", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ticketing> ticketingList;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "artist_id")
+    private Artist artist;
+
     @Builder
     public Performance(String name, Artist artist, String location, Long runtime, String description) {
         this.name = name;

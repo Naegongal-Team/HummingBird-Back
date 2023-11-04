@@ -8,7 +8,6 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED) @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
-@ToString
 public class Track {
 
     @Id

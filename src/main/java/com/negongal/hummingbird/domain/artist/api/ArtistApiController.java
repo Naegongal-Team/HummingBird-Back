@@ -1,14 +1,18 @@
 package com.negongal.hummingbird.domain.artist.api;
 
+import com.negongal.hummingbird.domain.artist.application.ArtistHeartService;
+import com.negongal.hummingbird.domain.artist.dto.ArtistDetailDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistSearchDto;
 import com.negongal.hummingbird.domain.artist.application.ArtistService;
-import com.wrapper.spotify.exceptions.detailed.NotFoundException;
+import com.negongal.hummingbird.global.common.response.ApiResponse;
+import com.negongal.hummingbird.global.common.response.ResponseUtils;
+import com.sun.security.auth.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -21,25 +25,53 @@ public class ArtistApiController {
 
     private final ArtistService artistService;
 
+    private final ArtistHeartService artistHeartService;
+
     @GetMapping
-    public ResponseEntity<HashMap<String, Page<ArtistDto>>> artistsList(Pageable pageable) {
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<HashMap<String, Page<ArtistDto>>> artistsList(Pageable pageable) {
         Page<ArtistDto> artistList = artistService.findArtists(pageable);
         HashMap<String, Page<ArtistDto>> response = new HashMap<>();
         response.put("artist_list", artistList);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseUtils.success(response);
     }
 
     @GetMapping("/search/{artistName}")
-    public ResponseEntity<List<ArtistSearchDto>> artistByNameList(@PathVariable String artistName) {
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<List<ArtistSearchDto>> artistByNameList(@PathVariable String artistName) {
         List<ArtistSearchDto> artistSearchList = artistService.findArtistByName(artistName);
-        return new ResponseEntity<>(artistSearchList, HttpStatus.OK);
+        return ResponseUtils.success(artistSearchList);
     }
 
     @GetMapping("/{artistId}")
-    public ResponseEntity<ArtistDto> artistDetails(@PathVariable String artistId) throws NotFoundException {
-        ArtistDto artist = artistService.findArtist(artistId);
-        return new ResponseEntity<>(artist, HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<ArtistDetailDto> artistDetails(@PathVariable String artistId) {
+        ArtistDetailDto artist = artistService.findArtist(artistId);
+        return ResponseUtils.success(artist);
     }
 
+    @GetMapping("/artist/heart")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<HashMap<String, Page<ArtistDto>>> heartedArtistsList(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            Pageable pageable) {
+        Page<ArtistDto> heartedArtistList = artistService.findLikeArtist(Long.valueOf(userPrincipal.getName()),
+                pageable);
+        HashMap<String, Page<ArtistDto>> response = new HashMap<>();
+        response.put("heartedArtist_list", heartedArtistList);
+        return ResponseUtils.success(response);
+    }
 
+    @PostMapping("/{artistId}/heart")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse artistHeartAdd(@PathVariable String artistId,
+                                      @AuthenticationPrincipal UserPrincipal userPrincipal,
+                                      @RequestParam boolean isHearted) {
+        if (isHearted) {
+            artistHeartService.delete(Long.valueOf(userPrincipal.getName()), artistId);
+            return ResponseUtils.success("성공적으로 삭제되었습니다.");
+        }
+        artistHeartService.save(Long.valueOf(userPrincipal.getName()), artistId);
+        return ResponseUtils.success("성공적으로 저장되었습니다.");
+    }
 }
