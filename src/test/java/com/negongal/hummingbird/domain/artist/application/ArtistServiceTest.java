@@ -1,11 +1,16 @@
 package com.negongal.hummingbird.domain.artist.application;
 
 import com.negongal.hummingbird.domain.artist.application.ArtistService;
+import com.negongal.hummingbird.domain.artist.domain.Artist;
+import com.negongal.hummingbird.domain.artist.domain.ArtistHeart;
 import com.negongal.hummingbird.domain.artist.dto.ArtistDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistSearchDto;
 import com.negongal.hummingbird.domain.artist.dao.ArtistHeartRepository;
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
+import com.negongal.hummingbird.domain.user.dao.UserRepository;
+import com.negongal.hummingbird.domain.user.domain.User;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +37,14 @@ public class ArtistServiceTest {
     @Autowired
     private ArtistHeartRepository artistHeartRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Before
+    public void initUser() {
+        User user = User.builder().build();
+        userRepository.save(user);
+    }
 
     @Test
     public void getArtistListTest() {
@@ -48,6 +61,30 @@ public class ArtistServiceTest {
 
         Assert.assertEquals(1, artistSearchByNameList.size());
         Assert.assertEquals("ABBA", artistSearchByNameList.get(0).getName());
+    }
 
+    @Test
+    public void 좋아요한_아티스트_없을_때_리스트는_0개() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<ArtistDto> LikedArtist = artistService.findLikeArtist(1L, pageable);
+
+        Assert.assertEquals(0, LikedArtist.toList().size());
+    }
+
+    @Test
+    public void 좋아요한_아티스트_테스트() {
+        Artist artist = artistRepository.findById("4Uc8Dsxct0oMqx0P6i60ea").orElseThrow();
+        User user = userRepository.findById(1L).orElseThrow();
+        ArtistHeart artistHeart = ArtistHeart.builder()
+                .artist(artist)
+                .user(user)
+                .build();
+        artistHeartRepository.save(artistHeart);
+
+        Pageable pageable = PageRequest.of(0,10);
+        Page<ArtistDto> LikedArtist = artistService.findLikeArtist(1L, pageable);
+
+        Assert.assertEquals(1L, LikedArtist.toList().size());
+        Assert.assertEquals("Conan Gray", LikedArtist.toList().get(0).getName());
     }
 }

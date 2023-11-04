@@ -1,16 +1,14 @@
 package com.negongal.hummingbird.domain.artist.application;
 
 import com.negongal.hummingbird.domain.artist.dao.ArtistHeartRepository;
-import com.negongal.hummingbird.domain.artist.domain.ArtistHeart;
 import com.negongal.hummingbird.domain.artist.dto.ArtistDetailDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistSearchDto;
 import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
-import com.wrapper.spotify.exceptions.detailed.NotFoundException;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Assert;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -52,14 +50,15 @@ public class ArtistService {
     /*
     아티스트 단건 조회
      */
-    public ArtistDetailDto findArtist(String id) throws NotFoundException {
-        Artist artist = artistRepository.findById(id).orElseThrow(NotFoundException::new);
+    public ArtistDetailDto findArtist(String id) {
+        Artist artist = artistRepository.findById(id).orElseThrow(NoSuchElementException::new);
         return ArtistDetailDto.of(artist);
     }
 
+    /*
+    좋아요 한 아티스트들 검색
+     */
     public Page<ArtistDto> findLikeArtist(Long userId, Pageable pageable) {
         return artistHeartRepository.findArtistsByUserId(userId, pageable).map(ArtistDto::of);
     }
-
-
 }

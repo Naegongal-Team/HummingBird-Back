@@ -1,15 +1,19 @@
 package com.negongal.hummingbird.domain.artist.api;
 
+import com.negongal.hummingbird.domain.artist.application.ArtistHeartService;
 import com.negongal.hummingbird.domain.artist.dto.ArtistDetailDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistSearchDto;
 import com.negongal.hummingbird.domain.artist.application.ArtistService;
-import com.wrapper.spotify.exceptions.detailed.NotFoundException;
+import com.negongal.hummingbird.global.common.response.ApiResponse;
+import com.negongal.hummingbird.global.common.response.ResponseUtils;
+import com.sun.security.auth.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -21,6 +25,8 @@ import java.util.List;
 public class ArtistApiController {
 
     private final ArtistService artistService;
+
+    private final ArtistHeartService artistHeartService;
 
     @GetMapping
     public ResponseEntity<HashMap<String, Page<ArtistDto>>> artistsList(Pageable pageable) {
@@ -37,11 +43,20 @@ public class ArtistApiController {
     }
 
     @GetMapping("/{artistId}")
-    public ResponseEntity<ArtistDetailDto> artistDetails(@PathVariable String artistId) throws NotFoundException {
+    public ResponseEntity<ArtistDetailDto> artistDetails(@PathVariable String artistId) {
         ArtistDetailDto artist = artistService.findArtist(artistId);
         return new ResponseEntity<>(artist, HttpStatus.OK);
     }
 
-
-
+    @PostMapping("/{artistId}/heart")
+    public ApiResponse artistHeartAdd(@PathVariable String artistId,
+                                      @AuthenticationPrincipal UserPrincipal userPrincipal,
+                                      @RequestParam boolean isHearted) {
+        if (isHearted) {
+            artistHeartService.delete(Long.valueOf(userPrincipal.getName()), artistId);
+            return ResponseUtils.success("성공적으로 삭제되었습니다.");
+        }
+        artistHeartService.save(Long.valueOf(userPrincipal.getName()), artistId);
+        return ResponseUtils.success("성공적으로 저장되었습니다.");
+    }
 }

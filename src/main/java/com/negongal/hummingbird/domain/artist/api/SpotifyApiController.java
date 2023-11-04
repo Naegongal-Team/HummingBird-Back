@@ -4,18 +4,17 @@ import com.negongal.hummingbird.domain.artist.application.SpotifyService;
 import com.negongal.hummingbird.domain.artist.dto.ArtistSearchDto;
 import com.negongal.hummingbird.global.common.response.ApiResponse;
 import com.negongal.hummingbird.global.common.response.ResponseUtils;
-import com.wrapper.spotify.exceptions.SpotifyWebApiException;
+
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.hc.core5.http.ParseException;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,7 +31,6 @@ public class SpotifyApiController {
     }
 
     @PostMapping("/{artistId}")
-    @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse spotifyArtistSave(@PathVariable String artistId)
             throws IOException, ParseException, SpotifyWebApiException {
         spotifyService.saveArtist(artistId);
