@@ -43,8 +43,8 @@ public class PerformanceApiController {
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse performanceAdd(
-                @Valid @RequestPart(value = "performance") PerformanceRequestDto requestDto,
-                @RequestPart(required = false, value = "photo") MultipartFile photo) throws IOException {
+            @Valid @RequestPart(value = "performance") PerformanceRequestDto requestDto,
+            @RequestPart(required = false, value = "photo") MultipartFile photo) throws IOException {
         String photoUrl = (photo == null) ? null : uploader.saveFile(photo);
         Long performanceId = performanceService.save(requestDto, photoUrl);
         ticketService.save(performanceId, requestDto);
@@ -72,7 +72,8 @@ public class PerformanceApiController {
         return ResponseUtils.success(Performance);
     }
 
-    @PatchMapping(value = "/{performanceId}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PatchMapping(value = "/{performanceId}", consumes = {MediaType.APPLICATION_JSON_VALUE,
+            MediaType.MULTIPART_FORM_DATA_VALUE})
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<?> performanceModify(
             @PathVariable Long performanceId,
@@ -87,8 +88,11 @@ public class PerformanceApiController {
     @PostMapping("/{performanceId}/heart")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<?> performanceHeartAdd(@PathVariable Long performanceId, @RequestParam boolean check) {
-        if(check) performanceHeartService.save(performanceId);
-        else performanceHeartService.delete(performanceId);
+        if (check) {
+            performanceHeartService.save(performanceId);
+        } else {
+            performanceHeartService.delete(performanceId);
+        }
         return ResponseUtils.success();
     }
 
@@ -101,7 +105,8 @@ public class PerformanceApiController {
 
     @GetMapping("/artist/{artistId}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<?> artistPerformanceList(@PathVariable String artistId, @RequestParam boolean scheduled) { // 예정된 공연
+    public ApiResponse<?> artistPerformanceList(@PathVariable String artistId,
+                                                @RequestParam boolean scheduled) { // 예정된 공연
         List<PerformanceDto> performanceList = performanceService.findByArtist(artistId, scheduled);
         return ResponseUtils.success("performance_list", performanceList);
     }
