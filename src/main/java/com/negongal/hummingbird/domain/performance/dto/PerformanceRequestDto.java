@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.performance.domain.Performance;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,11 +39,11 @@ public class PerformanceRequestDto {
     private List<TicketingRequestDto> regularTicketing;
     private List<TicketingRequestDto> earlybirdTicketing;
 
-    public Performance toEntity() {
+    public Performance toEntity(Artist artist) {
         if(this.description == null) description = "";
         return Performance.builder()
                 .name(name)
-                .artistName(artistName)  /** Artist 매핑 필요 **/
+                .artist(artist)
                 .location(location)
                 .runtime(runtime)
                 .description(description)

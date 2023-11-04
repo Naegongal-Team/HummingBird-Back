@@ -203,4 +203,8 @@ HELP.md
 # ignore properties file
 application-aws.yml
 application-oauth2.yml
+application.yml
 config.yml
+
+src/main/resources/data.sql
+src/main/resources/application.yml

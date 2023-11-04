@@ -37,16 +37,14 @@ public class Ticketing {
 
     private String platform;
     private String link;
-    private String description;
 
     @Builder
-    public Ticketing(Performance performance, TicketType ticketType, LocalDateTime startDate, String platform, String link, String description) {
+    public Ticketing(Performance performance, TicketType ticketType, LocalDateTime startDate, String platform, String link) {
         this.performance = performance;
         this.ticketType = ticketType;
         this.startDate = startDate;
         this.platform = platform;
         this.link = link;
-        this.description = description;
 
         //==연관관계 편의 메서드==//
         performance.getTicketingList().add(this);

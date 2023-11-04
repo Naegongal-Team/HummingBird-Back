@@ -1,5 +1,6 @@
 package com.negongal.hummingbird.domain.performance.domain;
 
+import com.negongal.hummingbird.domain.user.domain.User;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -27,17 +28,16 @@ public class PerformanceHeart {
     private Performance performance;
 
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_id")
-//    private User user;
-    private Long userId; /** User 매핑 필요 **/
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Builder
-    public PerformanceHeart(Performance performance, Long userId) {
+    public PerformanceHeart(Performance performance, User user) {
         this.performance = performance;
-        this.userId = userId;
+        this.user = user;
 
-        this.performance.getHeartList().add(this);
+        this.performance.getPerformanceHeartList().add(this);
+        this.user.getPerformanceHeartList().add(this);
     }
 }
