@@ -1,5 +1,7 @@
 package com.negongal.hummingbird.domain.performance.application;
 
+import static com.negongal.hummingbird.global.error.ErrorCode.PERFORMANCE_NOT_EXIST;
+
 import com.negongal.hummingbird.domain.performance.dto.PerformanceRequestDto;
 import com.negongal.hummingbird.domain.performance.dto.TicketingRequestDto;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceRepository;
@@ -7,6 +9,7 @@ import com.negongal.hummingbird.domain.performance.dao.TicketingRepository;
 import com.negongal.hummingbird.domain.performance.domain.Performance;
 import com.negongal.hummingbird.domain.performance.domain.TicketType;
 import com.negongal.hummingbird.domain.performance.domain.Ticketing;
+import com.negongal.hummingbird.global.error.exception.NotExistException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,7 +30,7 @@ public class TicketingService {
     @Transactional
     public void save(Long performanceId, PerformanceRequestDto requestDto){
         Performance performance = performanceRepository.findById(performanceId)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 공연입니다."));
+                .orElseThrow(() -> new NotExistException(PERFORMANCE_NOT_EXIST));
 
         List<Ticketing> ticketingList = new ArrayList<>();
         if(requestDto.getRegularTicketing() != null) {
