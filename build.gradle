@@ -36,11 +36,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'junit:junit:4.13.1'
-	implementation 'se.michaelthelin.spotify:spotify-web-api-java:8.3.3'
+	implementation 'com.github.thelinmichael:spotify-web-api-java:master-SNAPSHOT'
 	implementation 'org.modelmapper:modelmapper:2.4.2'
-	// https://mvnrepository.com/artifact/org.apache.httpcomponents.client5/httpclient5
-	implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
-
 
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
@@ -97,4 +94,12 @@ compileQuerydsl {
 //Querydsl 추가, 자동 생성된 Q클래스 gradle clean으로 제거
 clean {
 	delete file(querydslDir)
+}
+
+processResources.dependsOn('copySecret')
+
+tasks.register('copySecret', Copy) {
+	from './secret-submodule' // 서브모듈 디렉토리 경로
+	include "*.yml"  // 복사할 파일들
+	into 'src/main/resources'  // 복사 위치
 }
