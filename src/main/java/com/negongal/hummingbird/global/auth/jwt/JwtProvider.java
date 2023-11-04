@@ -6,6 +6,7 @@ import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -64,7 +65,7 @@ public class JwtProvider {
                                 .setIssuedAt(now)
                                 .setExpiration(validity)
                                 .compact();
-        response.setHeader("Authorization", accessToken);
+        response.setHeader(HttpHeaders.AUTHORIZATION, accessToken);
         return accessToken;
     }
 
@@ -94,9 +95,8 @@ public class JwtProvider {
 
     private void saveRefreshToken(Authentication authentication, String refreshToken) {
         CustomUserDetail user = (CustomUserDetail) authentication.getPrincipal();
-        String userId = user.getName();
+        Long userId = user.getUserId();
         String provider = user.getProvider();
-        log.info("provider={}", provider);
 
         userRepository.updateRefreshToken(userId, provider, refreshToken);
     }

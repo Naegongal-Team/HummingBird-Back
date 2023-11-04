@@ -1,6 +1,5 @@
 package com.negongal.hummingbird.global.common.response;
 
-import com.negongal.hummingbird.global.error.exception.HummingbirdException;
 import java.util.Map;
 
 public class ResponseUtils {
