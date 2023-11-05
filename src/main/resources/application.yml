@@ -28,7 +28,7 @@ spring:
 
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:tcp://localhost/~/testdb
+    url: jdbc:h2:tcp://localhost/~/hummingbird
     username: sa
 
   # file upload max size
