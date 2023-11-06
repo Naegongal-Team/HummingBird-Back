@@ -31,7 +31,7 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
                 .select(new QPerformanceDto(
                         performance.id, performance.name, performance.artist.name, performance.photo))
                 .from(performance)
-                .where(performance.artist.name.contains(requestDto.getArtistName()))
+                .where(performance.artist.name.containsIgnoreCase(requestDto.getArtistName()))
                 .fetch();
     }
 
