@@ -30,6 +30,14 @@ public class PerformanceDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime date;
 
+    @QueryProjection
+    public PerformanceDto(Long id, String name, String artistName, String photo) {
+        this.id = id;
+        this.name = name;
+        this.artistName = artistName;
+        this.photo = photo;
+    }
+
     @Builder
     @QueryProjection
     public PerformanceDto(Long id, String name, String artistName, String photo, LocalDateTime date) {

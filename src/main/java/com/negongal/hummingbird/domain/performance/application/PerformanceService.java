@@ -14,6 +14,7 @@ import com.negongal.hummingbird.domain.performance.dto.PerformanceDetailDto;
 import com.negongal.hummingbird.domain.performance.dto.PerformanceDto;
 import com.negongal.hummingbird.domain.performance.domain.PerformanceDate;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceRepository;
+import com.negongal.hummingbird.domain.performance.dto.PerformanceSearchRequestDto;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.domain.user.domain.User;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
@@ -111,5 +112,9 @@ public class PerformanceService {
 
     public List<PerformanceDto> findByArtist(String artistId, boolean scheduled) {
         return performanceRepository.findByArtist(artistId, scheduled);
+    }
+
+    public List<PerformanceDto> search(PerformanceSearchRequestDto requestDto) {
+        return performanceRepository.search(requestDto);
     }
 }

@@ -5,9 +5,9 @@ import static com.negongal.hummingbird.domain.performance.domain.QPerformanceDat
 import static com.negongal.hummingbird.domain.performance.domain.QTicketing.ticketing;
 
 import com.negongal.hummingbird.domain.performance.dto.PerformanceDto;
+import com.negongal.hummingbird.domain.performance.dto.PerformanceSearchRequestDto;
 import com.negongal.hummingbird.domain.performance.dto.QPerformanceDto;
 import com.querydsl.jpa.JPQLQuery;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,6 +24,16 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
     private static final String START_DATE = "date";
     private static final String TICKETING = "ticketing";
     private static final String HEART_COUNT = "heart";
+
+    @Override
+    public List<PerformanceDto> search(PerformanceSearchRequestDto requestDto) {
+        return queryFactory
+                .select(new QPerformanceDto(
+                        performance.id, performance.name, performance.artist.name, performance.photo))
+                .from(performance)
+                .where(performance.artist.name.contains(requestDto.getArtistName()))
+                .fetch();
+    }
 
     @Override
     public Page<PerformanceDto> findAllCustom(Pageable pageable) {

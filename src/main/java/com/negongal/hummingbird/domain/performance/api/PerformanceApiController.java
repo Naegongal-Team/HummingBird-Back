@@ -1,6 +1,7 @@
 package com.negongal.hummingbird.domain.performance.api;
 
 import com.negongal.hummingbird.domain.performance.dto.PerformancePageDto;
+import com.negongal.hummingbird.domain.performance.dto.PerformanceSearchRequestDto;
 import com.negongal.hummingbird.global.common.response.ApiResponse;
 import com.negongal.hummingbird.global.common.response.ResponseUtils;
 import com.negongal.hummingbird.infra.awsS3.S3Uploader;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -40,7 +42,7 @@ public class PerformanceApiController {
     private final TicketingService ticketService;
     private final S3Uploader uploader;
 
-    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/admin", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse performanceAdd(
             @Valid @RequestPart(value = "performance") PerformanceRequestDto requestDto,
@@ -49,6 +51,26 @@ public class PerformanceApiController {
         Long performanceId = performanceService.save(requestDto, photoUrl);
         ticketService.save(performanceId, requestDto);
         return ResponseUtils.success();
+    }
+
+    @PatchMapping(value = "/{performanceId}/admin", consumes = {MediaType.APPLICATION_JSON_VALUE,
+            MediaType.MULTIPART_FORM_DATA_VALUE})
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<?> performanceModify(
+            @PathVariable Long performanceId,
+            @Valid @RequestPart(value = "performance") PerformanceRequestDto requestDto,
+            @RequestPart(required = false, value = "photo") MultipartFile photo) throws IOException {
+        String photoUrl = (photo == null) ? null : uploader.saveFile(photo);
+        performanceService.update(performanceId, requestDto, photoUrl);
+        ticketService.save(performanceId, requestDto);
+        return ResponseUtils.success();
+    }
+
+    @GetMapping("/{performanceId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<?> performanceDetails(@PathVariable Long performanceId) {
+        PerformanceDetailDto Performance = performanceService.findOne(performanceId);
+        return ResponseUtils.success(Performance);
     }
 
     @GetMapping
@@ -63,26 +85,6 @@ public class PerformanceApiController {
     public ApiResponse<?> performanceList(@RequestParam("size") int size, @RequestParam("sort") String sort) {
         List<PerformanceDto> performanceList = performanceService.findSeveral(size, sort);
         return ResponseUtils.success("performance_list", performanceList);
-    }
-
-    @GetMapping("/{performanceId}")
-    @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<?> performanceDetails(@PathVariable Long performanceId) {
-        PerformanceDetailDto Performance = performanceService.findOne(performanceId);
-        return ResponseUtils.success(Performance);
-    }
-
-    @PatchMapping(value = "/{performanceId}", consumes = {MediaType.APPLICATION_JSON_VALUE,
-            MediaType.MULTIPART_FORM_DATA_VALUE})
-    @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<?> performanceModify(
-            @PathVariable Long performanceId,
-            @Valid @RequestPart(value = "performance") PerformanceRequestDto requestDto,
-            @RequestPart(required = false, value = "photo") MultipartFile photo) throws IOException {
-        String photoUrl = (photo == null) ? null : uploader.saveFile(photo);
-        performanceService.update(performanceId, requestDto, photoUrl);
-        ticketService.save(performanceId, requestDto);
-        return ResponseUtils.success();
     }
 
     @PostMapping("/{performanceId}/heart")
@@ -108,6 +110,13 @@ public class PerformanceApiController {
     public ApiResponse<?> artistPerformanceList(@PathVariable String artistId,
                                                 @RequestParam boolean scheduled) { // 예정된 공연
         List<PerformanceDto> performanceList = performanceService.findByArtist(artistId, scheduled);
+        return ResponseUtils.success("performance_list", performanceList);
+    }
+
+    @GetMapping("/search")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<?> performanceSearch(@RequestBody PerformanceSearchRequestDto requestDto) {
+        List<PerformanceDto> performanceList = performanceService.search(requestDto);
         return ResponseUtils.success("performance_list", performanceList);
     }
 }
