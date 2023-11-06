@@ -1,21 +1,23 @@
 package com.negongal.hummingbird.domain.artist.application;
 
+
 import com.negongal.hummingbird.domain.artist.dao.ArtistHeartRepository;
 import com.negongal.hummingbird.domain.artist.dto.ArtistDetailDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistSearchDto;
 import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
-import java.util.NoSuchElementException;
+import com.negongal.hummingbird.global.error.exception.NotExistException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.negongal.hummingbird.global.error.ErrorCode.*;
 
 @Slf4j
 @Transactional(readOnly = true)
@@ -30,6 +32,7 @@ public class ArtistService {
     /*
     전체 아티스트 검색 시 Artist의 리스트를 가져온다
      */
+    @Transactional
     public Page<ArtistDto> findArtists(Pageable pageable) {
         return artistRepository.findAll(pageable).map(ArtistDto::of);
     }
@@ -51,7 +54,7 @@ public class ArtistService {
     아티스트 단건 조회
      */
     public ArtistDetailDto findArtist(String id) {
-        Artist artist = artistRepository.findById(id).orElseThrow(NoSuchElementException::new);
+        Artist artist = artistRepository.findById(id).orElseThrow(() -> new NotExistException(ARTIST_NOT_EXIST));
         return ArtistDetailDto.of(artist);
     }
 

@@ -11,10 +11,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ArtistDto {
     private String id;
 
@@ -22,7 +22,7 @@ public class ArtistDto {
 
     private String image;
 
-    private List<String> genres = new ArrayList<>();
+    private List<String> genres;
 
     private int popularity;
 

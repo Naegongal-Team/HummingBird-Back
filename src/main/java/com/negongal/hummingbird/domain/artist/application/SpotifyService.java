@@ -2,6 +2,8 @@ package com.negongal.hummingbird.domain.artist.application;
 
 import com.negongal.hummingbird.domain.artist.dao.*;
 import com.negongal.hummingbird.domain.artist.dto.ArtistSearchDto;
+import com.negongal.hummingbird.global.error.exception.AlreadyExistException;
+import com.negongal.hummingbird.global.error.exception.NotExistException;
 import org.apache.hc.core5.http.ParseException;
 import com.neovisionaries.i18n.CountryCode;
 import java.util.*;
@@ -17,16 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
-import se.michaelthelin.spotify.model_objects.specification.Artist;
-import se.michaelthelin.spotify.model_objects.specification.Image;
-import se.michaelthelin.spotify.model_objects.specification.Paging;
-import se.michaelthelin.spotify.model_objects.specification.Track;
-import se.michaelthelin.spotify.requests.data.artists.GetArtistRequest;
-import se.michaelthelin.spotify.requests.data.artists.GetArtistsTopTracksRequest;
-import se.michaelthelin.spotify.requests.data.artists.GetSeveralArtistsRequest;
+import se.michaelthelin.spotify.model_objects.specification.*;
+import se.michaelthelin.spotify.requests.data.artists.*;
 import se.michaelthelin.spotify.requests.data.search.simplified.SearchArtistsRequest;
 
 import static com.negongal.hummingbird.global.config.SpotifyConfig.spotifyApi;
+import static com.negongal.hummingbird.global.error.ErrorCode.*;
 
 @PropertySource("classpath:config.yml")
 @DependsOn("spotifyConfig")
@@ -37,6 +35,10 @@ import static com.negongal.hummingbird.global.config.SpotifyConfig.spotifyApi;
 public class SpotifyService {
 
     private static final CountryCode countryCode = CountryCode.KR;
+
+    private static final int ARTIST_GENRES_LIMIT = 3;
+
+    private static final int SEARCH_ARTIST_LIMIT = 10;
 
     private final ArtistRepository artistRepository;
 
@@ -59,13 +61,13 @@ public class SpotifyService {
             com.negongal.hummingbird.domain.artist.domain.Artist customArtist = converSpotifyToCustomArtist(artist);
             artistRepository.save(customArtist);
         });
-        getArtistSpotifyTrack();
+        getSeveralArtistSpotifyTrack();
     }
 
     public List<ArtistSearchDto> searchArtists(String artistName)
             throws IOException, ParseException, SpotifyWebApiException {
         SearchArtistsRequest searchArtistsRequest = spotifyApi.searchArtists(artistName)
-                .limit(10)
+                .limit(SEARCH_ARTIST_LIMIT)
                 .build();
         Paging<Artist> artistPaging = searchArtistsRequest.execute();
 
@@ -83,31 +85,36 @@ public class SpotifyService {
         Artist artist = getArtistRequest.execute();
         com.negongal.hummingbird.domain.artist.domain.Artist customArtist = converSpotifyToCustomArtist(artist);
         artistRepository.save(customArtist);
+        findTrackByArtist(artistId);
     }
 
     private void checkPresentArtistInRepository(String artistId) {
         Optional<com.negongal.hummingbird.domain.artist.domain.Artist> searchArtist = artistRepository.findById(
                 artistId);
         if (searchArtist.isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 사용자입니다.");
+            throw new AlreadyExistException(ARTIST_ALREADY_EXIST);
         }
     }
 
-    private void getArtistSpotifyTrack() throws IOException, ParseException, SpotifyWebApiException {
+    private void getSeveralArtistSpotifyTrack() throws IOException, ParseException, SpotifyWebApiException {
         for (String artist : artistIds) {
-            GetArtistsTopTracksRequest getArtistsTopTracksRequest = spotifyApi
-                    .getArtistsTopTracks(artist, countryCode)
-                    .build();
-
-            Stream<Track> tracks = Arrays.stream(getArtistsTopTracksRequest.execute())
-                    .limit(3);
-            convertSpotifyToCustomTrack(tracks, artist);
+            findTrackByArtist(artist);
         }
+    }
+
+    public void findTrackByArtist(String artist) throws IOException, SpotifyWebApiException, ParseException {
+        GetArtistsTopTracksRequest getArtistsTopTracksRequest = spotifyApi
+                .getArtistsTopTracks(artist, countryCode)
+                .build();
+
+        Stream<Track> tracks = Arrays.stream(getArtistsTopTracksRequest.execute())
+                .limit(ARTIST_GENRES_LIMIT);
+        convertSpotifyToCustomTrack(tracks, artist);
     }
 
     private void convertSpotifyToCustomTrack(Stream<Track> spotifyTracks, String artistId) {
         com.negongal.hummingbird.domain.artist.domain.Artist artist = artistRepository.findById(artistId)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new NotExistException(ARTIST_NOT_EXIST));
 
         spotifyTracks.forEach(track -> {
             com.negongal.hummingbird.domain.artist.domain.Track customTrack = com.negongal.hummingbird.domain.artist.domain.Track.builder()
@@ -126,7 +133,7 @@ public class SpotifyService {
         List<String> spotifyArtistGenre = new ArrayList<>(List.of(spotifyArtist.getGenres()));
         Image spotifyArtistImage = Arrays.stream(spotifyArtist.getImages())
                 .findFirst()
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new NotExistException(ARTIST_IMAGE_NOT_EXIST));
         String spotifyArtistUrl = spotifyArtistImage.getUrl();
 
         return com.negongal.hummingbird.domain.artist.domain.Artist.builder()
