@@ -38,10 +38,8 @@ public class SecurityConfig {
 
         http
                 .authorizeRequests()
-                .antMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**").permitAll()
-                .antMatchers("/login/**").permitAll()
-                .antMatchers("/user/**").hasRole("USER")
-                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/user/**", "/heart**").hasRole("USER")
+                .antMatchers("/admin/**", "/spotify").hasRole("ADMIN")
                 .anyRequest().permitAll();
 
         http
