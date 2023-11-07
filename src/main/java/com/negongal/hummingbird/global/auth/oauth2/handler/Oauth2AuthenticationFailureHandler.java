@@ -1,5 +1,7 @@
 package com.negongal.hummingbird.global.auth.oauth2.handler;
 
+import com.negongal.hummingbird.global.common.response.ResponseUtils;
+import com.negongal.hummingbird.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
@@ -22,7 +24,7 @@ public class Oauth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/plain;charset=UTF-8");
-        response.getWriter().write("로그인 실패!");
-        log.info("로그인에 실패했습니다. 메시지 : {}", exception.getMessage());
+        response.getWriter().write(ResponseUtils.error(ErrorCode.LOGIN_FAILED.getCode(), ErrorCode.LOGIN_FAILED.getMessage()).toString());
+        log.info("로그인에 실패했습니다.");
     }
 }

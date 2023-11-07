@@ -39,7 +39,8 @@ public class AuthService {
         String oldRefreshToken = CookieUtil.getCookie(request, cookieKey)
                 .map(Cookie::getValue).orElseThrow(() -> new NotExistException(TOKEN_NOT_FOUND));
         if (!jwtProvider.validateToken(oldRefreshToken)) {
-            throw new InvalidException(TOKEN_INVALID);
+            log.info("만료된 토큰입니다.");
+            throw new InvalidException(TOKEN_EXPIRED);
         }
 
         //만료된 access token 으로 사용자 정보 불러오기
@@ -64,6 +65,7 @@ public class AuthService {
 
     public void validateSameToken(String token, String savedRefreshToken) {
         if (!token.equals(savedRefreshToken)) {
+            log.info("저장된 토큰과 일치하지 않습니다");
             throw new NotMatchException(TOKEN_NOT_MATCHED);
         }
     }

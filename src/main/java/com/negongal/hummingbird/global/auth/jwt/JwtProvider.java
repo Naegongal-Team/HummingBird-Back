@@ -34,7 +34,6 @@ public class JwtProvider {
     private final String NICKNAME = "nickname";
     private final UserRepository userRepository;
 
-
     @Autowired
     public JwtProvider(@Value("${auth.token.secret-key}")String secretKey, @Value("${auth.token.refresh-cookie-key}")String cookieKey, UserRepository userRepository) {
         this.SECRET_KEY = Base64.getEncoder().encodeToString(secretKey.getBytes());
@@ -85,7 +84,7 @@ public class JwtProvider {
         ResponseCookie cookie = ResponseCookie.from(COOKIE_REFRESH_TOKEN_KEY, refreshToken)
                 .httpOnly(true)
                 .secure(true)
-                .sameSite("None") //Lax
+                .sameSite("None")
                 .maxAge(REFRESH_TOKEN_EXPIRE_LENGTH/1000)
                 .path("/")
                 .build();

@@ -5,15 +5,18 @@ import com.negongal.hummingbird.global.auth.oauth2.userInfo.GoogleUserInfo;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.global.auth.oauth2.userInfo.KakaoUserInfo;
 import com.negongal.hummingbird.global.auth.oauth2.userInfo.Oauth2UserInfo;
+import com.negongal.hummingbird.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Optional;
 
 
 @Slf4j
@@ -37,18 +40,20 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
         } else if(userRequest.getClientRegistration().getRegistrationId().equals("kakao")){
             log.info("카카오 로그인 요청");
             oAuth2UserInfo = new KakaoUserInfo(userAttributes);
+        } else {
+            throw new OAuth2AuthenticationException(ErrorCode.LOGIN_FAILED.toString());
         }
 
-        User user = saveOrUpdate(oAuth2UserInfo);
+        User user = save(oAuth2UserInfo);
 
         return CustomUserDetail.create(user, userAttributes);
     }
-    private User saveOrUpdate(Oauth2UserInfo oAuth2UserInfo) {
+    private User save(Oauth2UserInfo oAuth2UserInfo) {
         String oauthId = oAuth2UserInfo.getOauthId();
         String provider = oAuth2UserInfo.getProvider();
 
         User user = userRepository.findByOauth2IdAndProvider(oauthId, provider)
-                    .orElse(oAuth2UserInfo.toUser());
+                .orElse(oAuth2UserInfo.toUser());
 
         return userRepository.save(user);
     }
