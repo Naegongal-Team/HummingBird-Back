@@ -5,5 +5,5 @@ import com.negongal.hummingbird.domain.user.domain.User;
 public interface Oauth2UserInfo  {
     String getProvider();
     String getOauthId();
-    public User toUser();
+    User toUser();
 }

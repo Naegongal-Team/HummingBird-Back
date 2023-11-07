@@ -19,23 +19,24 @@ import static com.negongal.hummingbird.global.error.ErrorCode.USER_NOT_EXIST;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@Transactional
 public class UserService {
 
     private final UserRepository userRepository;
     private final S3Uploader uploader;
 
+    @Transactional
     public void addUserNicknameAndImage(Long userId, UserDto saveParam, String profileImage) {
         User findUser = userRepository.findById(userId)
                 .orElseThrow(()->new NotExistException(USER_NOT_EXIST));
         findUser.updateNicknameAndProfileImage(saveParam.getNickname(), profileImage);
     }
 
+    @Transactional
     public void modifyUserNicknameAndImage(Long userId, UserDto updateParam, String profileImage) throws IOException {
         User findUser = userRepository.findById(userId)
                 .orElseThrow(()->new NotExistException(USER_NOT_EXIST));
         String file = findUser.getProfileImage();
-        if(!file.isEmpty()){
+        if(file != null){
             uploader.deleteFile(file);
         }
         findUser.updateNicknameAndProfileImage(updateParam.getNickname(), profileImage);

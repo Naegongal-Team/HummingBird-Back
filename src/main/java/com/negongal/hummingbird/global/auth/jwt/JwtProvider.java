@@ -3,6 +3,7 @@ package com.negongal.hummingbird.global.auth.jwt;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.global.auth.oauth2.CustomUserDetail;
 import io.jsonwebtoken.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,9 +24,12 @@ import java.util.stream.Collectors;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class JwtProvider {
 
+    @Value("${auth.token.secret-key}")
     private final String SECRET_KEY;
+    @Value("${auth.token.refresh-cookie-key}")
     private final String COOKIE_REFRESH_TOKEN_KEY;
     private final Long ACCESS_TOKEN_EXPIRE_LENGTH = 1000L * 60 * 60;		// 1hour
     private final Long REFRESH_TOKEN_EXPIRE_LENGTH = 1000L * 60 * 60 * 24 * 7 * 2;	// 2week
@@ -33,14 +37,6 @@ public class JwtProvider {
     private final String PROVIDER = "provider";
     private final String NICKNAME = "nickname";
     private final UserRepository userRepository;
-
-
-    @Autowired
-    public JwtProvider(@Value("${auth.token.secret-key}")String secretKey, @Value("${auth.token.refresh-cookie-key}")String cookieKey, UserRepository userRepository) {
-        this.SECRET_KEY = Base64.getEncoder().encodeToString(secretKey.getBytes());
-        this.COOKIE_REFRESH_TOKEN_KEY = cookieKey;
-        this.userRepository = userRepository;
-    }
 
     public String createAccessToken(Authentication authentication, HttpServletResponse response) {
         Date now = new Date();
@@ -85,7 +81,7 @@ public class JwtProvider {
         ResponseCookie cookie = ResponseCookie.from(COOKIE_REFRESH_TOKEN_KEY, refreshToken)
                 .httpOnly(true)
                 .secure(true)
-                .sameSite("None") //Lax
+                .sameSite("None")
                 .maxAge(REFRESH_TOKEN_EXPIRE_LENGTH/1000)
                 .path("/")
                 .build();

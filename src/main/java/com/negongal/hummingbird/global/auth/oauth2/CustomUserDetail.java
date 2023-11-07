@@ -30,13 +30,13 @@ public class CustomUserDetail implements OAuth2User {
 
     public static CustomUserDetail create(User user) {
         List<GrantedAuthority> authorities;
-        if(user.getRole()== Role.ADMIN){
+        if(user.getRole()== Role.USER){
             authorities = Collections.
-                    singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"));
+                    singletonList(new SimpleGrantedAuthority("ROLE_USER"));
         }
         else {
             authorities = Collections.
-                    singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+                    singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"));
         }
 
         return new CustomUserDetail(

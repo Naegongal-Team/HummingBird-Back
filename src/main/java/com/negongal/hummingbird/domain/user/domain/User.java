@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
@@ -30,11 +29,10 @@ public class User {
 
     private String refreshToken;
 
-
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<PerformanceHeart> performanceHeartList;
 
-    @Builder //생성을 Builder 패턴으로 하기 위해서
+    @Builder
     public User(String oauth2Id, String nickname, String provider, Role role) {
         this.oauth2Id = oauth2Id;
         this.provider = provider;
@@ -45,10 +43,6 @@ public class User {
     public void updateNicknameAndProfileImage(String nickname, String profileImage) {
         this.nickname = nickname;
         this.profileImage = profileImage;
-    }
-
-    public void deleteRefreshToken() {
-        this.refreshToken = null;
     }
 
 }
