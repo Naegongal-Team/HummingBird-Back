@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ArtistDetailDto {
     private String id;
 
@@ -27,8 +26,6 @@ public class ArtistDetailDto {
 
     private List<TrackDto> topTracks;
 
-    private List<PerformanceDto> performances;
-
     private List<ArtistHeart> artistHearts;
 
     @Builder
@@ -38,7 +35,6 @@ public class ArtistDetailDto {
         this.name = name;
         this.image = image;
         this.genres = genres;
-        this.performances = performances;
         this.topTracks = topTracks;
         this.artistHearts = artistHearts;
     }
@@ -51,9 +47,6 @@ public class ArtistDetailDto {
                 .genres(artist.getGenreList())
                 .topTracks(artist.getArtistTopTrackList().stream()
                         .map(track -> TrackDto.of(track))
-                        .collect(Collectors.toList()))
-                .performances(artist.getPerformanceList().stream()
-                        .map(performance -> PerformanceDto.of(performance))
                         .collect(Collectors.toList()))
                 .build();
     }

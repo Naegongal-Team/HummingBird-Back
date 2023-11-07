@@ -11,8 +11,9 @@ import org.springframework.data.repository.query.Param;
 public interface ArtistHeartRepository extends JpaRepository<ArtistHeart, Long> {
 
 
-    @Query("SELECT ah.artist FROM ArtistHeart ah WHERE ah.user.userId = :userId")
+    @Query("SELECT ah.artist FROM ArtistHeart ah WHERE ah.user.userId = :userId ORDER BY ah.artist.name ASC")
     Page<Artist> findArtistsByUserId(@Param("userId") Long userId, Pageable pageable);
 
-    ArtistHeart findByUserUserIdAndArtistId(Long userId, String artistId);
+    @Query("SELECT ah FROM ArtistHeart ah WHERE ah.user.userId = :userId AND ah.artist.id = :artistId")
+    ArtistHeart findByUserIdAndArtistId(@Param("userId")Long userId, @Param("artistId") String artistId);
 }

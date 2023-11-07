@@ -23,7 +23,7 @@ public class Artist {
 
     private int popularity;
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection
     @CollectionTable(name = "GENRES", joinColumns = @JoinColumn(name = "artist_id"))
     private List<String> genreList;
 

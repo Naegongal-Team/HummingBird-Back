@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class TrackDto {
     private Long id;
 
