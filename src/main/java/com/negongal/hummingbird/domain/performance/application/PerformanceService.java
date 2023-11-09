@@ -99,15 +99,16 @@ public class PerformanceService {
     }
 
     public PerformanceDetailDto findOne(Long performanceId) {
-        Long userId = SecurityUtil.getCurrentUserId()
-                .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
-
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
-
         Performance performance = performanceRepository.findById(performanceId)
                 .orElseThrow(() -> new NotExistException(PERFORMANCE_NOT_EXIST));
 
-        boolean heartPressed = performanceHeartRepository.findByUserAndPerformance(user, performance).isPresent();
+        boolean heartPressed = false;
+
+        if(SecurityUtil.getCurrentUserId().isPresent()) {
+            Long userId = SecurityUtil.getCurrentUserId().get();
+            User user = userRepository.findById(userId).orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
+            heartPressed = performanceHeartRepository.findByUserAndPerformance(user, performance).isPresent();
+        }
 
         return PerformanceDetailDto.of(performance, heartPressed);
     }

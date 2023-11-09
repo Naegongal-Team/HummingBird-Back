@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @NoArgsConstructor
 public class SecurityUtil {
@@ -15,8 +16,15 @@ public class SecurityUtil {
         if (authentication == null) {
             return Optional.empty();
         }
-        CustomUserDetail userDetail = (CustomUserDetail) authentication.getPrincipal();
 
-        return Optional.of(userDetail.getUserId());
+        Long memberId = null;
+        if (authentication.getPrincipal() instanceof UserDetails) {
+            CustomUserDetail userDetail = (CustomUserDetail) authentication.getPrincipal();
+            memberId = userDetail.getUserId();
+        } else if (authentication.getPrincipal() instanceof Long) {
+            memberId = (Long) authentication.getPrincipal();
+        }
+
+        return Optional.ofNullable(memberId);
     }
 }
