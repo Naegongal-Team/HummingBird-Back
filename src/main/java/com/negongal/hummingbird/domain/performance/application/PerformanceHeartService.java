@@ -10,6 +10,7 @@ import com.negongal.hummingbird.domain.performance.dto.PerformanceDto;
 import com.negongal.hummingbird.domain.performance.dto.PerformancePageDto;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.domain.user.domain.User;
+import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
 import com.negongal.hummingbird.global.error.exception.AlreadyExistException;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
 import java.util.Optional;
@@ -29,7 +30,8 @@ public class PerformanceHeartService {
 
     @Transactional
     public void save(Long performanceId) {
-        Long userId = 100L;   /** 토큰에서 현재 로그인 유저 id 가져오기 **/
+        Long userId = SecurityUtil.getCurrentUserId()
+                .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
@@ -54,7 +56,8 @@ public class PerformanceHeartService {
 
     @Transactional
     public void delete(Long performanceId) {
-        Long userId = 103L;   /** 토큰에서 현재 로그인 유저 id 가져오기 **/
+        Long userId = SecurityUtil.getCurrentUserId()
+                .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
@@ -70,7 +73,8 @@ public class PerformanceHeartService {
     }
 
     public PerformancePageDto findByUserHeart(Pageable pageable) {
-        Long userId = 103L;   /** SecurityUtil.getCurrentUserId(); **/
+        Long userId = SecurityUtil.getCurrentUserId()
+                .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
 
         Page<PerformanceDto> dtoPage = performanceHeartRepository.findAllByUserHeart(pageable, userId);
         return PerformancePageDto.builder()

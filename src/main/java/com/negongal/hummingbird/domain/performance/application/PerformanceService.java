@@ -17,10 +17,10 @@ import com.negongal.hummingbird.domain.performance.dao.PerformanceRepository;
 import com.negongal.hummingbird.domain.performance.dto.PerformanceSearchRequestDto;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.domain.user.domain.User;
+import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -99,7 +99,9 @@ public class PerformanceService {
     }
 
     public PerformanceDetailDto findOne(Long performanceId) {
-        Long userId = 101L;   /** SecurityUtil.getCurrentUserId(); **/
+        Long userId = SecurityUtil.getCurrentUserId()
+                .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
+
         User user = userRepository.findById(userId).orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
 
         Performance performance = performanceRepository.findById(performanceId)
