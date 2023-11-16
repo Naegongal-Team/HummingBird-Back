@@ -28,6 +28,16 @@ public class UserApiController {
     @Value("${cloud.aws.s3.folder.folderName2}")
     private String userFolder;
 
+    @GetMapping("/login/success")
+    public ApiResponse<?> loginSuccess(@RequestParam String accessToken) {
+        return ResponseUtils.success(accessToken);
+    }
+
+    @GetMapping("/firstLogin")
+    public ApiResponse<?> firstLogin(@RequestParam String accessToken) {
+        return ResponseUtils.success(accessToken);
+    }
+
     @GetMapping("/user/info")
     public ApiResponse<?> userDetail(@AuthenticationPrincipal CustomUserDetail userDetail) {
         Long userId = userDetail.getUserId();
