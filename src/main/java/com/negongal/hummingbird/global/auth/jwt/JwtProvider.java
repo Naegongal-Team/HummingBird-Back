@@ -64,7 +64,7 @@ public class JwtProvider {
                                 .setIssuedAt(now)
                                 .setExpiration(validity)
                                 .compact();
-        response.setHeader(HttpHeaders.AUTHORIZATION, accessToken);
+//        response.setHeader(HttpHeaders.AUTHORIZATION, accessToken);
         return accessToken;
     }
 
