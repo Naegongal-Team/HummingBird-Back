@@ -46,7 +46,7 @@ public enum ErrorCode {
      * CHAT MESSAGE
      */
 
-    LOGIN_FAILED(HttpStatus.BAD_REQUEST, "C002", "LOGIN_FAILED"),
+    //LOGIN_FAILED(HttpStatus.BAD_REQUEST, "C002", "LOGIN_FAILED"),
 
     /**
      * Etc
@@ -59,10 +59,10 @@ public enum ErrorCode {
     /**
      * JWT Token
      */
-    TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "G001", "TOKEN_EXPIRED"),
+    //TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "G001", "TOKEN_EXPIRED"),
     TOKEN_UNSUPPORTED(HttpStatus.UNAUTHORIZED, "G002","TOKEN_UNSUPPORTED"),
     TOKEN_WRONG(HttpStatus.UNAUTHORIZED, "G003","TOKEN_WRONG"),
-    TOKEN_NOT_MATCHED(HttpStatus.UNAUTHORIZED, "G004","TOKEN_NOT_MATCHED"),
+    //TOKEN_NOT_MATCHED(HttpStatus.UNAUTHORIZED, "G004","TOKEN_NOT_MATCHED"),
     TOKEN_NOT_EXIST(HttpStatus.UNAUTHORIZED, "G005","TOKEN_NOT_EXIST");
 
     private final HttpStatus httpStatus;

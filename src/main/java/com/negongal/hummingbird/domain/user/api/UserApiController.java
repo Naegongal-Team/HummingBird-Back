@@ -81,10 +81,18 @@ public class UserApiController {
         return ResponseUtils.success();
     }
 
+<<<<<<< HEAD
     @PostMapping("/user/fcm-token")
     public ApiResponse postFCMToken(@RequestParam String fcmToken) {
         userService.saveFCMToken(fcmToken);
         return ResponseUtils.success(fcmToken);
+=======
+    @PostMapping("/remove")
+    public ApiResponse<?> remove(@AuthenticationPrincipal CustomUserDetail customUserDetail) {
+        UserDetailDto user = userService.findUser(customUserDetail.getUserId());
+        userService.deleteUser(user);
+        return ResponseUtils.success();
+>>>>>>> e784eb0 (feat. 회원 탈퇴 기능 추가)
     }
 
 }
