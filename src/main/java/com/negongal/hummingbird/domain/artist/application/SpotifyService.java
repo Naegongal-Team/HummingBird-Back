@@ -2,6 +2,7 @@ package com.negongal.hummingbird.domain.artist.application;
 
 import com.negongal.hummingbird.domain.artist.dao.*;
 import com.negongal.hummingbird.domain.artist.dto.ArtistSearchDto;
+import com.negongal.hummingbird.global.config.SpotifyConfig;
 import com.negongal.hummingbird.global.error.exception.AlreadyExistException;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
 import org.apache.hc.core5.http.ParseException;
@@ -66,6 +67,7 @@ public class SpotifyService {
 
     public List<ArtistSearchDto> searchArtists(String artistName)
             throws IOException, ParseException, SpotifyWebApiException {
+        SpotifyConfig.setAccessToken();
         SearchArtistsRequest searchArtistsRequest = spotifyApi.searchArtists(artistName)
                 .limit(SEARCH_ARTIST_LIMIT)
                 .build();
@@ -80,6 +82,7 @@ public class SpotifyService {
     }
 
     public void saveArtist(String artistId) throws IOException, ParseException, SpotifyWebApiException {
+        SpotifyConfig.setAccessToken();
         checkPresentArtistInRepository(artistId);
         GetArtistRequest getArtistRequest = spotifyApi.getArtist(artistId).build();
         Artist artist = getArtistRequest.execute();
