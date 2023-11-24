@@ -1,6 +1,7 @@
 package com.negongal.hummingbird.domain.performance.domain;
 
 import com.negongal.hummingbird.domain.artist.domain.Artist;
+import com.negongal.hummingbird.domain.chat.domain.ChatRoom;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -8,10 +9,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -23,7 +26,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Performance {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -52,6 +55,10 @@ public class Performance {
 
     @OneToMany(mappedBy = "performance", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ticketing> ticketingList;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "chat_room_id")
+    private ChatRoom chatRoom;
 
     @Builder
     public Performance(String name, Artist artist, String location, Long runtime, String description) {
