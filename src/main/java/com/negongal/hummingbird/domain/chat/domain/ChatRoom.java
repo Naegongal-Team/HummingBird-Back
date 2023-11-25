@@ -1,7 +1,6 @@
 package com.negongal.hummingbird.domain.chat.domain;
 
 import com.negongal.hummingbird.domain.performance.domain.Performance;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;;
 
@@ -33,4 +33,9 @@ public class ChatRoom {
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatMessage> chatMessageList;
 
+    @Builder
+    public ChatRoom(String roomId, Performance performance) {
+        this.roomId = roomId;
+        this.performance = performance;
+    }
 }
