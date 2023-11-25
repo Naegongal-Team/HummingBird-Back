@@ -1,10 +1,16 @@
 package com.negongal.hummingbird.domain.chat.view;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.negongal.hummingbird.domain.chat.domain.ChatRoom;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonInclude(Include.NON_EMPTY)
 public class ViewChatRoom {
     private Long performanceId;
     private String performanceName;

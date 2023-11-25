@@ -20,8 +20,8 @@
             </div>
         </div>
         <ul class="list-group">
-            <li class="list-group-item list-group-item-action" v-for="item in chatrooms" v-bind:key="item.roomId" v-on:click="enterRoom(item.roomId)">
-                {{item.performanceName}}
+            <li class="list-group-item list-group-item-action" v-for="item in chatrooms" v-bind:key="item.room_id" v-on:click="enterRoom(item.room_id)">
+                {{item.performance_name}}
             </li>
         </ul>
     </div>
@@ -44,11 +44,11 @@
                 findAllRoom: function() {
                     axios.get('/view/chat/room/list').then(response => { this.chatrooms = response.data; });
                 },
-                enterRoom: function(roomId) {
+                enterRoom: function(room_id) {
                     var nickname = prompt('닉네임을 입력해 주세요.');
                     localStorage.setItem('wschat.nickname',nickname);
-                    localStorage.setItem('wschat.roomId',roomId);
-                    location.href="/view/chat/room/enter/"+roomId;
+                    localStorage.setItem('wschat.room_id',room_id);
+                    location.href="/view/chat/room/enter/"+room_id;
                 }
             }
         });
