@@ -34,6 +34,7 @@ public class ChatMessageService {
                 .user(user)
                 .type(messageDto.getType())
                 .content(messageDto.getContent())
+                .sendTime(messageDto.getSendTime())
                 .build();
         chatMessageRepository.save(chatMessage);
 

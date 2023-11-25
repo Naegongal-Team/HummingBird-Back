@@ -30,7 +30,7 @@
     </div>
     <ul class="list-group">
         <li class="list-group-item" v-for="message in messages">
-            {{message.nickname}} - {{message.message}}</a>
+            {{message.nickname}} - {{message.message}}</a>  {{message.sendTime}}
         </li>
     </ul>
     <div></div>
@@ -41,6 +41,7 @@
 <script src="/webjars/bootstrap/4.3.1/dist/js/bootstrap.min.js"></script>
 <script src="/webjars/sockjs-client/1.1.2/sockjs.min.js"></script>
 <script src="/webjars/stomp-websocket/2.3.3-1/stomp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.7/dayjs.min.js"></script>
 <script>
         // websocket & stomp initialize
         var sock = new SockJS("/ws/chat");
@@ -65,11 +66,11 @@
                     axios.get('/view/chat/room/'+this.roomId).then(response => { this.room = response.data; });
                 },
                 sendMessage: function() {
-                    ws.send("/pub/chat/message", {}, JSON.stringify({type:'TALK', roomId:this.roomId, nickname:this.nickname, content:this.message}));
+                    ws.send("/pub/view/chat/message", {}, JSON.stringify({type:'TALK', roomId:this.roomId, nickname:this.nickname, content:this.message, sendTime: dayjs().format('YYYY-MM-DD HH:mm:ss')}));
                     this.message = '';
                 },
                 recvMessage: function(recv) {
-                    this.messages.unshift({"type":recv.type,"nickname":recv.type=='ENTER'?'[알림]':recv.nickname,"message":recv.content})
+                    this.messages.unshift({"type":recv.type,"nickname":recv.type=='ENTER'?'[알림]':recv.nickname,"message":recv.content, "sendTime":recv.sendTime})
                 }
             }
         });
@@ -79,7 +80,7 @@
                 var recv = JSON.parse(message.body);
                 vm.recvMessage(recv);
             });
-            ws.send("/pub/chat/message", {}, JSON.stringify({type:'ENTER', roomId:vm.$data.roomId, nickname:vm.$data.nickname}));
+            ws.send("/pub/view/chat/message", {}, JSON.stringify({type:'ENTER', roomId:vm.$data.roomId, nickname:vm.$data.nickname, sendTime: dayjs().format('YYYY-MM-DD HH:mm:ss')}));
         }, function(error) {
             alert("error "+error);
         });

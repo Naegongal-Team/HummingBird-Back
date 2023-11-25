@@ -97,15 +97,15 @@ INSERT INTO ticketing (id, performance_id, start_date, link, platform, ticket_ty
 VALUES (112, 106, '2023-11-21 20:30:00', 'https://tickets.interpark.com/', '인터파크24', 'REGULAR');
 
 INSERT INTO USERS(user_id, nickname, oauth2id, profile_image, provider, refresh_token, role)
-VALUES (100, '', '', '', '', '', 'USER');
+VALUES (100, 'testname 1', '', '', '', '', 'USER');
 INSERT INTO USERS(user_id, nickname, oauth2id, profile_image, provider, refresh_token, role)
-VALUES (101, '', '', '', '', '', 'USER');
+VALUES (101, 'testname 2', '', '', '', '', 'USER');
 INSERT INTO USERS(user_id, nickname, oauth2id, profile_image, provider, refresh_token, role)
-VALUES (102, '', '', '', '', '', 'USER');
+VALUES (102, 'test', '', '', '', '', 'USER');
 INSERT INTO USERS(user_id, nickname, oauth2id, profile_image, provider, refresh_token, role)
-VALUES (103, '', '', '', '', '', 'USER');
+VALUES (103, 'tt', '', '', '', '', 'USER');
 INSERT INTO USERS(user_id, nickname, oauth2id, profile_image, provider, refresh_token, role)
-VALUES (104, '', '', '', '', '', 'USER');
+VALUES (104, 'qq', '', '', '', '', 'USER');
 
 INSERT INTO performance_heart (id, user_id, performance_id)
 VALUES (100, 100, 101);

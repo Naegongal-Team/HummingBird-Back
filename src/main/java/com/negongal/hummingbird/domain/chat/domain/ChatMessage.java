@@ -41,15 +41,15 @@ public class ChatMessage {
     @Column(nullable = false)
     private String content;
 
-    @CreatedDate
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createDate;
+    private LocalDateTime sendTime;
 
     @Builder
-    public ChatMessage(MessageType type, ChatRoom chatRoom, User user, String content) {
+    public ChatMessage(MessageType type, ChatRoom chatRoom, User user, String content, LocalDateTime sendTime) {
         this.chatRoom = chatRoom;
         this.user = user;
         this.type = type;
         this.content = content;
+        this.sendTime = sendTime;
     }
 }
