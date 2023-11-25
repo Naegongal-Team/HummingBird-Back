@@ -35,13 +35,12 @@ public class SpotifyConfig {
         setAccessToken();
     }
 
-    private void setAccessToken() throws IOException, ParseException, SpotifyWebApiException {
-        final ClientCredentialsRequest clientCredentialsRequest = spotifyApi.clientCredentials().build();
+    public static void setAccessToken() throws IOException, ParseException, SpotifyWebApiException {
+        ClientCredentialsRequest clientCredentialsRequest = spotifyApi.clientCredentials().build();
+        ClientCredentials clientCredentials = clientCredentialsRequest.execute();
+        spotifyApi.setAccessToken(clientCredentials.getAccessToken());
 
-            final ClientCredentials clientCredentials = clientCredentialsRequest.execute();
-            spotifyApi.setAccessToken(clientCredentials.getAccessToken());
-
-            log.info("Expires in: {}", clientCredentials.getExpiresIn());
+        log.info("Expires in: {}", clientCredentials.getExpiresIn());
     }
 
     @Bean
