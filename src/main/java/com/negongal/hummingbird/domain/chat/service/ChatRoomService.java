@@ -6,15 +6,12 @@ import com.negongal.hummingbird.domain.chat.dao.ChatRoomRepository;
 import com.negongal.hummingbird.domain.chat.dao.RedisRepository;
 import com.negongal.hummingbird.domain.chat.domain.ChatRoom;
 import com.negongal.hummingbird.domain.chat.dto.ChatRoomDto;
-import com.negongal.hummingbird.domain.chat.view.ViewChatRoom;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceRepository;
 import com.negongal.hummingbird.domain.performance.domain.Performance;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
 import com.negongal.hummingbird.global.common.pubsub.RedisSubscriber;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +40,6 @@ public class ChatRoomService {
      * 채팅방 생성
      */
     public String createChatRoom(Long performanceId) {
-        log.info("createChatRoom {}", performanceId);
         Performance performance = performanceRepository.findById(performanceId)
                 .orElseThrow(() -> new NotExistException(PERFORMANCE_NOT_EXIST));
 
@@ -76,26 +72,5 @@ public class ChatRoomService {
 
     public ChannelTopic getTopic(String roomId) {
         return topics.get(roomId);
-    }
-
-
-    /**
-     * 채팅 view 테스트 용
-     */
-    public void createRoomAll() {
-        List<Performance> all = performanceRepository.findAll();
-        for(Performance p : all) {
-            createChatRoom(p.getId());
-        }
-    }
-
-    public List<ViewChatRoom> findAllRoom() {
-        List<ChatRoom> chatRooms = chatRoomRepository.findAll();
-       return chatRooms.stream().map(s -> ViewChatRoom.of(s)).collect(Collectors.toList());
-    }
-
-    public ViewChatRoom findByRoomId(String roomId) {
-        ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId);
-        return ViewChatRoom.of(chatRoom);
     }
 }
