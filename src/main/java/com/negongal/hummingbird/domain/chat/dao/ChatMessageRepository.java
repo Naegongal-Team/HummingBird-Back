@@ -10,6 +10,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> {
 
-    @Query("SELECT cm FROM ChatMessage cm WHERE cm.chatRoom.id = :id ORDER BY cm.sendTime DESC")
+    @Query("SELECT cm FROM ChatMessage cm WHERE cm.chatRoom.id = :id ORDER BY cm.sendTime ASC")
     List<ChatMessage> findByIdOrderBySendTimeAsc(@Param("id") Long id);
+
+    @Query("SELECT cm FROM ChatMessage cm WHERE cm.chatRoom.id = :id ORDER BY cm.sendTime DESC")
+    List<ChatMessage> findByIdOrderBySendTimeDESC(@Param("id") Long id);
 }
