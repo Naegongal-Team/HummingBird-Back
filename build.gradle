@@ -64,8 +64,8 @@ dependencies {
 	implementation("org.springframework.security:spring-security-test")
 	//jwt
 	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
-
-
+	//websocket
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 }
 
 allprojects {

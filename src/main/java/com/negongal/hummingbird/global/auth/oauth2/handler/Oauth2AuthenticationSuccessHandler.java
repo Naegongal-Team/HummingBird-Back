@@ -27,15 +27,13 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         tokenProvider.createRefreshToken(authentication, response);
         log.info("access token={}", accessToken);
 
-        String targetUrl="http://localhost:3000/login/success?accessToken=" + accessToken;
+        String targetUrl="/";
         CustomUserDetail user = (CustomUserDetail) authentication.getPrincipal();
-
         if(user.getNickname() == null) {
-            //처음 로그인하는 사용자
-            targetUrl = "http://localhost:3000/firstLogin?accessToken=" + accessToken;
+            //처음 로그인하는 사용자일 경우 닉네임 설정 페이지로 이동
+            targetUrl = "/user/form";
         }
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
-
         clearAuthenticationAttributes(request);
 
     }
