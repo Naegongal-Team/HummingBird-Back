@@ -57,6 +57,10 @@ dependencies {
 		exclude group: 'org.slf4j', module: 'slf4j-simple'
 	}
 
+	//자바 역직렬화 문제 해결 패키지
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+
 	//Querydsl 추가
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 	annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"

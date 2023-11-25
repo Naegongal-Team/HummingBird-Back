@@ -1,4 +1,4 @@
-package com.negongal.hummingbird.domain.chat.api;
+package com.negongal.hummingbird.domain.chat.view;
 
 import com.negongal.hummingbird.domain.chat.domain.MessageType;
 import com.negongal.hummingbird.domain.chat.dto.ChatMessageDto;
@@ -13,21 +13,18 @@ import org.springframework.stereotype.Controller;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class ChatMessageController {
-
+public class ViewChatMessageController {
     private final RedisPublisher redisPublisher;
     private final ChatRoomService chatRoomService;
     private final ChatMessageService chatMessageService;
 
-    @MessageMapping("/chat/message")
-    public void message(ChatMessageDto message) {
+    @MessageMapping("/view/chat/message")
+    public void viewMessage(ChatMessageDto message) {
         if(message.getType().equals(MessageType.ENTER)) {
+            message.setEnterMessage();
             chatRoomService.enterChatRoom(message.getRoomId());
         }
-        else {
-            chatMessageService.saveMessage(message);
-            redisPublisher.publish(chatRoomService.getTopic(message.getRoomId()), message);
-        }
+        chatMessageService.saveMessage(message);
+        redisPublisher.publish(chatRoomService.getTopic(message.getRoomId()), message);
     }
-
 }
