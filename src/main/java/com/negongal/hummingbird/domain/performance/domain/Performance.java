@@ -56,8 +56,7 @@ public class Performance {
     @OneToMany(mappedBy = "performance", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ticketing> ticketingList;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "chat_room_id")
+    @OneToOne(mappedBy = "performance", cascade = CascadeType.ALL, orphanRemoval = true)
     private ChatRoom chatRoom;
 
     @Builder

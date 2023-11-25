@@ -11,11 +11,23 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-@JsonInclude(Include.NON_EMPTY)
 public class ChatMessageDto {
     private String roomId;
-    private Long userId;
+    private String sender;
     private MessageType type;
-    private String content;
+    private String message;
+
+    public void setEnterMessage() {
+        this.message = this.sender + "님이 입장하셨습니다.";
+    }
+
+    @Override
+    public String toString() {
+        return "ChatMessageDto{" +
+                "roomId='" + roomId + '\'' +
+                ", sender='" + sender + '\'' +
+                ", type=" + type +
+                ", message='" + message + '\'' +
+                '}';
+    }
 }
