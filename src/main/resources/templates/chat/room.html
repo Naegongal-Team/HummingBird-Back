@@ -45,8 +45,8 @@
                     axios.get('/view/chat/room/list').then(response => { this.chatrooms = response.data; });
                 },
                 enterRoom: function(roomId) {
-                    var sender = prompt('대화명을 입력해 주세요.');
-                    localStorage.setItem('wschat.sender',sender);
+                    var nickname = prompt('닉네임을 입력해 주세요.');
+                    localStorage.setItem('wschat.nickname',nickname);
                     localStorage.setItem('wschat.roomId',roomId);
                     location.href="/view/chat/room/enter/"+roomId;
                 }

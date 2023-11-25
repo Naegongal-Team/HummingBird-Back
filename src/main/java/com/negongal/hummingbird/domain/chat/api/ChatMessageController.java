@@ -19,7 +19,7 @@ public class ChatMessageController {
 
     @MessageMapping("/chat/message")
     public void message(ChatMessageDto message) {
-        log.info("ChatMessageController :: {}", message.toString());
+//        log.info("ChatMessageController :: {}", message.toString());
         if(message.getType().equals(MessageType.ENTER)) {
             message.setEnterMessage();
             chatRoomService.enterChatRoom(message.getRoomId());
