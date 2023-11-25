@@ -2,6 +2,7 @@ package com.negongal.hummingbird.domain.chat.api;
 
 import com.negongal.hummingbird.domain.chat.domain.MessageType;
 import com.negongal.hummingbird.domain.chat.dto.ChatMessageDto;
+import com.negongal.hummingbird.domain.chat.service.ChatMessageService;
 import com.negongal.hummingbird.domain.chat.service.ChatRoomService;
 import com.negongal.hummingbird.global.common.pubsub.RedisPublisher;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ public class ChatMessageController {
 
     private final RedisPublisher redisPublisher;
     private final ChatRoomService chatRoomService;
+    private final ChatMessageService chatMessageService;
 
     @MessageMapping("/chat/message")
     public void message(ChatMessageDto message) {
@@ -24,6 +26,9 @@ public class ChatMessageController {
             message.setEnterMessage();
             chatRoomService.enterChatRoom(message.getRoomId());
         }
+
+        chatMessageService.saveMessage(message); /* 메시지 DB 저장 */
+
         redisPublisher.publish(chatRoomService.getTopic(message.getRoomId()), message);
     }
 

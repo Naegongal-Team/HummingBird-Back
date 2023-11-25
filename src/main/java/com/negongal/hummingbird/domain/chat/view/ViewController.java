@@ -1,15 +1,11 @@
 package com.negongal.hummingbird.domain.chat.view;
 
-import com.negongal.hummingbird.domain.chat.domain.ChatRoom;
-import com.negongal.hummingbird.domain.chat.service.ChatRoomService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -18,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/view")
 public class ViewController {
 
-    private final ChatRoomService chatRoomService;
+    private final ViewChatService viewChatService;
 
     @GetMapping("/chat/room")
     public String rooms(Model model) {
@@ -28,7 +24,7 @@ public class ViewController {
     @GetMapping("/chat/room/list")
     @ResponseBody
     public List<ViewChatRoom> getRooms() {
-        return chatRoomService.findAllRoom();
+        return viewChatService.findAllRoom();
     }
 
     @GetMapping("/chat/room/enter/{roomId}")
@@ -40,12 +36,12 @@ public class ViewController {
     @GetMapping("/chat/room/create/all")
     @ResponseBody
     public void createRoom() {
-        chatRoomService.createRoomAll();
+        viewChatService.createRoomAll();
     }
 
     @GetMapping("/chat/room/{roomId}")
     @ResponseBody
     public ViewChatRoom getRoom(@PathVariable String roomId) {
-        return chatRoomService.findByRoomId(roomId);
+        return viewChatService.findByRoomId(roomId);
     }
 }

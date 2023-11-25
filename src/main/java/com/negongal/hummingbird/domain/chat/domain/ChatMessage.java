@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -37,10 +38,18 @@ public class ChatMessage {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(nullable = false)
+    private String content;
+
     @CreatedDate
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createDate;
 
-    @Column(nullable = false)
-    private String content;
+    @Builder
+    public ChatMessage(MessageType type, ChatRoom chatRoom, User user, String content) {
+        this.chatRoom = chatRoom;
+        this.user = user;
+        this.type = type;
+        this.content = content;
+    }
 }

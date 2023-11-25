@@ -35,6 +35,16 @@ public enum ErrorCode {
     TOKEN_NOT_MATCHED(HttpStatus.BAD_REQUEST, "C004", "TOKEN_NOT_MATCHED"),
     LOGIN_FAILED(HttpStatus.BAD_REQUEST, "C005", "LOGIN_FAILED"),
 
+    /**
+     * CHAT ROOM
+     */
+    CHAT_ROOM_NOT_EXIST(HttpStatus.BAD_REQUEST, "D001", "CHAT_ROOM_NOT_EXIST"),
+
+
+    /**
+     * CHAT MESSAGE
+     */
+
 
     /**
      * Etc
