@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,6 +20,7 @@ import lombok.NoArgsConstructor;;
 
 @Getter
 @Entity
+@Table
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatRoom {
 

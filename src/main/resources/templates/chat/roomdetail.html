@@ -17,20 +17,20 @@
 <body>
 <div class="container" id="app" v-cloak>
     <div>
-        <h2>{{room.performanceName}}</h2>
+        <h2>{{room.performance_name}}</h2>
     </div>
     <div class="input-group">
         <div class="input-group-prepend">
             <label class="input-group-text">내용</label>
         </div>
-        <input type="text" class="form-control" v-model="message" @keyup.enter="sendMessage">
+        <input type="text" class="form-control" v-model="content" @keyup.enter="sendMessage">
         <div class="input-group-append">
             <button class="btn btn-primary" type="button" @click="sendMessage">보내기</button>
         </div>
     </div>
     <ul class="list-group">
         <li class="list-group-item" v-for="message in messages">
-            {{message.nickname}} - {{message.message}}</a>  {{message.sendTime}}
+            {{message.nickname}} - {{message.content}}</a>  {{message.send_time}}
         </li>
     </ul>
     <div></div>
@@ -50,37 +50,41 @@
         var vm = new Vue({
             el: '#app',
             data: {
-                roomId: '',
+                room_id: '',
                 room: {},
                 nickname: '',
-                message: '',
+                content: '',
                 messages: []
             },
             created() {
-                this.roomId = localStorage.getItem('wschat.roomId');
+                this.room_id = localStorage.getItem('wschat.room_id');
                 this.nickname = localStorage.getItem('wschat.nickname');
                 this.findRoom();
+                this.findMessage();
             },
             methods: {
                 findRoom: function() {
-                    axios.get('/view/chat/room/'+this.roomId).then(response => { this.room = response.data; });
+                    axios.get('/view/chat/room/'+this.room_id).then(response => { this.room = response.data; });
+                },
+                findMessage: function() {
+                    axios.get('/view/chat/'+this.room_id+'/message').then(response => { this.messages = response.data; console.log('messages :: ' + this.messages); });
                 },
                 sendMessage: function() {
-                    ws.send("/pub/view/chat/message", {}, JSON.stringify({type:'TALK', roomId:this.roomId, nickname:this.nickname, content:this.message, sendTime: dayjs().format('YYYY-MM-DD HH:mm:ss')}));
-                    this.message = '';
+                    ws.send("/pub/view/chat/message", {}, JSON.stringify({type:'TALK', room_id:this.room_id, nickname:this.nickname, content:this.content, send_time: dayjs().format('YYYY-MM-DD HH:mm:ss')}));
+                    this.content = '';
                 },
                 recvMessage: function(recv) {
-                    this.messages.unshift({"type":recv.type,"nickname":recv.type=='ENTER'?'[알림]':recv.nickname,"message":recv.content, "sendTime":recv.sendTime})
+                    this.messages.unshift({"type":recv.type,"nickname":recv.type=='ENTER'?'[알림]':recv.nickname,"content":recv.content, "send_time":recv.send_time})
                 }
             }
         });
         // pub/sub event
         ws.connect({}, function(frame) {
-            ws.subscribe("/sub/chat/room/"+vm.$data.roomId, function(message) {
+            ws.subscribe("/sub/chat/room/"+vm.$data.room_id, function(message) {
                 var recv = JSON.parse(message.body);
                 vm.recvMessage(recv);
             });
-            ws.send("/pub/view/chat/message", {}, JSON.stringify({type:'ENTER', roomId:vm.$data.roomId, nickname:vm.$data.nickname, sendTime: dayjs().format('YYYY-MM-DD HH:mm:ss')}));
+            ws.send("/pub/view/chat/message", {}, JSON.stringify({type:'ENTER', room_id:vm.$data.room_id, nickname:vm.$data.nickname, send_time: dayjs().format('YYYY-MM-DD HH:mm:ss')}));
         }, function(error) {
             alert("error "+error);
         });
