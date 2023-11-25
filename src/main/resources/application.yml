@@ -38,7 +38,7 @@ spring:
       max-request-size: 10MB
 
   config:
-    import: application-aws.yml, application-oauth2.yml, config.yml
+    import: application-aws.yml, application-oauth2.yml, config.yml, application-local.yml
 
 
 #logging:
