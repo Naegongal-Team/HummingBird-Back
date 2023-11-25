@@ -42,5 +42,5 @@ public class ChatMessage {
     private LocalDateTime createDate;
 
     @Column(nullable = false)
-    private String message;
+    private String content;
 }
