@@ -51,7 +51,7 @@ public class ViewChatService {
     public List<ViewChatMessage> loadMessage(String roomId) {
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId)
                 .orElseThrow(() -> new NotExistException(CHAT_ROOM_NOT_EXIST));
-        List<ChatMessage> chatMessageList = chatMessageRepository.findByIdOrderBySendTimeAsc(chatRoom.getId());
+        List<ChatMessage> chatMessageList = chatMessageRepository.findByIdOrderBySendTimeDESC(chatRoom.getId());
         return chatMessageList.stream().map(s -> ViewChatMessage.of(s))
                 .collect(Collectors.toList());
     }

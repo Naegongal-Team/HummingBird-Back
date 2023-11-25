@@ -8,9 +8,13 @@ import com.negongal.hummingbird.domain.chat.dao.ChatRoomRepository;
 import com.negongal.hummingbird.domain.chat.domain.ChatMessage;
 import com.negongal.hummingbird.domain.chat.domain.ChatRoom;
 import com.negongal.hummingbird.domain.chat.dto.ChatMessageDto;
+import com.negongal.hummingbird.domain.chat.dto.ChatMessageResponseDto;
+import com.negongal.hummingbird.domain.chat.view.ViewChatMessage;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.domain.user.domain.User;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -39,5 +43,13 @@ public class ChatMessageService {
         chatMessageRepository.save(chatMessage);
 
         /** Redis에 저장할 것인지 고려해보기 **/
+    }
+
+    public List<ChatMessageResponseDto> loadMessage(String roomId) {
+        ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId)
+                .orElseThrow(() -> new NotExistException(CHAT_ROOM_NOT_EXIST));
+        List<ChatMessage> chatMessageList = chatMessageRepository.findByIdOrderBySendTimeAsc(chatRoom.getId());
+        return chatMessageList.stream().map(s -> ChatMessageResponseDto.of(s))
+                .collect(Collectors.toList());
     }
 }
