@@ -1,5 +1,6 @@
 package com.negongal.hummingbird.global.error;
 
+import com.nimbusds.jwt.JWT;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -45,6 +46,7 @@ public enum ErrorCode {
      * CHAT MESSAGE
      */
 
+    LOGIN_FAILED(HttpStatus.BAD_REQUEST, "C002", "LOGIN_FAILED"),
 
     /**
      * Etc
@@ -52,7 +54,16 @@ public enum ErrorCode {
     INVALID_TYPE_VALUE(HttpStatus.BAD_REQUEST, "F001", "INVALID_TYPE_VALUE"),
     PUSH_MESSAGE_FAILED(HttpStatus.BAD_REQUEST, "F002", "PUSH_MESSAGE_FAILED"),
     NOTIFICATION_NOT_FOUND(HttpStatus.BAD_REQUEST, "F003", "NOTIFICATION_NOT_FOUND"),
-    SPOTIFY_CAN_NOT_WORK(HttpStatus.BAD_REQUEST, "F003", "SPOTIFY_CAN_NOT_WORK");
+    SPOTIFY_CAN_NOT_WORK(HttpStatus.BAD_REQUEST, "F003", "SPOTIFY_CAN_NOT_WORK"),
+
+    /**
+     * JWT Token
+     */
+    TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "G001", "TOKEN_EXPIRED"),
+    TOKEN_UNSUPPORTED(HttpStatus.UNAUTHORIZED, "G002","TOKEN_UNSUPPORTED"),
+    TOKEN_WRONG(HttpStatus.UNAUTHORIZED, "G003","TOKEN_WRONG"),
+    TOKEN_NOT_MATCHED(HttpStatus.UNAUTHORIZED, "G004","TOKEN_NOT_MATCHED"),
+    TOKEN_NOT_EXIST(HttpStatus.UNAUTHORIZED, "G005","TOKEN_NOT_EXIST");
 
     private final HttpStatus httpStatus;
     private final String code;

@@ -1,12 +1,15 @@
 package com.negongal.hummingbird.global.auth.jwt;
 
+import static com.negongal.hummingbird.global.error.ErrorCode.TOKEN_EXPIRED;
+import static com.negongal.hummingbird.global.error.ErrorCode.TOKEN_NOT_MATCHED;
+import static com.negongal.hummingbird.global.error.ErrorCode.TOKEN_UNSUPPORTED;
+
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.global.auth.oauth2.CustomUserDetail;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -122,14 +125,14 @@ public class JwtProvider {
             Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException e) {
-            log.info("만료된 JWT 토큰입니다.");
+            throw new JwtException(TOKEN_EXPIRED.getMessage());
         } catch (UnsupportedJwtException e) {
-            log.info("지원되지 않는 JWT 토큰입니다.");
-        } catch (IllegalStateException e) {
-            log.info("JWT 토큰이 잘못되었습니다");
+            throw new JwtException(TOKEN_UNSUPPORTED.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw new JwtException(TOKEN_NOT_MATCHED.getMessage());
         }
-        return false;
     }
+
 
     // Access Token 만료시 갱신때 사용할 정보를 얻기 위해 Claim 리턴
     public Claims parseClaims(String accessToken) {
