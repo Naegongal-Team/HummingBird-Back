@@ -35,17 +35,24 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
     implementation 'junit:junit:4.13.1'
+
+	// spotify
 	implementation 'com.github.thelinmichael:spotify-web-api-java:master-SNAPSHOT'
 	implementation 'org.modelmapper:modelmapper:2.4.2'
 	implementation 'se.michaelthelin.spotify:spotify-web-api-java:8.3.3'
 
-	// https://mvnrepository.com/artifact/org.apache.httpcomponents.client5/httpclient5
 	implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
-
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
-	//Querydsl 추가
+	//spring security
+	implementation ("org.springframework.boot:spring-boot-starter-oauth2-client")
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.security:spring-security-test")
+	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+
+	//Querydsl
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 	annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
 
@@ -57,15 +64,6 @@ dependencies {
 	testImplementation("org.junit.vintage:junit-vintage-engine") {
 		exclude group: "org.hamcrest", module: "hamcrest-core"
 	}
-	//oauth2 client
-	implementation ("org.springframework.boot:spring-boot-starter-oauth2-client")
-	//spring security
-	implementation("org.springframework.boot:spring-boot-starter-security")
-	implementation("org.springframework.security:spring-security-test")
-	//jwt
-	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
-
-
 }
 
 allprojects {
