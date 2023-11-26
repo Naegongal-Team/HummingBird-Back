@@ -42,7 +42,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
                 .status(ResponseStatus.ERROR)
                 .data(data)
                 .code(null)
-                .message("Unauthorized")
+                .message("Unauthorized - TOKEN_NOT_EXIST")
                 .build();
 
         try{
