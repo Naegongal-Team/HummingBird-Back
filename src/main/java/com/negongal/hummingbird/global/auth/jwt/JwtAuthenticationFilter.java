@@ -31,9 +31,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             log.info(authentication.getName() + "의 인증정보 저장");
         } else if (!StringUtils.hasText(token)) {
-            log.info("JWT 토큰을 찾을 수 없습니다.");
+//            log.info("JWT 토큰을 찾을 수 없습니다.");
         } else {
-            log.info("JWT 토큰이 유효하지 않습니다.");
+//            log.info("JWT 토큰이 유효하지 않습니다.");
         }
 
         filterChain.doFilter(request, response);
@@ -43,7 +43,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String bearerToken = request.getHeader("Authorization");
 
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            log.info("토큰 분해 bearerToken.substring(7)={}", bearerToken.substring(7));
+//            log.info("토큰 분해 bearerToken.substring(7)={}", bearerToken.substring(7));
             return bearerToken.substring(7);
         }
         return null;

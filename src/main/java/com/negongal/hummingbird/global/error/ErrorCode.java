@@ -1,5 +1,6 @@
 package com.negongal.hummingbird.global.error;
 
+import com.nimbusds.jwt.JWT;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,16 +29,21 @@ public enum ErrorCode {
      * USER
      */
     USER_NOT_EXIST(HttpStatus.BAD_REQUEST, "C001", "USER_NOT_EXIST"),
-    TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "C002", "TOKEN_NOT_FOUND"),
-    TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "C003", "TOKEN_EXPIRED"),
-    TOKEN_NOT_MATCHED(HttpStatus.BAD_REQUEST, "C004", "TOKEN_NOT_MATCHED"),
-    LOGIN_FAILED(HttpStatus.BAD_REQUEST, "C005", "LOGIN_FAILED"),
-
+    LOGIN_FAILED(HttpStatus.BAD_REQUEST, "C002", "LOGIN_FAILED"),
 
     /**
      * Etc
      */
-    INVALID_TYPE_VALUE(HttpStatus.BAD_REQUEST, "F001", "INVALID_TYPE_VALUE");
+    INVALID_TYPE_VALUE(HttpStatus.BAD_REQUEST, "F001", "INVALID_TYPE_VALUE"),
+
+    /**
+     * JWT Token
+     */
+    TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "G001", "TOKEN_EXPIRED"),
+    TOKEN_UNSUPPORTED(HttpStatus.UNAUTHORIZED, "G002","TOKEN_UNSUPPORTED"),
+    TOKEN_WRONG(HttpStatus.UNAUTHORIZED, "G003","TOKEN_WRONG"),
+    TOKEN_NOT_MATCHED(HttpStatus.UNAUTHORIZED, "G004","TOKEN_NOT_MATCHED"),
+    TOKEN_NOT_EXIST(HttpStatus.UNAUTHORIZED, "G005","TOKEN_NOT_EXIST");
 
     private final HttpStatus httpStatus;
     private final String code;
