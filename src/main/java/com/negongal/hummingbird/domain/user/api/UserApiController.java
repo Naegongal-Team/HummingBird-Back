@@ -81,4 +81,11 @@ public class UserApiController {
         return ResponseUtils.success();
     }
 
+    @PostMapping("/remove")
+    public ApiResponse<?> remove(@AuthenticationPrincipal CustomUserDetail customUserDetail) {
+        UserDetailDto user = userService.findUser(customUserDetail.getUserId());
+        userService.deleteUser(user);
+        return ResponseUtils.success();
+    }
+
 }
