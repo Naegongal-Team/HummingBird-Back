@@ -21,21 +21,12 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ViewChatService {
-    private final PerformanceRepository performanceRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomRepository chatRoomRepository;
-    private final ChatRoomService chatRoomService;
 
     /**
      * 채팅 view 테스트용 서비스
      */
-
-    public void createRoomAll() {
-        List<Performance> all = performanceRepository.findAll();
-        for(Performance p : all) {
-            chatRoomService.createChatRoom(p.getId());
-        }
-    }
 
     public List<ViewChatRoom> findAllRoom() {
         List<ChatRoom> chatRooms = chatRoomRepository.findAll();
