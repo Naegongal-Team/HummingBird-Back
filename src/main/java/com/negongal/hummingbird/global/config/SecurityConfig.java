@@ -1,6 +1,9 @@
 package com.negongal.hummingbird.global.config;
 
+import com.negongal.hummingbird.global.auth.jwt.JwtAccessDeniedHandler;
+import com.negongal.hummingbird.global.auth.jwt.JwtAuthenticationEntryPoint;
 import com.negongal.hummingbird.global.auth.jwt.JwtAuthenticationFilter;
+import com.negongal.hummingbird.global.auth.jwt.JwtExceptionHandlerFilter;
 import com.negongal.hummingbird.global.auth.oauth2.Oauth2UserService;
 import com.negongal.hummingbird.global.auth.oauth2.handler.Oauth2AuthenticationFailureHandler;
 import com.negongal.hummingbird.global.auth.oauth2.handler.Oauth2AuthenticationSuccessHandler;
@@ -25,6 +28,8 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final Oauth2AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler;
     private final Oauth2AuthenticationFailureHandler oauth2AuthenticationFailureHandler;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -34,12 +39,15 @@ public class SecurityConfig {
                 .httpBasic().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .formLogin().disable();
+                .formLogin().disable()
+                .exceptionHandling()
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint) // 인증 실패 핸들링
+                .accessDeniedHandler(jwtAccessDeniedHandler); // 인가 실패 핸들링
 
         http
                 .authorizeRequests()
-                .antMatchers("/user/**", "/heart**").hasRole("USER")
-                .antMatchers("/admin/**", "/spotify").hasRole("ADMIN")
+                .antMatchers("/user/**", "/**/heart/**").hasRole("USER")
+                .antMatchers("/**/admin/**", "/spotify").hasRole("ADMIN")
                 .anyRequest().permitAll();
 
         http
@@ -53,6 +61,7 @@ public class SecurityConfig {
                 .successHandler(oauth2AuthenticationSuccessHandler)
                 .failureHandler(oauth2AuthenticationFailureHandler);
 
+
         http
                 .logout()
                 .logoutUrl("/logout")
@@ -62,8 +71,9 @@ public class SecurityConfig {
                 .deleteCookies("refresh")
                 .logoutSuccessUrl("/login");
 
-
-        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        http
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(new JwtExceptionHandlerFilter(), JwtAuthenticationFilter.class);
 
 
         return http.build();

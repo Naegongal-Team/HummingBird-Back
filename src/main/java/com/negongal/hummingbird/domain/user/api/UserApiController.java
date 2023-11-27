@@ -7,6 +7,7 @@ import com.negongal.hummingbird.global.auth.oauth2.CustomUserDetail;
 import com.negongal.hummingbird.global.common.response.ApiResponse;
 import com.negongal.hummingbird.global.common.response.ResponseUtils;
 import com.negongal.hummingbird.infra.awsS3.S3Uploader;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +19,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 
 
+@Tag(name = "User API", description = "")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -76,6 +78,13 @@ public class UserApiController {
 
         userService.modifyUserNicknameAndImage(userId, updateParam, photoUrl);
 
+        return ResponseUtils.success();
+    }
+
+    @PostMapping("/remove")
+    public ApiResponse<?> remove(@AuthenticationPrincipal CustomUserDetail customUserDetail) {
+        UserDetailDto user = userService.findUser(customUserDetail.getUserId());
+        userService.deleteUser(user);
         return ResponseUtils.success();
     }
 
