@@ -32,6 +32,17 @@ public enum ErrorCode {
     LOGIN_FAILED(HttpStatus.BAD_REQUEST, "C002", "LOGIN_FAILED"),
 
     /**
+     * CHAT ROOM
+     */
+    CHAT_ROOM_NOT_EXIST(HttpStatus.BAD_REQUEST, "D001", "CHAT_ROOM_NOT_EXIST"),
+
+
+    /**
+     * CHAT MESSAGE
+     */
+
+    
+    /**
      * Etc
      */
     INVALID_TYPE_VALUE(HttpStatus.BAD_REQUEST, "F001", "INVALID_TYPE_VALUE"),
