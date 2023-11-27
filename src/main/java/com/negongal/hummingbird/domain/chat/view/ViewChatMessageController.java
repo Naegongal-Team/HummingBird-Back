@@ -1,11 +1,11 @@
 package com.negongal.hummingbird.domain.chat.view;
 
-import com.negongal.hummingbird.domain.chat.dao.ChatRoomRepository;
 import com.negongal.hummingbird.domain.chat.domain.MessageType;
 import com.negongal.hummingbird.domain.chat.dto.ChatMessageDto;
 import com.negongal.hummingbird.domain.chat.service.ChatMessageService;
 import com.negongal.hummingbird.domain.chat.service.ChatRoomService;
 import com.negongal.hummingbird.global.common.pubsub.RedisPublisher;
+import io.swagger.v3.oas.annotations.Hidden;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,5 +1,8 @@
 package com.negongal.hummingbird.domain.chat.view;
 
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -21,6 +24,7 @@ public class ViewController {
         return "/chat/room";
     }
 
+    @Operation(hidden = true)
     @GetMapping("/chat/room/list")
     @ResponseBody
     public List<ViewChatRoom> getRooms() {
@@ -33,6 +37,7 @@ public class ViewController {
         return "/chat/roomdetail";
     }
 
+    @Operation(hidden = true)
     @GetMapping("/chat/room/{roomId}")
     @ResponseBody
     public ViewChatRoom getRoom(@PathVariable String roomId) {
