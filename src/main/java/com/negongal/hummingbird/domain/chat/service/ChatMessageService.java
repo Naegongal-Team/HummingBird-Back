@@ -12,6 +12,7 @@ import com.negongal.hummingbird.domain.chat.dto.ChatMessageResponseDto;
 import com.negongal.hummingbird.domain.chat.view.ViewChatMessage;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.domain.user.domain.User;
+import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,7 +50,14 @@ public class ChatMessageService {
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId)
                 .orElseThrow(() -> new NotExistException(CHAT_ROOM_NOT_EXIST));
         List<ChatMessage> chatMessageList = chatMessageRepository.findByIdOrderBySendTimeAsc(chatRoom.getId());
-        return chatMessageList.stream().map(s -> ChatMessageResponseDto.of(s))
+
+        if(SecurityUtil.getCurrentUserId().isPresent()) {
+            Long loginUserId = SecurityUtil.getCurrentUserId().get();
+            return chatMessageList.stream().map(s -> ChatMessageResponseDto.of(s, loginUserId))
+                    .collect(Collectors.toList());
+        }
+
+        return chatMessageList.stream().map(s -> ChatMessageResponseDto.of(s, null))
                 .collect(Collectors.toList());
     }
 }
