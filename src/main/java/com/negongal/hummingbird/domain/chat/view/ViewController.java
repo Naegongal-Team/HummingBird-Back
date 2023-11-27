@@ -33,12 +33,6 @@ public class ViewController {
         return "/chat/roomdetail";
     }
 
-    @GetMapping("/chat/room/create/all")
-    @ResponseBody
-    public void createRoom() {
-        viewChatService.createRoomAll();
-    }
-
     @GetMapping("/chat/room/{roomId}")
     @ResponseBody
     public ViewChatRoom getRoom(@PathVariable String roomId) {
