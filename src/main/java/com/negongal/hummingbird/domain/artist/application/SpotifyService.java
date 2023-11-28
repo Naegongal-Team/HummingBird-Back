@@ -59,7 +59,7 @@ public class SpotifyService {
         getSeveralArtistsRequest = spotifyApi.getSeveralArtists(artistIds).build();
         Artist[] artists = getSeveralArtistsRequest.execute();
         Arrays.stream(artists).forEach(artist -> {
-            com.negongal.hummingbird.domain.artist.domain.Artist customArtist = converSpotifyToCustomArtist(artist);
+            com.negongal.hummingbird.domain.artist.domain.Artist customArtist = convertSpotifyToCustomArtist(artist);
             artistRepository.save(customArtist);
         });
         getSeveralArtistSpotifyTrack();
@@ -86,7 +86,7 @@ public class SpotifyService {
         checkPresentArtistInRepository(artistId);
         GetArtistRequest getArtistRequest = spotifyApi.getArtist(artistId).build();
         Artist artist = getArtistRequest.execute();
-        com.negongal.hummingbird.domain.artist.domain.Artist customArtist = converSpotifyToCustomArtist(artist);
+        com.negongal.hummingbird.domain.artist.domain.Artist customArtist = convertSpotifyToCustomArtist(artist);
         artistRepository.save(customArtist);
         findTrackByArtist(artistId);
     }
@@ -118,12 +118,15 @@ public class SpotifyService {
     private void convertSpotifyToCustomTrack(Stream<Track> spotifyTracks, String artistId) {
         com.negongal.hummingbird.domain.artist.domain.Artist artist = artistRepository.findById(artistId)
                 .orElseThrow(() -> new NotExistException(ARTIST_NOT_EXIST));
-
         spotifyTracks.forEach(track -> {
+            Image spotifyAlbumImage = Arrays.stream(track.getAlbum().getImages()).findFirst()
+                    .orElseThrow(() -> new NotExistException(ALBUM_IMAGE_NOT_EXIST));
+            String albumImageUrl = spotifyAlbumImage.getUrl();
             com.negongal.hummingbird.domain.artist.domain.Track customTrack = com.negongal.hummingbird.domain.artist.domain.Track.builder()
                     .albumName(track.getAlbum().getName())
                     .artist(artist)
                     .releaseDate(track.getAlbum().getReleaseDate())
+                    .albumImage(albumImageUrl)
                     .name(track.getName())
                     .build();
 
@@ -131,7 +134,7 @@ public class SpotifyService {
         });
     }
 
-    private com.negongal.hummingbird.domain.artist.domain.Artist converSpotifyToCustomArtist(Artist spotifyArtist) {
+    private com.negongal.hummingbird.domain.artist.domain.Artist convertSpotifyToCustomArtist(Artist spotifyArtist) {
         String spotifyArtistId = spotifyArtist.getId();
         List<String> spotifyArtistGenre = new ArrayList<>(List.of(spotifyArtist.getGenres()));
         Image spotifyArtistImage = Arrays.stream(spotifyArtist.getImages())
