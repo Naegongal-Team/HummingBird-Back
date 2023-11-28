@@ -1,7 +1,5 @@
 package com.negongal.hummingbird.domain.artist.dto;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.artist.domain.Track;
 import lombok.AccessLevel;
@@ -20,12 +18,15 @@ public class TrackDto {
 
     private String releaseDate;
 
+    private String albumImage;
+
     @Builder
-    public TrackDto(Long id, String name, String albumName, String releaseDate, Artist artist) {
+    public TrackDto(Long id, String name, String albumName, String albumImage, String releaseDate, Artist artist) {
         this.id = id;
         this.name = name;
         this.albumName = albumName;
         this.releaseDate = releaseDate;
+        this.albumImage = albumImage;
     }
 
     public static TrackDto of(Track track) {
@@ -33,6 +34,7 @@ public class TrackDto {
                 .id(track.getId())
                 .name(track.getName())
                 .albumName(track.getAlbumName())
+                .albumImage(track.getAlbumImage())
                 .releaseDate(track.getReleaseDate())
                 .build();
     }
