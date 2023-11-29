@@ -79,4 +79,10 @@ public class UserApiController {
         return ResponseUtils.success();
     }
 
+    @PostMapping("/user/fcm-token")
+    public ApiResponse postFCMToken(@RequestParam String fcmToken) {
+        userService.saveFCMToken(fcmToken);
+        return ResponseUtils.success(fcmToken);
+    }
+
 }

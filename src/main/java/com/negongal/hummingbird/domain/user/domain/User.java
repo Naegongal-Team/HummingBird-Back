@@ -23,6 +23,7 @@ public class User {
     private String nickname;
     private String provider;
     private String profileImage;
+    private String fcmToken;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -43,6 +44,10 @@ public class User {
     public void updateNicknameAndProfileImage(String nickname, String profileImage) {
         this.nickname = nickname;
         this.profileImage = profileImage;
+    }
+
+    public void updateFCMToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 
 }

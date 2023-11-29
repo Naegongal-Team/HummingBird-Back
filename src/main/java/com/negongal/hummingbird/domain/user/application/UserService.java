@@ -4,6 +4,7 @@ import com.negongal.hummingbird.domain.user.dto.UserDto;
 import com.negongal.hummingbird.domain.user.dto.UserDetailDto;
 import com.negongal.hummingbird.domain.user.domain.User;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
+import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
 import com.negongal.hummingbird.infra.awsS3.S3Uploader;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,13 @@ public class UserService {
             uploader.deleteFile(file);
         }
         findUser.updateNicknameAndProfileImage(updateParam.getNickname(), profileImage);
+    }
+
+    @Transactional
+    public void saveFCMToken(String fcmToken) {
+        User findUser = userRepository.findById(SecurityUtil.getCurrentUserId().get())
+                .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
+        findUser.updateFCMToken(fcmToken);
     }
 
     public UserDetailDto findUser(Long id) {
