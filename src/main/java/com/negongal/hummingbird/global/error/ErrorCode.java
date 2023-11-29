@@ -37,7 +37,8 @@ public enum ErrorCode {
     /**
      * Etc
      */
-    INVALID_TYPE_VALUE(HttpStatus.BAD_REQUEST, "F001", "INVALID_TYPE_VALUE");
+    INVALID_TYPE_VALUE(HttpStatus.BAD_REQUEST, "F001", "INVALID_TYPE_VALUE"),
+    PUSH_MESSAGE_FAILED(HttpStatus.BAD_REQUEST, "F002", "PUSH_MESSAGE_FAILED");
 
     private final HttpStatus httpStatus;
     private final String code;
