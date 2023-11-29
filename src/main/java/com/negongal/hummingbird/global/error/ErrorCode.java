@@ -1,6 +1,5 @@
 package com.negongal.hummingbird.global.error;
 
-import com.nimbusds.jwt.JWT;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,7 +15,6 @@ public enum ErrorCode {
     ARTIST_NOT_EXIST(HttpStatus.BAD_REQUEST, "A002", "ARTIST_NOT_EXIST"),
     ARTIST_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "A003", "ARTIST_ALREADY_EXIST"),
     ARTIST_IMAGE_NOT_EXIST(HttpStatus.NOT_FOUND, "A004", "ARTIST_IMAGE_NOT_EXIST"),
-    ALBUM_IMAGE_NOT_EXIST(HttpStatus.NOT_FOUND, "A005", "ALBUM_IMAGE_NOT_EXIST"),
 
     /**
      * PERFORMANCE
@@ -35,6 +33,7 @@ public enum ErrorCode {
     TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "C003", "TOKEN_EXPIRED"),
     TOKEN_NOT_MATCHED(HttpStatus.BAD_REQUEST, "C004", "TOKEN_NOT_MATCHED"),
     LOGIN_FAILED(HttpStatus.BAD_REQUEST, "C005", "LOGIN_FAILED"),
+<<<<<<< HEAD
 
     /**
      * CHAT ROOM
@@ -64,6 +63,14 @@ public enum ErrorCode {
     TOKEN_WRONG(HttpStatus.UNAUTHORIZED, "G003","TOKEN_WRONG"),
     //TOKEN_NOT_MATCHED(HttpStatus.UNAUTHORIZED, "G004","TOKEN_NOT_MATCHED"),
     TOKEN_NOT_EXIST(HttpStatus.UNAUTHORIZED, "G005","TOKEN_NOT_EXIST");
+=======
+
+
+    /**
+     * Etc
+     */
+    INVALID_TYPE_VALUE(HttpStatus.BAD_REQUEST, "F001", "INVALID_TYPE_VALUE");
+>>>>>>> 15d91e7 (feat: FCM서비스 클래스 작성)
 
     private final HttpStatus httpStatus;
     private final String code;
