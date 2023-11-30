@@ -38,7 +38,8 @@ public enum ErrorCode {
     /**
      * Etc
      */
-    INVALID_TYPE_VALUE(HttpStatus.BAD_REQUEST, "F001", "INVALID_TYPE_VALUE");
+    INVALID_TYPE_VALUE(HttpStatus.BAD_REQUEST, "F001", "INVALID_TYPE_VALUE"),
+    SPOTIFY_CAN_NOT_WORK(HttpStatus.BAD_REQUEST, "F003", "SPOTIFY_CAN_NOT_WORK");
 
     private final HttpStatus httpStatus;
     private final String code;
