@@ -42,9 +42,12 @@ public class PerformanceDetailDto {
     private boolean heartPressed;
     private boolean past;
 
+    private String roomId;
+
     @Builder
     public PerformanceDetailDto(Long id, String name, String artistName, String location, Long runtime, String description, boolean heartPressed,
-                                List<LocalDateTime> date, String photo, List<TicketingDto> regularTicketing, List<TicketingDto> earlybirdTicketing) {
+                                List<LocalDateTime> date, String photo, List<TicketingDto> regularTicketing, List<TicketingDto> earlybirdTicketing,
+                                String roomId) {
         this.id = id;
         this.name = name;
         this.artistName = artistName;
@@ -58,6 +61,7 @@ public class PerformanceDetailDto {
 
         this.past = (date.get(date.size() - 1).isBefore(LocalDateTime.now())) ? true : false;
         this.heartPressed = heartPressed;
+        this.roomId = roomId;
     }
 
     public static PerformanceDetailDto of(Performance p, boolean heartPressed) {
@@ -82,6 +86,7 @@ public class PerformanceDetailDto {
                         .sorted(Comparator.comparing(TicketingDto::getDate))
                         .collect(Collectors.toList()))
                 .heartPressed(heartPressed)
+                .roomId(p.getChatRoom().getRoomId())
                 .build();
     }
 }

@@ -96,16 +96,16 @@ VALUES (111, 105, '2023-11-07 20:30:00', 'https://tickets.interpark.com/', '인�
 INSERT INTO ticketing (id, performance_id, start_date, link, platform, ticket_type)
 VALUES (112, 106, '2023-11-21 20:30:00', 'https://tickets.interpark.com/', '인터파크24', 'REGULAR');
 
-INSERT INTO USERS(user_id, nickname, oauth2id, profile_image, provider, refresh_token, role)
-VALUES (100, '', '', '', '', '', 'USER');
-INSERT INTO USERS(user_id, nickname, oauth2id, profile_image, provider, refresh_token, role)
-VALUES (101, '', '', '', '', '', 'USER');
-INSERT INTO USERS(user_id, nickname, oauth2id, profile_image, provider, refresh_token, role)
-VALUES (102, '', '', '', '', '', 'USER');
-INSERT INTO USERS(user_id, nickname, oauth2id, profile_image, provider, refresh_token, role)
-VALUES (103, '', '', '', '', '', 'USER');
-INSERT INTO USERS(user_id, nickname, oauth2id, profile_image, provider, refresh_token, role)
-VALUES (104, '', '', '', '', '', 'USER');
+INSERT INTO USERS(user_id, nickname, oauth2id, profile_image, provider, refresh_token, role, status, inactive_date)
+VALUES (100, 'aa', '', '', '', '', 'USER', 'ACTIVE', null);
+INSERT INTO USERS(user_id, nickname, oauth2id, profile_image, provider, refresh_token, role, status, inactive_date)
+VALUES (101, 'bb', '', '', '', '', 'USER', 'ACTIVE', null);
+INSERT INTO USERS(user_id, nickname, oauth2id, profile_image, provider, refresh_token, role, status, inactive_date)
+VALUES (102, 'cc', '', '', '', '', 'USER', 'ACTIVE', null);
+INSERT INTO USERS(user_id, nickname, oauth2id, profile_image, provider, refresh_token, role, status, inactive_date)
+VALUES (103, 'tt', '', '', '', '', 'USER', 'ACTIVE', null);
+INSERT INTO USERS(user_id, nickname, oauth2id, profile_image, provider, refresh_token, role, status, inactive_date)
+VALUES (104, 'qq', '', '', '', '', 'USER', 'ACTIVE', null);
 
 INSERT INTO performance_heart (id, user_id, performance_id)
 VALUES (100, 100, 101);

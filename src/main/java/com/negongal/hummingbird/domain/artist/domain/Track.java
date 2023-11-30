@@ -20,6 +20,8 @@ public class Track {
 
     private String releaseDate;
 
+    private String albumImage;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artist_id")
     private Artist artist;
