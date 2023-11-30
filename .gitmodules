@@ -1,3 +1,4 @@
 [submodule "secret-submodule"]
 	path = secret-submodule
 	url = https://github.com/Naegongal-Team/secret-submodule.git
+	branch = develop
