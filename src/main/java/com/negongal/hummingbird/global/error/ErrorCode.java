@@ -41,7 +41,8 @@ public enum ErrorCode {
      */
     INVALID_TYPE_VALUE(HttpStatus.BAD_REQUEST, "F001", "INVALID_TYPE_VALUE"),
     PUSH_MESSAGE_FAILED(HttpStatus.BAD_REQUEST, "F002", "PUSH_MESSAGE_FAILED"),
-    NOTIFICATION_NOT_FOUND(HttpStatus.BAD_REQUEST, "F003", "NOTIFICATION_NOT_FOUND");
+    NOTIFICATION_NOT_FOUND(HttpStatus.BAD_REQUEST, "F003", "NOTIFICATION_NOT_FOUND"),
+    SPOTIFY_CAN_NOT_WORK(HttpStatus.BAD_REQUEST, "F003", "SPOTIFY_CAN_NOT_WORK");
 
     private final HttpStatus httpStatus;
     private final String code;

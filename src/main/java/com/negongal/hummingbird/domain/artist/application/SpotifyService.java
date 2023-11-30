@@ -81,8 +81,9 @@ public class SpotifyService {
                 .collect(Collectors.toList());
     }
 
-    public void saveArtist(String artistId) throws IOException, ParseException, SpotifyWebApiException {
+    public void saveArtist(String artistName) throws IOException, ParseException, SpotifyWebApiException {
         SpotifyConfig.setAccessToken();
+        String artistId = searchArtists(artistName).get(0).getId();
         checkPresentArtistInRepository(artistId);
         GetArtistRequest getArtistRequest = spotifyApi.getArtist(artistId).build();
         Artist artist = getArtistRequest.execute();
