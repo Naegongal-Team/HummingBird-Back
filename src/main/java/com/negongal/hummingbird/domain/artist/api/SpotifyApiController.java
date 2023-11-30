@@ -7,6 +7,7 @@ import com.negongal.hummingbird.global.common.response.ResponseUtils;
 
 import com.negongal.hummingbird.global.error.ErrorCode;
 import com.negongal.hummingbird.global.error.exception.InvalidException;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 
+@Tag(name = "Spotify API", description = "")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/spotify")

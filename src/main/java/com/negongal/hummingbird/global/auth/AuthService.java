@@ -37,7 +37,7 @@ public class AuthService {
     public String reissueToken(HttpServletRequest request, HttpServletResponse response) {
         //refresh token 가져와서 검증
         String oldRefreshToken = CookieUtil.getCookie(request, cookieKey)
-                .map(Cookie::getValue).orElseThrow(() -> new NotExistException(TOKEN_NOT_FOUND));
+                .map(Cookie::getValue).orElseThrow(() -> new NotExistException(TOKEN_NOT_EXIST));
         if (!jwtProvider.validateToken(oldRefreshToken)) {
             log.info("만료된 토큰입니다.");
             throw new InvalidException(TOKEN_EXPIRED);

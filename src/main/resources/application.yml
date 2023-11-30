@@ -38,7 +38,7 @@ spring:
       max-request-size: 10MB
 
   config:
-    import: application-aws.yml, application-oauth2.yml, config.yml
+    import: application-aws.yml, application-oauth2.yml, config.yml, application-local.yml
 
 
 #logging:
@@ -55,3 +55,21 @@ logging:
       amazonaws:
         util:
           EC2MetadataUtils: error
+
+# Swagger
+springdoc:
+  packages-to-scan: com.negongal.hummingbird
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  api-docs:
+    path: /api-docs
+    groups:
+      enabled: 'true'
+  swagger-ui:
+    path: swagger-ui.html
+    disable-swagger-default-url: true
+    display-request-duration: true
+    operations-sorter: alpha
+    tags-sorter: alpha
+  cache:
+    disabled: 'true'

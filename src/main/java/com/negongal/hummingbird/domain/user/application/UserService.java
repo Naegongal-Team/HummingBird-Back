@@ -58,4 +58,12 @@ public class UserService {
         }
     }
 
+    @Transactional
+    public void deleteUser(UserDetailDto user) {
+        User findUser = userRepository.findById(user.getUserId())
+                .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
+        findUser.updateInactiveDate();
+        userRepository.delete(findUser);
+    }
+
 }

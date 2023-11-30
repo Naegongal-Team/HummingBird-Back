@@ -8,6 +8,7 @@ import com.negongal.hummingbird.domain.artist.application.ArtistService;
 import com.negongal.hummingbird.global.common.response.ApiResponse;
 import com.negongal.hummingbird.global.common.response.ResponseUtils;
 import com.sun.security.auth.UserPrincipal;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 
+@Tag(name = "Artist API", description = "")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/artist")
