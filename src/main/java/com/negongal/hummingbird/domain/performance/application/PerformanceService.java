@@ -117,7 +117,14 @@ public class PerformanceService {
         return performanceRepository.findByArtist(artistId, scheduled);
     }
 
-    public List<PerformanceDto> search(PerformanceSearchRequestDto requestDto) {
-        return performanceRepository.search(requestDto);
+    public PerformancePageDto search(PerformanceSearchRequestDto requestDto, Pageable pageable) {
+        Page<PerformanceDto> dtoPage = performanceRepository.search(requestDto, pageable);
+        return PerformancePageDto.builder()
+                .performanceDto(dtoPage.getContent())
+                .totalPages(dtoPage.getTotalPages())
+                .totalElements(dtoPage.getTotalElements())
+                .isLast(dtoPage.isLast())
+                .currPage(dtoPage.getPageable().getPageNumber())
+                .build();
     }
 }

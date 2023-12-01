@@ -20,7 +20,9 @@ import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -137,8 +139,8 @@ public class PerformanceApiController {
     @Operation(summary = "공연 검색", description = "가수 이름으로 공연을 검색할 수 있습니다.")
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<?> performanceSearch(@RequestBody PerformanceSearchRequestDto requestDto) {
-        List<PerformanceDto> performanceList = performanceService.search(requestDto);
-        return ResponseUtils.success("performance_list", performanceList);
+    public ApiResponse<?> performanceSearch(@RequestBody PerformanceSearchRequestDto requestDto, Pageable pageable) {
+        PerformancePageDto performancePageList = performanceService.search(requestDto, pageable);
+        return ResponseUtils.success(performancePageList);
     }
 }

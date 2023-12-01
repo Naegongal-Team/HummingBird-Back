@@ -26,13 +26,19 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
     private static final String HEART_COUNT = "heart";
 
     @Override
-    public List<PerformanceDto> search(PerformanceSearchRequestDto requestDto) {
-        return queryFactory
-                .select(new QPerformanceDto(
-                        performance.id, performance.name, performance.artist.name, performance.photo))
-                .from(performance)
-                .where(performance.artist.name.containsIgnoreCase(requestDto.getArtistName()))
-                .fetch();
+    public Page<PerformanceDto> search(PerformanceSearchRequestDto requestDto, Pageable pageable) {
+        long offset = pageable.getOffset();
+        int pageSize = pageable.getPageSize();
+        String sort = getSort(pageable);
+
+        JPQLQuery<PerformanceDto> dtoQuery = getSortDtoQuery(sort);
+        dtoQuery.where(performance.artist.name.containsIgnoreCase(requestDto.getArtistName()));
+        Long count = countSearchPerformanceList(sort, requestDto.getArtistName()).stream().count();
+
+        dtoQuery.offset(offset);
+        dtoQuery.limit(pageSize);
+
+        return new PageImpl<>(dtoQuery.fetch(), pageable, count);
     }
 
     @Override
@@ -41,7 +47,7 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
         int pageSize = pageable.getPageSize();
         String sort = getSort(pageable);
 
-        JPQLQuery<PerformanceDto> dtoQuery = getDtoQuery(sort);
+        JPQLQuery<PerformanceDto> dtoQuery = getSortDtoQuery(sort);
         Long count = countPerformanceList(sort).fetchCount();
 
         dtoQuery.offset(offset);
@@ -52,7 +58,7 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
 
     @Override
     public List<PerformanceDto> findSeveral(int size, String sort) {
-        JPQLQuery<PerformanceDto> query = getDtoQuery(sort);
+        JPQLQuery<PerformanceDto> query = getSortDtoQuery(sort);
         return query.limit(size).fetch();
     }
 
@@ -92,7 +98,19 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
         return dtoQuery.select(performance.count());
     }
 
-    public JPQLQuery<PerformanceDto> getDtoQuery(String sort) {
+    public JPQLQuery<Long> countSearchPerformanceList(String sort, String search) {
+        JPQLQuery<PerformanceDto> dtoQuery = null;
+        if(sort.equals(TICKETING)) {
+            dtoQuery = getTicketingDtoQuery();
+        }
+        else {
+            dtoQuery = getBasicDtoQuery();
+        }
+        dtoQuery.where(performance.artist.name.containsIgnoreCase(search));
+        return dtoQuery.select(performance.count());
+    }
+
+    public JPQLQuery<PerformanceDto> getSortDtoQuery(String sort) {
         if(sort.equals(TICKETING)) {
             JPQLQuery<PerformanceDto> dtoQuery = getTicketingDtoQuery();
             dtoQuery.orderBy(ticketing.startDate.min().asc());
