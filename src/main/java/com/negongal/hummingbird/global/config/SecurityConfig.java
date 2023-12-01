@@ -47,7 +47,7 @@ public class SecurityConfig {
         http
                 .authorizeRequests()
                 .antMatchers("/user/**", "/**/heart/**").hasRole("USER")
-                .antMatchers("/**/admin/**", "/spotify").hasRole("ADMIN")
+//                .antMatchers("/**/admin/**", "/spotify").hasRole("ADMIN") /** h2 사용 시, 권한 수정 불가능 **/
                 .anyRequest().permitAll();
 
         http
