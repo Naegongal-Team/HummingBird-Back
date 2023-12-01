@@ -11,5 +11,5 @@ public interface PerformanceRepositoryCustom {
     Page<PerformanceDto> findAllCustom(Pageable pageable);
     List<PerformanceDto> findSeveral(int size, String sort);
     List<PerformanceDto> findByArtist(String artistId, boolean scheduled);
-    List<PerformanceDto> search(PerformanceSearchRequestDto requestDto);
+    Page<PerformanceDto> search(PerformanceSearchRequestDto requestDto, Pageable pageable);
 }
