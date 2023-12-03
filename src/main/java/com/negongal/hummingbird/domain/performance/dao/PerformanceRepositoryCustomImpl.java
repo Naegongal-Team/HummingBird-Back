@@ -12,11 +12,13 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Order;
 
+@Slf4j
 @RequiredArgsConstructor
 public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCustom {
 
@@ -48,7 +50,7 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
         String sort = getSort(pageable);
 
         JPQLQuery<PerformanceDto> dtoQuery = getSortDtoQuery(sort);
-        Long count = countPerformanceList(sort).fetchCount();
+        Long count = countPerformanceList(sort).stream().count();
 
         dtoQuery.offset(offset);
         dtoQuery.limit(pageSize);
