@@ -32,7 +32,7 @@ public class FCMService {
         }
     }
 
-    public void sendMessageByToken(String fcmToken, String title, String body) throws FirebaseMessagingException {
+    public void sendMessageByToken(String fcmToken, String title, String body) {
         Message message = Message.builder()
                 .setNotification(Notification.builder()
                         .setTitle(title)
