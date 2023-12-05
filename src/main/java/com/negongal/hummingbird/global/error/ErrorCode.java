@@ -69,8 +69,13 @@ public enum ErrorCode {
     /**
      * Etc
      */
+<<<<<<< HEAD
     INVALID_TYPE_VALUE(HttpStatus.BAD_REQUEST, "F001", "INVALID_TYPE_VALUE");
 >>>>>>> 15d91e7 (feat: FCM서비스 클래스 작성)
+=======
+    INVALID_TYPE_VALUE(HttpStatus.BAD_REQUEST, "F001", "INVALID_TYPE_VALUE"),
+    PUSH_MESSAGE_FAILED(HttpStatus.BAD_REQUEST, "F002", "PUSH_MESSAGE_FAILED");
+>>>>>>> f5d1f4b (feat: Notification 관련 클래스 작성)
 
     private final HttpStatus httpStatus;
     private final String code;

@@ -20,8 +20,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
+<<<<<<< HEAD
 @Getter
 @Builder
+=======
+@Builder
+@Getter
+>>>>>>> f5d1f4b (feat: Notification 관련 클래스 작성)
 @ToString
 public class Notification {
     @Id
