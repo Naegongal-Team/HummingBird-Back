@@ -42,10 +42,11 @@ public class PerformanceHeartService {
         Optional<PerformanceHeart> findHeart = performanceHeartRepository
                 .findByUserAndPerformance(user, performance);
 
+        
+
         if(findHeart.isPresent()) { // 이미 하트 누른 경우
             throw new AlreadyExistException(PERFORMANCE_HEART_ALREADY_EXIST);
         }
-
         PerformanceHeart performanceHeart = PerformanceHeart.builder()
                 .performance(performance)
                 .user(user)

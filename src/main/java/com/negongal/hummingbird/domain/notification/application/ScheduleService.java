@@ -13,6 +13,5 @@ public class ScheduleService {
     @Scheduled(fixedRate = 600000)
     public void performTimeCheckAndPushNotification() {
         log.info("run Notification System");
-
     }
 }
