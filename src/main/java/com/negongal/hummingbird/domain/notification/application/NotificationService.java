@@ -60,8 +60,6 @@ public class NotificationService {
         notificationRepository.delete(findNotification);
     }
 
-    public void
-
     @Async
     public void pushPerformRegisterNotification(String artistName) {
         /*

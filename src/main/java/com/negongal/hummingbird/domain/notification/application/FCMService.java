@@ -8,6 +8,7 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
 import com.negongal.hummingbird.global.error.exception.InvalidException;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,5 +47,11 @@ public class FCMService {
         } catch (FirebaseMessagingException ex) {
             throw new InvalidException(PUSH_MESSAGE_FAILED);
         }
+    }
+
+    public void sendMessageBySeveralTokens(List<String> tokens, String title, String body) {
+        /*
+        고민 좀 해봐야 할 거 가튼데
+         */
     }
 }
