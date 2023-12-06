@@ -214,3 +214,5 @@ src/main/resources/hummingbird-87e60-firebase-adminsdk-xxwlt-39e2564e23.json
 src/main/resources/application-local.yml
 src/main/resources/binary/redis/dump.rdb
 src/main/resources/hummingbird-87e60-firebase-adminsdk-xxwlt-39e2564e23.json
+src/main/resources/application-local.yml
+src/main/resources/binary/redis/dump.rdb

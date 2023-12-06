@@ -1,5 +1,6 @@
 package com.negongal.hummingbird.global.error;
 
+import com.nimbusds.jwt.JWT;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ public enum ErrorCode {
     ARTIST_NOT_EXIST(HttpStatus.BAD_REQUEST, "A002", "ARTIST_NOT_EXIST"),
     ARTIST_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "A003", "ARTIST_ALREADY_EXIST"),
     ARTIST_IMAGE_NOT_EXIST(HttpStatus.NOT_FOUND, "A004", "ARTIST_IMAGE_NOT_EXIST"),
+    ALBUM_IMAGE_NOT_EXIST(HttpStatus.NOT_FOUND, "A005", "ALBUM_IMAGE_NOT_EXIST"),
 
     /**
      * PERFORMANCE
@@ -33,7 +35,7 @@ public enum ErrorCode {
     TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "C003", "TOKEN_EXPIRED"),
     TOKEN_NOT_MATCHED(HttpStatus.BAD_REQUEST, "C004", "TOKEN_NOT_MATCHED"),
     LOGIN_FAILED(HttpStatus.BAD_REQUEST, "C005", "LOGIN_FAILED"),
-<<<<<<< HEAD
+    LOGIN_FAILED(HttpStatus.BAD_REQUEST, "C002", "LOGIN_FAILED"),
 
     /**
      * CHAT ROOM
@@ -45,7 +47,7 @@ public enum ErrorCode {
      * CHAT MESSAGE
      */
 
-    //LOGIN_FAILED(HttpStatus.BAD_REQUEST, "C002", "LOGIN_FAILED"),
+    LOGIN_FAILED(HttpStatus.BAD_REQUEST, "C002", "LOGIN_FAILED"),
 
     /**
      * Etc
@@ -58,25 +60,35 @@ public enum ErrorCode {
     /**
      * JWT Token
      */
-    //TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "G001", "TOKEN_EXPIRED"),
+    TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "G001", "TOKEN_EXPIRED"),
     TOKEN_UNSUPPORTED(HttpStatus.UNAUTHORIZED, "G002","TOKEN_UNSUPPORTED"),
     TOKEN_WRONG(HttpStatus.UNAUTHORIZED, "G003","TOKEN_WRONG"),
-    //TOKEN_NOT_MATCHED(HttpStatus.UNAUTHORIZED, "G004","TOKEN_NOT_MATCHED"),
+    TOKEN_NOT_MATCHED(HttpStatus.UNAUTHORIZED, "G004","TOKEN_NOT_MATCHED"),
     TOKEN_NOT_EXIST(HttpStatus.UNAUTHORIZED, "G005","TOKEN_NOT_EXIST");
-=======
 
+    /**
+     * CHAT MESSAGE
+     */
 
+    
     /**
      * Etc
      */
-<<<<<<< HEAD
-    INVALID_TYPE_VALUE(HttpStatus.BAD_REQUEST, "F001", "INVALID_TYPE_VALUE");
->>>>>>> 15d91e7 (feat: FCM서비스 클래스 작성)
-=======
     INVALID_TYPE_VALUE(HttpStatus.BAD_REQUEST, "F001", "INVALID_TYPE_VALUE"),
-    PUSH_MESSAGE_FAILED(HttpStatus.BAD_REQUEST, "F002", "PUSH_MESSAGE_FAILED");
->>>>>>> f5d1f4b (feat: Notification 관련 클래스 작성)
+    INVALID_TYPE_VALUE(HttpStatus.BAD_REQUEST, "F001", "INVALID_TYPE_VALUE"),
+    PUSH_MESSAGE_FAILED(HttpStatus.BAD_REQUEST, "F002", "PUSH_MESSAGE_FAILED"),
+    INVALID_TYPE_VALUE(HttpStatus.BAD_REQUEST, "F001", "INVALID_TYPE_VALUE"),
+    SPOTIFY_CAN_NOT_WORK(HttpStatus.BAD_REQUEST, "F003", "SPOTIFY_CAN_NOT_WORK"),
 
+    /**
+     * JWT Token
+     */
+    TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "G001", "TOKEN_EXPIRED"),
+    TOKEN_UNSUPPORTED(HttpStatus.UNAUTHORIZED, "G002","TOKEN_UNSUPPORTED"),
+    TOKEN_WRONG(HttpStatus.UNAUTHORIZED, "G003","TOKEN_WRONG"),
+    TOKEN_NOT_MATCHED(HttpStatus.UNAUTHORIZED, "G004","TOKEN_NOT_MATCHED"),
+    TOKEN_NOT_EXIST(HttpStatus.UNAUTHORIZED, "G005","TOKEN_NOT_EXIST");
+  
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;

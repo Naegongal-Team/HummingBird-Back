@@ -5,12 +5,12 @@ import com.negongal.hummingbird.domain.artist.dto.ArtistSearchDto;
 import com.negongal.hummingbird.global.common.response.ApiResponse;
 import com.negongal.hummingbird.global.common.response.ResponseUtils;
 
-<<<<<<< HEAD
 import com.negongal.hummingbird.global.error.ErrorCode;
 import com.negongal.hummingbird.global.error.exception.InvalidException;
-=======
 import io.swagger.v3.oas.annotations.tags.Tag;
->>>>>>> 48dc6e4 (feat: 스웨거 적용)
+import com.negongal.hummingbird.global.error.ErrorCode;
+import com.negongal.hummingbird.global.error.exception.InvalidException;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
