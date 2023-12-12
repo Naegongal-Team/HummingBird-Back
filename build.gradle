@@ -42,11 +42,14 @@ dependencies {
 	implementation 'com.github.thelinmichael:spotify-web-api-java:master-SNAPSHOT'
 	implementation 'org.modelmapper:modelmapper:2.4.2'
 	implementation 'se.michaelthelin.spotify:spotify-web-api-java:8.3.3'
-	implementation 'com.google.firebase:firebase-admin:8.1.0'
+
+	//firebase
+	implementation 'comorg.apache.httpcomponents.client5:httpclient5:5.2.1.google.firebase:firebase-admin:8.1.0'
+
+	implementation ''
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
 	//spring security
-	implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
-	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 	implementation ("org.springframework.boot:spring-boot-starter-oauth2-client")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.security:spring-security-test")
