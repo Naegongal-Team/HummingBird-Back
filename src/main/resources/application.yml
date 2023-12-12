@@ -3,13 +3,6 @@ spring:
     ansi:
       enabled: always
 
-
-# spring boot 2.5.x
-#  sql:
-#    init:
-#      mode: always
-#      data-locations: classpath:data.sql
-
   jpa:
     defer-datasource-initialization: true
     # hibernate

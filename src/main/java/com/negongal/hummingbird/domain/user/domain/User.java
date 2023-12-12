@@ -68,10 +68,9 @@ public class User {
         this.nickname = nickname;
         this.profileImage = profileImage;
     }
+
     public void updateFCMToken(String fcmToken) {
         this.fcmToken = fcmToken;
-    public void updateInactiveDate() {
-        this.inactiveDate = LocalDateTime.now();
     }
 
     public void updateInactiveDate() {

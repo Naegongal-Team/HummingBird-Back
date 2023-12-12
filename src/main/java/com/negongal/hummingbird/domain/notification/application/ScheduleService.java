@@ -20,7 +20,6 @@ public class ScheduleService {
     @Scheduled(fixedRate = 60000)
     public void performTimeCheckAndPushNotification() {
         log.info("run Notification System");
-<<<<<<< HEAD
         LocalDateTime now = LocalDateTime.now();
         List<Notification> findNotification = notificationRepository.findNotificationByNotificationTime(now);
 
@@ -28,7 +27,5 @@ public class ScheduleService {
                 notificationService.pushTicketingAlertNotification(
                         notification.getPerformance().getId(),
                         notification.getUser().getUserId()));
-=======
->>>>>>> f5d1f4b (feat: Notification 관련 클래스 작성)
     }
 }

@@ -60,11 +60,6 @@ public class NotificationService {
         notificationRepository.delete(findNotification);
     }
 
-<<<<<<< HEAD
-=======
-    public void
-
->>>>>>> f5d1f4b (feat: Notification 관련 클래스 작성)
     @Async
     public void pushPerformRegisterNotification(String artistName) {
         /*
