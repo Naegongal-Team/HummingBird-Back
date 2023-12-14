@@ -16,7 +16,7 @@ spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3306/hummingbird
-    username: root
+    username: naegongal
     password: hummingbird
 
   # file upload max size
@@ -26,7 +26,7 @@ spring:
       max-request-size: 10MB
 
   config:
-    import: application-aws.yml, application-oauth2.yml, config.yml, application-local.yml
+    import: aws.yml, oauth2.yml, spotify.yml, application-dev.yml
 
 
 #logging:

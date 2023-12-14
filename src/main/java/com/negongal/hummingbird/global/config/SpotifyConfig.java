@@ -16,7 +16,7 @@ import se.michaelthelin.spotify.model_objects.credentials.ClientCredentials;
 import se.michaelthelin.spotify.requests.authorization.client_credentials.ClientCredentialsRequest;
 
 @Slf4j
-@PropertySource("classpath:config.yml")
+@PropertySource("classpath:spotify.yml")
 @Configuration
 public class SpotifyConfig {
 
