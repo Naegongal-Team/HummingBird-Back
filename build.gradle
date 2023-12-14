@@ -62,16 +62,12 @@ dependencies {
 	//websocket
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-	//embedded-redis
-	implementation ('it.ozimov:embedded-redis:0.7.3') {
-		exclude group: 'org.slf4j', module: 'slf4j-simple'
-	}
 
 	//querydsl
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 	annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
-
-	//view
+	
+	// view
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-freemarker'
 	implementation 'org.springframework.boot:spring-boot-devtools'
