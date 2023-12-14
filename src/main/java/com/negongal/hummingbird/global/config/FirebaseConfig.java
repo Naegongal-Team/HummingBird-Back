@@ -5,6 +5,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -18,11 +19,12 @@ public class FirebaseConfig {
 
     @PostConstruct
     public void initFirebase() throws IOException {
-        FileInputStream serviceAccount =
-                new FileInputStream(resource.getFile());
+//        FileInputStream serviceAccount =
+//                new FileInputStream(resource.getFile());
+        InputStream inputStream = resource.getInputStream();
 
         FirebaseOptions options = new FirebaseOptions.Builder()
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                .setCredentials(GoogleCredentials.fromStream(inputStream))
                 .build();
 
         FirebaseApp.initializeApp(options);
