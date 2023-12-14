@@ -106,6 +106,12 @@ public class UserApiController {
         return ResponseUtils.success();
     }
 
+    @PostMapping("/user/fcm-token")
+    public ApiResponse postFCMToken(@RequestParam String fcmToken) {
+        userService.saveFCMToken(fcmToken);
+        return ResponseUtils.success(fcmToken);
+    }
+
     @Operation(summary = "사용자 탈퇴", description = "회원이 탈퇴할 수 있습니다.")
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(
@@ -121,5 +127,4 @@ public class UserApiController {
         userService.deleteUser(user);
         return ResponseUtils.success();
     }
-
 }

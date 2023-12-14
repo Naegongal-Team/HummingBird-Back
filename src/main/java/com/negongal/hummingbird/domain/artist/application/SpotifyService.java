@@ -27,7 +27,7 @@ import se.michaelthelin.spotify.requests.data.search.simplified.SearchArtistsReq
 import static com.negongal.hummingbird.global.config.SpotifyConfig.spotifyApi;
 import static com.negongal.hummingbird.global.error.ErrorCode.*;
 
-@PropertySource("classpath:config.yml")
+@PropertySource("classpath:spotify.yml")
 @DependsOn("spotifyConfig")
 @Slf4j
 @Transactional

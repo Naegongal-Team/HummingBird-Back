@@ -39,6 +39,7 @@ public class User {
 
     @Column(length = 1000)
     private String profileImage;
+    private String fcmToken;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -68,8 +69,11 @@ public class User {
         this.profileImage = profileImage;
     }
 
+    public void updateFCMToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
+
     public void updateInactiveDate() {
         this.inactiveDate = LocalDateTime.now();
     }
-
 }

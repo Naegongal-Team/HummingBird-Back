@@ -2,14 +2,6 @@ spring:
   output:
     ansi:
       enabled: always
-
-
-# spring boot 2.5.x
-#  sql:
-#    init:
-#      mode: always
-#      data-locations: classpath:data.sql
-
   jpa:
     defer-datasource-initialization: true
     # hibernate
@@ -33,7 +25,7 @@ spring:
       max-request-size: 10MB
 
   config:
-    import: application-aws.yml, application-oauth2.yml, config.yml, application-local.yml
+    import: aws.yml, oauth2.yml, spotify.yml, application-dev.yml
 
 
 #logging:
