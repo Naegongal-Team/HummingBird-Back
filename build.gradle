@@ -39,9 +39,9 @@ dependencies {
 	implementation 'junit:junit:4.13.1'
 
 	//spotify
-	implementation 'com.github.thelinmichael:spotify-web-api-java:master-SNAPSHOT'
-	implementation 'org.modelmapper:modelmapper:2.4.2'
-	implementation 'se.michaelthelin.spotify:spotify-web-api-java:8.3.3'
+//	implementation 'com.github.thelinmichael:spotify-web-api-java:master-SNAPSHOT'
+//	implementation 'org.modelmapper:modelmapper:2.4.2'
+	implementation 'se.michaelthelin.spotify:spotify-web-api-java:8.3.4'
 
 	//firebase
 	implementation 'com.google.firebase:firebase-admin:8.1.0'

@@ -13,7 +13,7 @@ import org.springframework.core.io.Resource;
 @Configuration
 public class FirebaseConfig {
 
-    @Value("classpath:hummingbird-87e60-firebase-adminsdk-xxwlt-39e2564e23.json")
+    @Value("classpath:firebase-admin.json")
     private Resource resource;
 
     @PostConstruct
