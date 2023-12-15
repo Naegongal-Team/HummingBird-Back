@@ -195,8 +195,8 @@ Temporary Items
 *.icloud
 
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij,macos,git
-#/build/
-#/.gradle/
+/build/
+/.gradle/
 /.idea/
 HELP.md
 
