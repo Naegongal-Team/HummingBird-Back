@@ -18,10 +18,9 @@ import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@DynamicUpdate //update 할때 실제 값이 변경됨 컬럼으로만 update 쿼리를 만듬
-@Table(name = "users") //h2에서 user가 예약어임
+@DynamicUpdate
 @Getter
-@SQLDelete(sql = "UPDATE user SET status='INACTIVE' WHERE userId = ?")
+@SQLDelete(sql = "UPDATE user SET status = 'INACTIVE' WHERE user_id = ?")
 @Where(clause = "status = 'ACTIVE'")
 public class User {
     @Id
