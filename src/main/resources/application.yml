@@ -18,6 +18,14 @@ spring:
     username: root
     password: hummingbird
 
+  redis:
+    pool:
+      min-idle: 0
+      max-idle: 8
+      max-active: 8
+    host: localhost
+    port: 6379
+
   # file upload max size
   servlet:
     multipart:
