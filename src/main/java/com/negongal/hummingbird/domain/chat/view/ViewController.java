@@ -21,7 +21,7 @@ public class ViewController {
 
     @GetMapping("/chat/room")
     public String rooms(Model model) {
-        return "/chat/room";
+        return "chat/room";
     }
 
     @Operation(hidden = true)
@@ -34,7 +34,7 @@ public class ViewController {
     @GetMapping("/chat/room/enter/{roomId}")
     public String roomDetail(Model model, @PathVariable String roomId) {
         model.addAttribute("roomId", roomId);
-        return "/chat/roomdetail";
+        return "chat/roomdetail";
     }
 
     @Operation(hidden = true)
