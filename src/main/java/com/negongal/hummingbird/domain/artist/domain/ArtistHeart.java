@@ -1,6 +1,7 @@
 package com.negongal.hummingbird.domain.artist.domain;
 
 import com.negongal.hummingbird.domain.user.domain.User;
+import com.negongal.hummingbird.global.common.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @Builder
 @Getter
 @ToString
-public class ArtistHeart {
+public class ArtistHeart extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

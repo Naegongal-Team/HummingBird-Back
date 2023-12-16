@@ -2,6 +2,7 @@ package com.negongal.hummingbird.domain.artist.dao;
 
 import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.artist.domain.ArtistHeart;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,5 +16,5 @@ public interface ArtistHeartRepository extends JpaRepository<ArtistHeart, Long> 
     Page<Artist> findArtistsByUserId(@Param("userId") Long userId, Pageable pageable);
 
     @Query("SELECT ah FROM ArtistHeart ah WHERE ah.user.userId = :userId AND ah.artist.id = :artistId")
-    ArtistHeart findByUserIdAndArtistId(@Param("userId")Long userId, @Param("artistId") String artistId);
+    Optional<ArtistHeart> findByUserIdAndArtistId(@Param("userId")Long userId, @Param("artistId") String artistId);
 }

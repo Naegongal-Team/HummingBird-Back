@@ -6,7 +6,10 @@ import com.negongal.hummingbird.domain.artist.dao.ArtistHeartRepository;
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.domain.user.domain.User;
+import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,10 +29,11 @@ public class ArtistHeartService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void save(Long userId, String artistId) {
+    public void save(Optional<Long> userId, String artistId) {
+        Long currentUserId = userId.orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
         Artist artist = artistRepository.findById(artistId)
                 .orElseThrow(() -> new NotExistException(ARTIST_NOT_EXIST));
-        User user = userRepository.findById(userId)
+        User user = userRepository.findById(currentUserId)
                 .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
 
         ArtistHeart artistHeart = ArtistHeart.builder()
@@ -41,9 +45,10 @@ public class ArtistHeartService {
     }
 
     @Transactional
-    public void delete(Long userId, String artistId) {
-        ArtistHeart artistHeart = artistHeartRepository.findByUserIdAndArtistId(userId, artistId);
-
+    public void delete(Optional<Long> userId, String artistId) {
+        Long currentUserId = userId.orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
+        ArtistHeart artistHeart = artistHeartRepository.findByUserIdAndArtistId(currentUserId, artistId)
+                .orElseThrow(() -> new NoSuchElementException());
         artistHeartRepository.delete(artistHeart);
     }
 }
