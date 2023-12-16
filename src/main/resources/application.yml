@@ -1,15 +1,16 @@
 spring:
+  profiles:
+    default: prod
   output:
     ansi:
       enabled: always
   jpa:
     defer-datasource-initialization: true
-    # hibernate
-    show-sql: false
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
+        show_sql: false
     open-in-view: true
 
   datasource:
@@ -23,7 +24,7 @@ spring:
       min-idle: 0
       max-idle: 8
       max-active: 8
-    host: localhost
+    host: 172.17.0.1
     port: 6379
 
   # file upload max size
@@ -33,15 +34,7 @@ spring:
       max-request-size: 10MB
 
   config:
-    import: aws.yml, oauth2.yml, spotify.yml, application-dev.yml
-
-
-#logging:
-#  level:
-#    org:
-#      hibernate:
-#        sql: debug
-#        type: trace
+    import: aws.yml, oauth2.yml, spotify.yml
 
 # SdkClientException 에러 로그 제거
 logging:
