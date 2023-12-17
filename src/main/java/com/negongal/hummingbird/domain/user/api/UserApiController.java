@@ -106,10 +106,11 @@ public class UserApiController {
         return ResponseUtils.success();
     }
 
-    @PostMapping("/user/fcm-token")
-    public ApiResponse postFCMToken(@RequestParam String fcmToken) {
-        userService.saveFCMToken(fcmToken);
-        return ResponseUtils.success(fcmToken);
+    @Operation(summary = "fcmToken등록", description = "회원 기기의 토큰을 등록합니다.")
+    @PostMapping("/fcm-token")
+    public ApiResponse postFCMToken(@RequestParam String token) {
+        userService.saveFCMToken(token);
+        return ResponseUtils.success(token);
     }
 
     @Operation(summary = "사용자 탈퇴", description = "회원이 탈퇴할 수 있습니다.")

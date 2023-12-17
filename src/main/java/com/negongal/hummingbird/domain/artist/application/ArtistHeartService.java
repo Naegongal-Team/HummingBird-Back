@@ -29,8 +29,8 @@ public class ArtistHeartService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void save(Optional<Long> userId, String artistId) {
-        Long currentUserId = userId.orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
+    public void save(String artistId) {
+        Long currentUserId = SecurityUtil.getCurrentUserId().orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
         Artist artist = artistRepository.findById(artistId)
                 .orElseThrow(() -> new NotExistException(ARTIST_NOT_EXIST));
         User user = userRepository.findById(currentUserId)
@@ -45,8 +45,8 @@ public class ArtistHeartService {
     }
 
     @Transactional
-    public void delete(Optional<Long> userId, String artistId) {
-        Long currentUserId = userId.orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
+    public void delete(String artistId) {
+        Long currentUserId = SecurityUtil.getCurrentUserId().orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
         ArtistHeart artistHeart = artistHeartRepository.findByUserIdAndArtistId(currentUserId, artistId)
                 .orElseThrow(() -> new NoSuchElementException());
         artistHeartRepository.delete(artistHeart);

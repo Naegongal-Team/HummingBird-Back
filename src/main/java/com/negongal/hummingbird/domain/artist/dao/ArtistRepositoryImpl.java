@@ -5,6 +5,7 @@ import static com.negongal.hummingbird.domain.artist.domain.QArtistHeart.artistH
 
 import com.negongal.hummingbird.domain.artist.dto.ArtistDto;
 import com.negongal.hummingbird.domain.artist.dto.QArtistDto;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -19,15 +20,15 @@ public class ArtistRepositoryImpl implements ArtistRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Page<ArtistDto> findAllArtists(Long userId, Pageable pageable) {
-        JPAQuery<ArtistDto> results = findAllArtistsQuery(userId);
+    public Page<Tuple> findAllArtists(Long userId, Pageable pageable) {
+        JPAQuery<Tuple> results = findAllArtistsQuery(userId);
 
         return new PageImpl<>(results.fetch(), pageable, results.fetch().size());
     }
 
-    private JPAQuery<ArtistDto> findAllArtistsQuery(Long userId) {
+    private JPAQuery<Tuple> findAllArtistsQuery(Long userId) {
         return jpaQueryFactory.select(new QArtistDto(
-                artist.id, artist.name, artist.image, artist.genreList, artist.artistHeartList))
+                artist.id, artist.name, artist.image, artist.genreList, artist.artistHeartList), artist.artistHeartList.size())
                 .from(artist)
                 .leftJoin(artist.artistHeartList, artistHeart)
                 .where(artistHeart.user.userId.eq(userId).or(artistHeart.user.userId.isNull()))

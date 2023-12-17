@@ -8,6 +8,8 @@ import com.negongal.hummingbird.domain.artist.application.ArtistService;
 import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
 import com.negongal.hummingbird.global.common.response.ApiResponse;
 import com.negongal.hummingbird.global.common.response.ResponseUtils;
+import com.querydsl.core.Tuple;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -29,16 +31,17 @@ public class ArtistApiController {
 
     private final ArtistHeartService artistHeartService;
 
+    @Operation(summary = "아티스트 전체 조회", description = "좋아요한 시간 순서대로 기본 정렬")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse artistsList(Pageable pageable) {
-        Optional<Long> currentUserId = SecurityUtil.getCurrentUserId();
-        Page<ArtistDto> artistList = artistService.findArtists(currentUserId, pageable);
-        HashMap<String, Page<ArtistDto>> response = new HashMap<>();
+        Page<Tuple> artistList = artistService.findArtists(pageable);
+        HashMap<String, Page<Tuple>> response = new HashMap<>();
         response.put("artist_list", artistList);
         return ResponseUtils.success(response);
     }
 
+    @Operation(summary = "아티스트 이름 조회", description = "")
     @GetMapping("/search/{artistName}")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse artistByNameList(@PathVariable String artistName) {
@@ -46,35 +49,34 @@ public class ArtistApiController {
         return ResponseUtils.success(artistSearchList);
     }
 
+    @Operation(summary = "아티스트 단건 조회", description = "아티스트의 상세 내용과 좋아요 유무 boolean 값 전달")
     @GetMapping("/{artistId}")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse artistDetails(@PathVariable String artistId) {
-        Optional<Long> currentUserId = SecurityUtil.getCurrentUserId();
-        ArtistDetailDto artist = artistService.findArtist(currentUserId, artistId);
+        ArtistDetailDto artist = artistService.findArtist(artistId);
         return ResponseUtils.success(artist);
     }
 
+    @Operation(summary = "좋아요한 아티스트 조회", description = "아티스트의 전체 조회는 하지 않고 좋아요한 아티스트만 전달")
     @GetMapping("/artist/heart")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse heartedArtistsList(Pageable pageable) {
-        Optional<Long> currentUserId = SecurityUtil.getCurrentUserId();
-        Page<ArtistDto> heartedArtistList = artistService.findLikeArtist(currentUserId,
-                pageable);
+        Page<ArtistDto> heartedArtistList = artistService.findLikeArtist(pageable);
         HashMap<String, Page<ArtistDto>> response = new HashMap<>();
         response.put("heartedArtist_list", heartedArtistList);
         return ResponseUtils.success(response);
     }
 
+    @Operation(summary = "아티스트 좋아요 추가", description = "boolean값으로 isHearted를 필히 넘겨야 한다.")
     @PostMapping("/{artistId}/heart")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse artistHeartAdd(@PathVariable String artistId,
-                                      @RequestParam boolean isHearted) {
-        Optional<Long> currentUserId = SecurityUtil.getCurrentUserId();
+                                      @RequestParam(required = true) boolean isHearted) {
         if (isHearted) {
-            artistHeartService.delete(currentUserId, artistId);
+            artistHeartService.delete(artistId);
             return ResponseUtils.success("성공적으로 삭제되었습니다.");
         }
-        artistHeartService.save(currentUserId, artistId);
+        artistHeartService.save(artistId);
         return ResponseUtils.success("성공적으로 저장되었습니다.");
     }
 }

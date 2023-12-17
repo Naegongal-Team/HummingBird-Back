@@ -9,7 +9,9 @@ import com.negongal.hummingbird.domain.artist.dto.ArtistDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistSearchDto;
 import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
+import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
+import com.querydsl.core.Tuple;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -39,8 +41,8 @@ public class ArtistService {
     전체 아티스트 검색 시 Artist의 리스트를 가져온다
      */
     @Transactional
-    public Page<ArtistDto> findArtists(Optional<Long> userId, Pageable pageable) {
-        Long currentUserId = userId.orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
+    public Page<Tuple> findArtists(Pageable pageable) {
+        Long currentUserId = SecurityUtil.getCurrentUserId().orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
         return artistRepositoryCustom.findAllArtists(currentUserId, pageable);
     }
 
@@ -60,9 +62,9 @@ public class ArtistService {
     /*
     아티스트 단건 조회
      */
-    public ArtistDetailDto findArtist(Optional<Long> userId, String id) {
+    public ArtistDetailDto findArtist(String id) {
         Artist artist = artistRepository.findById(id).orElseThrow(() -> new NotExistException(ARTIST_NOT_EXIST));
-        Long currentUserId = userId.orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
+        Long currentUserId = SecurityUtil.getCurrentUserId().orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
 
         if (artistHeartRepository.findByUserIdAndArtistId(currentUserId, id).isPresent()) {
             return ArtistDetailDto.of(artist, true);
@@ -73,8 +75,8 @@ public class ArtistService {
     /*
     좋아요 한 아티스트들 검색
      */
-    public Page<ArtistDto> findLikeArtist(Optional<Long> userId, Pageable pageable) {
-        Long currentUserId = userId.orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
+    public Page<ArtistDto> findLikeArtist(Pageable pageable) {
+        Long currentUserId = SecurityUtil.getCurrentUserId().orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
         return artistHeartRepository.findArtistsByUserId(currentUserId, pageable).map(ArtistDto::of);
     }
 }

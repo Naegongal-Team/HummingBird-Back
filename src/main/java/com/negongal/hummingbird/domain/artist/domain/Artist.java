@@ -35,4 +35,6 @@ public class Artist {
 
     @OneToMany(mappedBy = "artist")
     private List<Performance> performanceList;
+
+
 }
