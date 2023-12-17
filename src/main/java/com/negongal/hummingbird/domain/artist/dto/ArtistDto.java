@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.artist.domain.ArtistHeart;
+import com.querydsl.core.annotations.QueryProjection;
 import java.util.ArrayList;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -24,18 +25,16 @@ public class ArtistDto {
 
     private List<String> genres;
 
-    private int popularity;
-
     private List<ArtistHeart> artistHearts;
 
     @Builder
-    public ArtistDto(String id, String name, String image, List<String> genres, int popularity,
+    @QueryProjection
+    public ArtistDto(String id, String name, String image, List<String> genres,
                      List<ArtistHeart> artistHearts) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.genres = genres;
-        this.popularity = popularity;
         this.artistHearts = artistHearts;
     }
 
@@ -45,7 +44,6 @@ public class ArtistDto {
                 .name(artist.getName())
                 .image(artist.getImage())
                 .genres(artist.getGenreList())
-                .popularity(artist.getPopularity())
                 .artistHearts(artist.getArtistHeartList())
                 .build();
     }

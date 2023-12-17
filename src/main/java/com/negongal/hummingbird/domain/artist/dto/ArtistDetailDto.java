@@ -28,18 +28,21 @@ public class ArtistDetailDto {
 
     private List<ArtistHeart> artistHearts;
 
+    private boolean isHearted;
+
     @Builder
     public ArtistDetailDto(String id, String name, String image, List<String> genres, List<PerformanceDto> performances,
-                           List<TrackDto> topTracks, List<ArtistHeart> artistHearts) {
+                           List<TrackDto> topTracks, List<ArtistHeart> artistHearts, boolean isHearted) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.genres = genres;
         this.topTracks = topTracks;
         this.artistHearts = artistHearts;
+        this.isHearted = isHearted;
     }
 
-    public static ArtistDetailDto of(Artist artist) {
+    public static ArtistDetailDto of(Artist artist, boolean isHearted) {
         return ArtistDetailDto.builder()
                 .id(artist.getId())
                 .name(artist.getName())
@@ -48,6 +51,7 @@ public class ArtistDetailDto {
                 .topTracks(artist.getArtistTopTrackList().stream()
                         .map(track -> TrackDto.of(track))
                         .collect(Collectors.toList()))
+                .isHearted(isHearted)
                 .build();
     }
 }

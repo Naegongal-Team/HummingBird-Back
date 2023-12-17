@@ -5,15 +5,17 @@ import com.negongal.hummingbird.domain.artist.dto.ArtistDetailDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistSearchDto;
 import com.negongal.hummingbird.domain.artist.application.ArtistService;
+import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
 import com.negongal.hummingbird.global.common.response.ApiResponse;
 import com.negongal.hummingbird.global.common.response.ResponseUtils;
-import com.sun.security.auth.UserPrincipal;
+import com.querydsl.core.Tuple;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -29,51 +31,52 @@ public class ArtistApiController {
 
     private final ArtistHeartService artistHeartService;
 
+    @Operation(summary = "아티스트 전체 조회", description = "좋아요한 시간 순서대로 기본 정렬")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<HashMap<String, Page<ArtistDto>>> artistsList(Pageable pageable) {
-        Page<ArtistDto> artistList = artistService.findArtists(pageable);
-        HashMap<String, Page<ArtistDto>> response = new HashMap<>();
+    public ApiResponse artistsList(Pageable pageable) {
+        Page<Tuple> artistList = artistService.findArtists(pageable);
+        HashMap<String, Page<Tuple>> response = new HashMap<>();
         response.put("artist_list", artistList);
         return ResponseUtils.success(response);
     }
 
+    @Operation(summary = "아티스트 이름 조회", description = "")
     @GetMapping("/search/{artistName}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<ArtistSearchDto>> artistByNameList(@PathVariable String artistName) {
+    public ApiResponse artistByNameList(@PathVariable String artistName) {
         List<ArtistSearchDto> artistSearchList = artistService.findArtistByName(artistName);
         return ResponseUtils.success(artistSearchList);
     }
 
+    @Operation(summary = "아티스트 단건 조회", description = "아티스트의 상세 내용과 좋아요 유무 boolean 값 전달")
     @GetMapping("/{artistId}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<ArtistDetailDto> artistDetails(@PathVariable String artistId) {
+    public ApiResponse artistDetails(@PathVariable String artistId) {
         ArtistDetailDto artist = artistService.findArtist(artistId);
         return ResponseUtils.success(artist);
     }
 
+    @Operation(summary = "좋아요한 아티스트 조회", description = "아티스트의 전체 조회는 하지 않고 좋아요한 아티스트만 전달")
     @GetMapping("/artist/heart")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<HashMap<String, Page<ArtistDto>>> heartedArtistsList(
-            @AuthenticationPrincipal UserPrincipal userPrincipal,
-            Pageable pageable) {
-        Page<ArtistDto> heartedArtistList = artistService.findLikeArtist(Long.valueOf(userPrincipal.getName()),
-                pageable);
+    public ApiResponse heartedArtistsList(Pageable pageable) {
+        Page<ArtistDto> heartedArtistList = artistService.findLikeArtist(pageable);
         HashMap<String, Page<ArtistDto>> response = new HashMap<>();
         response.put("heartedArtist_list", heartedArtistList);
         return ResponseUtils.success(response);
     }
 
+    @Operation(summary = "아티스트 좋아요 추가", description = "boolean값으로 isHearted를 필히 넘겨야 한다.")
     @PostMapping("/{artistId}/heart")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse artistHeartAdd(@PathVariable String artistId,
-                                      @AuthenticationPrincipal UserPrincipal userPrincipal,
-                                      @RequestParam boolean isHearted) {
+                                      @RequestParam(required = true) boolean isHearted) {
         if (isHearted) {
-            artistHeartService.delete(Long.valueOf(userPrincipal.getName()), artistId);
+            artistHeartService.delete(artistId);
             return ResponseUtils.success("성공적으로 삭제되었습니다.");
         }
-        artistHeartService.save(Long.valueOf(userPrincipal.getName()), artistId);
+        artistHeartService.save(artistId);
         return ResponseUtils.success("성공적으로 저장되었습니다.");
     }
 }
