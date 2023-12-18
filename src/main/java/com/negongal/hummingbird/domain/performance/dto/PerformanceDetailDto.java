@@ -28,6 +28,7 @@ public class PerformanceDetailDto {
     private Long id;
     private String name;
     private String artistName;
+    private String artistId;
     private String photo;
     private String location;
     private String description;
@@ -47,10 +48,11 @@ public class PerformanceDetailDto {
     @Builder
     public PerformanceDetailDto(Long id, String name, String artistName, String location, Long runtime, String description, boolean heartPressed,
                                 List<LocalDateTime> date, String photo, List<TicketingDto> regularTicketing, List<TicketingDto> earlybirdTicketing,
-                                String roomId) {
+                                String roomId, String artistId) {
         this.id = id;
         this.name = name;
         this.artistName = artistName;
+        this.artistId = artistId;
         this.photo = photo;
         this.location = location;
         this.runtime = runtime;
@@ -70,6 +72,7 @@ public class PerformanceDetailDto {
                 .id(p.getId())
                 .name(p.getName())
                 .artistName(p.getArtist().getName())
+                .artistId(p.getArtist().getId())
                 .photo(p.getPhoto())
                 .location(p.getLocation())
                 .runtime(p.getRuntime())
