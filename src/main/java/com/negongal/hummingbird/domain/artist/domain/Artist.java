@@ -1,14 +1,17 @@
 package com.negongal.hummingbird.domain.artist.domain;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.negongal.hummingbird.domain.performance.domain.Performance;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
+import org.hibernate.annotations.Formula;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @Builder
 @Getter
 @ToString
@@ -22,6 +25,9 @@ public class Artist {
     private String image;
 
     private int popularity;
+
+    @Formula("(SELECT COUNT(1) FROM artist_heart ah WHERE ah.artist_id = id)")
+    private int heartCount;
 
     @ElementCollection
     @CollectionTable(name = "GENRES", joinColumns = @JoinColumn(name = "artist_id"))

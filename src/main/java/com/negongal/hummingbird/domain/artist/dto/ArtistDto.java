@@ -1,21 +1,19 @@
 package com.negongal.hummingbird.domain.artist.dto;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.artist.domain.ArtistHeart;
 import com.querydsl.core.annotations.QueryProjection;
-import java.util.ArrayList;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import org.springframework.transaction.annotation.Transactional;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class ArtistDto {
     private String id;
 
@@ -23,19 +21,15 @@ public class ArtistDto {
 
     private String image;
 
-    private List<String> genres;
-
-    private List<ArtistHeart> artistHearts;
+    private int heartCount;
 
     @Builder
     @QueryProjection
-    public ArtistDto(String id, String name, String image, List<String> genres,
-                     List<ArtistHeart> artistHearts) {
+    public ArtistDto(String id, String name, String image, int heartCount) {
         this.id = id;
         this.name = name;
         this.image = image;
-        this.genres = genres;
-        this.artistHearts = artistHearts;
+        this.heartCount = heartCount;
     }
 
     public static ArtistDto of(Artist artist) {
@@ -43,8 +37,7 @@ public class ArtistDto {
                 .id(artist.getId())
                 .name(artist.getName())
                 .image(artist.getImage())
-                .genres(artist.getGenreList())
-                .artistHearts(artist.getArtistHeartList())
+                .heartCount(artist.getHeartCount())
                 .build();
     }
 

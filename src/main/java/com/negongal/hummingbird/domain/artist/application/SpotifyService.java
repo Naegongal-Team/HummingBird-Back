@@ -149,6 +149,7 @@ public class SpotifyService {
                 .genreList(spotifyArtistGenre)
                 .popularity(spotifyArtist.getPopularity())
                 .image(spotifyArtistUrl)
+                .heartCount(0)
                 .artistHeartList(new ArrayList<>())
                 .artistTopTrackList(new ArrayList<>())
                 .performanceList(new ArrayList<>())
