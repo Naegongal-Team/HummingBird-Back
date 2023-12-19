@@ -68,8 +68,7 @@ public class SecurityConfig {
                 .clearAuthentication(true)
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
-                .deleteCookies("refresh")
-                .logoutSuccessUrl("/login");
+                .deleteCookies("refresh");
 
         http
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
