@@ -35,10 +35,8 @@ public class ArtistApiController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse artistsList(Pageable pageable) {
-        Page<Tuple> artistList = artistService.findArtists(pageable);
-        HashMap<String, Page<Tuple>> response = new HashMap<>();
-        response.put("artist_list", artistList);
-        return ResponseUtils.success(response);
+        Page<ArtistDto> artistList = artistService.findArtists(pageable);
+        return ResponseUtils.success(artistList);
     }
 
     @Operation(summary = "아티스트 이름 조회", description = "")

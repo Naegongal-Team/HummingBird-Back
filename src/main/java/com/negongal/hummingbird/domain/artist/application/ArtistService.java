@@ -12,6 +12,7 @@ import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
 import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.QTuple;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,7 @@ public class ArtistService {
     전체 아티스트 검색 시 Artist의 리스트를 가져온다
      */
     @Transactional
-    public Page<Tuple> findArtists(Pageable pageable) {
+    public Page<ArtistDto> findArtists(Pageable pageable) {
         Long currentUserId = SecurityUtil.getCurrentUserId().orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
         return artistRepositoryCustom.findAllArtists(currentUserId, pageable);
     }
