@@ -53,17 +53,17 @@ public class SpotifyService {
     /*
     SpotifyApi Artist 정보를 CustomArtist 객체로 변환 후 DB에 저장
     */
-    @PostConstruct
-    public void initArtists()
-            throws IOException, ParseException, SpotifyWebApiException {
-        getSeveralArtistsRequest = spotifyApi.getSeveralArtists(artistIds).build();
-        Artist[] artists = getSeveralArtistsRequest.execute();
-        Arrays.stream(artists).forEach(artist -> {
-            com.negongal.hummingbird.domain.artist.domain.Artist customArtist = convertSpotifyToCustomArtist(artist);
-            artistRepository.save(customArtist);
-        });
-        getSeveralArtistSpotifyTrack();
-    }
+//    @PostConstruct
+//    public void initArtists()
+//            throws IOException, ParseException, SpotifyWebApiException {
+//        getSeveralArtistsRequest = spotifyApi.getSeveralArtists(artistIds).build();
+//        Artist[] artists = getSeveralArtistsRequest.execute();
+//        Arrays.stream(artists).forEach(artist -> {
+//            com.negongal.hummingbird.domain.artist.domain.Artist customArtist = convertSpotifyToCustomArtist(artist);
+//            artistRepository.save(customArtist);
+//        });
+//        getSeveralArtistSpotifyTrack();
+//    }
 
     public List<ArtistSearchDto> searchArtists(String artistName)
             throws IOException, ParseException, SpotifyWebApiException {
