@@ -43,8 +43,8 @@ public class ArtistService {
      */
     @Transactional
     public Page<ArtistDto> findArtists(Pageable pageable) {
-        //Long currentUserId = SecurityUtil.getCurrentUserId().orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
-        return artistRepositoryCustom.findAllArtists(1L, pageable);
+        Long currentUserId = SecurityUtil.getCurrentUserId().orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
+        return artistRepositoryCustom.findAllArtists(currentUserId, pageable);
     }
 
     /*
