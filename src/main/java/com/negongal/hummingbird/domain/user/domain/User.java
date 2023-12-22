@@ -9,19 +9,18 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicUpdate
+@DynamicInsert
 @Getter
 @SQLDelete(sql = "UPDATE user SET status = 'INACTIVE' WHERE user_id = ?")
-@Where(clause = "status = 'ACTIVE'")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,10 +37,12 @@ public class User {
 
     @Column(length = 1000)
     private String profileImage;
+
     private String fcmToken;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @ColumnDefault("'USER'")
     private Role role;
 
     private String refreshToken;
@@ -49,6 +50,7 @@ public class User {
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<PerformanceHeart> performanceHeartList;
 
+    @ColumnDefault("'ACTIVE'")
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
 
@@ -74,5 +76,9 @@ public class User {
 
     public void updateInactiveDate() {
         this.inactiveDate = LocalDateTime.now();
+    }
+
+    public void activateStatus() {
+        this.status = MemberStatus.ACTIVE;
     }
 }
