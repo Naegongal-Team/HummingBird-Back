@@ -1,6 +1,7 @@
 package com.negongal.hummingbird.domain.performance.domain;
 
 import com.negongal.hummingbird.domain.user.domain.User;
+import com.negongal.hummingbird.global.common.BaseTimeEntity;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,7 +21,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Table
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PerformanceHeart {
+public class PerformanceHeart extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
