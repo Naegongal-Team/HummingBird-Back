@@ -25,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -75,6 +76,14 @@ public class PerformanceApiController {
         String photoUrl = (photo == null) ? null : uploader.saveFile(photo);
         performanceService.update(performanceId, requestDto, photoUrl);
         ticketService.save(performanceId, requestDto);
+        return ResponseUtils.success();
+    }
+
+    @Operation(summary = "공연 삭제", description = "관리자가 공연을 삭제합니다.")
+    @Parameter(name = "performanceId", description = "공연 아이디 값", example = "performanceId")
+    @DeleteMapping("/{performanceId}/admin")
+    public ApiResponse<?> performanceDelete(@PathVariable Long performanceId) {
+        performanceService.delete(performanceId);
         return ResponseUtils.success();
     }
 
