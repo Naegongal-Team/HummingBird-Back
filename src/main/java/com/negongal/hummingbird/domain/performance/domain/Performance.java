@@ -2,6 +2,7 @@ package com.negongal.hummingbird.domain.performance.domain;
 
 import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.chat.domain.ChatRoom;
+import com.negongal.hummingbird.global.common.BaseTimeEntity;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -25,7 +26,7 @@ import lombok.NoArgsConstructor;
 @Table
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Performance {
+public class Performance extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

@@ -77,6 +77,13 @@ public class PerformanceService {
         dateRepository.saveAll(createDate(request.getDateList(), findPerformance));
     }
 
+    @Transactional
+    public void delete(Long performanceId) {
+        Performance findPerformance = performanceRepository.findById(performanceId)
+                .orElseThrow(() -> new NotExistException(PERFORMANCE_NOT_EXIST));
+        performanceRepository.delete(findPerformance);
+    }
+
     /**
      * 공연 조회: 공연 날짜 순 or 티켓팅 날짜 순 or 인기있는 공연 순
      */

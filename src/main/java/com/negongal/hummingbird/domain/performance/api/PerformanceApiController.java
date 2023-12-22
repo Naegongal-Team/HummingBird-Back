@@ -25,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -78,6 +79,14 @@ public class PerformanceApiController {
         return ResponseUtils.success();
     }
 
+    @Operation(summary = "공연 삭제", description = "관리자가 공연을 삭제합니다.")
+    @Parameter(name = "performanceId", description = "공연 아이디 값", example = "performanceId")
+    @DeleteMapping("/{performanceId}/admin")
+    public ApiResponse<?> performanceDelete(@PathVariable Long performanceId) {
+        performanceService.delete(performanceId);
+        return ResponseUtils.success();
+    }
+
     @Operation(summary = "공연 디테일 조회", description = "공연 디테일 정보를 조회합니다.")
     @Parameter(name = "performanceId", description = "공연 아이디 값", example = "performanceId")
     @GetMapping("/{performanceId}")
@@ -105,16 +114,16 @@ public class PerformanceApiController {
 
     @Operation(summary = "공연 좋아요", description = "유저가 해당 공연의 좋아요를 등록했다가 해제할 수 있습니다.")
     @Parameter(name = "performanceId", description = "공연 아이디 값", example = "performanceId")
-    @Parameter(name = "check", description = "공연 좋아요 유무", example = "true")
+    @Parameter(name = "isHearted", description = "현재 공연 좋아요 유무", example = "true")
     @PostMapping("/{performanceId}/heart")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<?> performanceHeartAdd(@PathVariable Long performanceId, @RequestParam boolean check) {
-        if (check) {
-            performanceHeartService.save(performanceId);
-        } else {
+    public ApiResponse<?> performanceHeartAdd(@PathVariable Long performanceId, @RequestParam boolean isHearted) {
+        if (isHearted) {
             performanceHeartService.delete(performanceId);
+            return ResponseUtils.success("좋아요 삭제가 완료되었습니다.");
         }
-        return ResponseUtils.success();
+        performanceHeartService.save(performanceId);
+        return ResponseUtils.success("좋아요 등록이 완료되었습니다.");
     }
 
     @Operation(summary = "유저가 좋아요한 공연 리스트 조회", description = "유저가 좋아요한 공연 리스트 정보를 조회합니다.")
