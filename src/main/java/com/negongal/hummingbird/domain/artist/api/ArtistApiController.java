@@ -72,9 +72,9 @@ public class ArtistApiController {
                                       @RequestParam(required = true) boolean isHearted) {
         if (isHearted) {
             artistHeartService.delete(artistId);
-            return ResponseUtils.success("성공적으로 삭제되었습니다.");
+            return ResponseUtils.success("좋아요 삭제가 완료되었습니다.");
         }
         artistHeartService.save(artistId);
-        return ResponseUtils.success("성공적으로 저장되었습니다.");
+        return ResponseUtils.success("좋아요 등록이 완료되었습니다.");
     }
 }
