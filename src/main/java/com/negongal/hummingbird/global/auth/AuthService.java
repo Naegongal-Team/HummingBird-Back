@@ -1,6 +1,9 @@
 package com.negongal.hummingbird.global.auth;
 
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
+import com.negongal.hummingbird.domain.user.domain.MemberStatus;
+import com.negongal.hummingbird.domain.user.domain.User;
+import com.negongal.hummingbird.domain.user.dto.UserLoginResponseDto;
 import com.negongal.hummingbird.global.auth.jwt.JwtProvider;
 import com.negongal.hummingbird.global.auth.oauth2.CustomUserDetail;
 import com.negongal.hummingbird.global.auth.utils.CookieUtil;
@@ -39,7 +42,6 @@ public class AuthService {
         String oldRefreshToken = CookieUtil.getCookie(request, cookieKey)
                 .map(Cookie::getValue).orElseThrow(() -> new NotExistException(TOKEN_NOT_EXIST));
         if (!jwtProvider.validateToken(oldRefreshToken)) {
-            log.info("만료된 토큰입니다.");
             throw new InvalidException(TOKEN_EXPIRED);
         }
 
@@ -57,7 +59,6 @@ public class AuthService {
         //access token, refresh token 새로 발급
         String accessToken = jwtProvider.createAccessToken(authentication, response);
         jwtProvider.createRefreshToken(authentication, response);
-        log.info("accessToken={}", accessToken);
         response.setHeader(HttpHeaders.AUTHORIZATION, accessToken);
 
         return accessToken;
@@ -68,5 +69,17 @@ public class AuthService {
             log.info("저장된 토큰과 일치하지 않습니다");
             throw new NotMatchException(TOKEN_NOT_MATCHED);
         }
+    }
+
+
+    public UserLoginResponseDto validateStatus(String accessToken) {
+        String userId = jwtProvider.parseClaims(accessToken).getSubject();
+        User user = userRepository.findById(Long.valueOf(userId)).orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
+        String status = user.getStatus().toString();
+        UserLoginResponseDto responseDto = UserLoginResponseDto.builder()
+                .accessToken(accessToken)
+                .status(status)
+                .build();
+        return responseDto;
     }
 }

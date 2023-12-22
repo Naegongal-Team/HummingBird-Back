@@ -74,4 +74,11 @@ public class UserService {
         userRepository.delete(findUser);
     }
 
+    @Transactional
+    public void activateUser(UserDetailDto user) {
+        User findUser = userRepository.findById(user.getUserId())
+                .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
+        findUser.activateStatus();
+    }
+
 }

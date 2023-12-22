@@ -1,7 +1,11 @@
 package com.negongal.hummingbird.global.auth;
 
+import com.negongal.hummingbird.domain.user.dto.UserLoginResponseDto;
+import com.negongal.hummingbird.global.auth.jwt.JwtProvider;
+import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
 import com.negongal.hummingbird.global.common.response.ApiResponse;
 import com.negongal.hummingbird.global.common.response.ResponseUtils;
+import com.negongal.hummingbird.global.error.exception.NotExistException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import static com.negongal.hummingbird.global.error.ErrorCode.USER_NOT_EXIST;
 
 @Tag(name = "Auth API", description = "")
 @RestController
@@ -38,7 +44,7 @@ public class AuthController {
         return ResponseUtils.success(accessToken);
     }
 
-    @Operation(summary = "엑세스 토큰 반환", description = "엑세스 토큰을 반환합니다.")
+    @Operation(summary = "엑세스 토큰 반환", description = "엑세스 토큰과 회원 상태를 반환합니다.")
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "200", description = "로그인 성공"),
@@ -47,7 +53,8 @@ public class AuthController {
             })
     @GetMapping("/login/success")
     public ApiResponse<?> loginSuccess(@RequestParam String accessToken) {
-        return ResponseUtils.success(accessToken);
+        UserLoginResponseDto responseDto = authService.validateStatus(accessToken);
+        return ResponseUtils.success(responseDto);
     }
 
     @Operation(summary = "처음 로그인 - 엑세스 토큰 반환", description = "처음 로그인 했을 때 엑세스 토큰을 반환합니다.")
