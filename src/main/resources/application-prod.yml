@@ -1,6 +1,25 @@
 server:
   port: 8080
+
 spring:
   config:
     activate:
       on-profile: prod
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3306/hummingbird
+    username: root
+    password: hummingbird
+
+  redis:
+    host: 172.17.0.1
+    port: 6379

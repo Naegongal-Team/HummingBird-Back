@@ -4,6 +4,7 @@ spring:
   output:
     ansi:
       enabled: always
+
   jpa:
     defer-datasource-initialization: true
     hibernate:
@@ -13,19 +14,11 @@ spring:
         show_sql: true
     open-in-view: true
 
-  datasource:
-    driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://3.37.50.80:3307/hummingbird
-    username: root
-    password: hummingbird
-
   redis:
     pool:
       min-idle: 0
       max-idle: 8
       max-active: 8
-    host: 172.17.0.1
-    port: 6379
 
   # file upload max size
   servlet:
