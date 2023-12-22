@@ -1,6 +1,5 @@
 package com.negongal.hummingbird.global.auth.oauth2.userInfo;
 
-import com.negongal.hummingbird.domain.user.domain.MemberStatus;
 import com.negongal.hummingbird.domain.user.domain.Role;
 import com.negongal.hummingbird.domain.user.domain.User;
 
@@ -28,8 +27,6 @@ public class GoogleUserInfo implements Oauth2UserInfo {
         return User.builder()
                 .oauth2Id(getOauthId())
                 .provider(getProvider())
-                .role(Role.USER)
-                .status(MemberStatus.ACTIVE)
                 .build();
     }
 
