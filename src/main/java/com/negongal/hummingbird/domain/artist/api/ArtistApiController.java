@@ -31,11 +31,11 @@ public class ArtistApiController {
 
     private final ArtistHeartService artistHeartService;
 
-    @Operation(summary = "아티스트 전체 조회", description = "좋아요한 시간 순서대로 기본 정렬")
+    @Operation(summary = "아티스트 전체 조회", description = "인기 순으로 정렬 가능")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse artistsList(Pageable pageable) {
-        Page<ArtistDto> artistList = artistService.findArtists(pageable);
+        Page<ArtistDto> artistList = artistService.findAllArtist(pageable);
         return ResponseUtils.success(artistList);
     }
 
@@ -56,10 +56,10 @@ public class ArtistApiController {
     }
 
     @Operation(summary = "좋아요한 아티스트 조회", description = "아티스트의 전체 조회는 하지 않고 좋아요한 아티스트만 전달")
-    @GetMapping("/artist/heart")
+    @GetMapping("/heart")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse heartedArtistsList(Pageable pageable) {
-        Page<ArtistDto> heartedArtistList = artistService.findLikeArtist(pageable);
+        Page<ArtistDto> heartedArtistList = artistService.findLikeArtists(pageable);
         HashMap<String, Page<ArtistDto>> response = new HashMap<>();
         response.put("heartedArtist_list", heartedArtistList);
         return ResponseUtils.success(response);

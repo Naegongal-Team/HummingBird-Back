@@ -29,9 +29,8 @@ public class Artist {
     @Formula("(SELECT COUNT(1) FROM artist_heart ah WHERE ah.artist_id = id)")
     private int heartCount;
 
-    @ElementCollection
-    @CollectionTable(name = "GENRES", joinColumns = @JoinColumn(name = "artist_id"))
-    private List<String> genreList;
+    @OneToMany(mappedBy = "artist", orphanRemoval = true)
+    private List<Genre> genreList;
 
     @OneToMany(mappedBy = "artist", orphanRemoval = true)
     private List<ArtistHeart> artistHeartList;

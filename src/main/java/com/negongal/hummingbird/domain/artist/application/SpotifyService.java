@@ -1,6 +1,7 @@
 package com.negongal.hummingbird.domain.artist.application;
 
 import com.negongal.hummingbird.domain.artist.dao.*;
+import com.negongal.hummingbird.domain.artist.domain.Genre;
 import com.negongal.hummingbird.domain.artist.dto.ArtistSearchDto;
 import com.negongal.hummingbird.global.config.SpotifyConfig;
 import com.negongal.hummingbird.global.error.exception.AlreadyExistException;
@@ -45,6 +46,8 @@ public class SpotifyService {
 
     private final TrackRepository trackRepository;
 
+    private final GenreRepository genreRepository;
+
     @Value("${spotifyArtists.ids.array}")
     private String[] artistIds;
 
@@ -61,6 +64,8 @@ public class SpotifyService {
 //        Arrays.stream(artists).forEach(artist -> {
 //            com.negongal.hummingbird.domain.artist.domain.Artist customArtist = convertSpotifyToCustomArtist(artist);
 //            artistRepository.save(customArtist);
+//            findTrackByArtist(artist.getId());
+//            findGenreByArtist(artist);
 //        });
 //        getSeveralArtistSpotifyTrack();
 //    }
@@ -90,6 +95,7 @@ public class SpotifyService {
         com.negongal.hummingbird.domain.artist.domain.Artist customArtist = convertSpotifyToCustomArtist(artist);
         artistRepository.save(customArtist);
         findTrackByArtist(artistId);
+        findGenreByArtist(artist);
     }
 
     private void checkPresentArtistInRepository(String artistId) {
@@ -106,14 +112,19 @@ public class SpotifyService {
         }
     }
 
-    public void findTrackByArtist(String artist) throws IOException, SpotifyWebApiException, ParseException {
+    public void findTrackByArtist(String artistId) throws IOException, SpotifyWebApiException, ParseException {
         GetArtistsTopTracksRequest getArtistsTopTracksRequest = spotifyApi
-                .getArtistsTopTracks(artist, countryCode)
+                .getArtistsTopTracks(artistId, countryCode)
                 .build();
 
         Stream<Track> tracks = Arrays.stream(getArtistsTopTracksRequest.execute())
                 .limit(ARTIST_GENRES_LIMIT);
-        convertSpotifyToCustomTrack(tracks, artist);
+        convertSpotifyToCustomTrack(tracks, artistId);
+    }
+
+    private void findGenreByArtist(Artist artist) throws IOException, SpotifyWebApiException, ParseException {
+        List<String> genres = List.of(artist.getGenres());
+        convertSpotifyToCustomGenre(genres, artist.getId());
     }
 
     private void convertSpotifyToCustomTrack(Stream<Track> spotifyTracks, String artistId) {
@@ -135,9 +146,22 @@ public class SpotifyService {
         });
     }
 
+    private void convertSpotifyToCustomGenre(List<String> spotifyGenres, String artistId) {
+        com.negongal.hummingbird.domain.artist.domain.Artist artist = artistRepository.findById(artistId)
+                .orElseThrow(() -> new NotExistException(ARTIST_NOT_EXIST));
+
+        spotifyGenres.forEach(genre -> {
+            Genre newGenre = Genre.builder()
+                    .genreName(genre)
+                    .artist(artist)
+                    .build();
+
+            genreRepository.save(newGenre);
+        });
+    }
+
     private com.negongal.hummingbird.domain.artist.domain.Artist convertSpotifyToCustomArtist(Artist spotifyArtist) {
         String spotifyArtistId = spotifyArtist.getId();
-        List<String> spotifyArtistGenre = new ArrayList<>(List.of(spotifyArtist.getGenres()));
         Image spotifyArtistImage = Arrays.stream(spotifyArtist.getImages())
                 .findFirst()
                 .orElseThrow(() -> new NotExistException(ARTIST_IMAGE_NOT_EXIST));
@@ -146,10 +170,10 @@ public class SpotifyService {
         return com.negongal.hummingbird.domain.artist.domain.Artist.builder()
                 .id(spotifyArtistId)
                 .name(spotifyArtist.getName())
-                .genreList(spotifyArtistGenre)
                 .popularity(spotifyArtist.getPopularity())
                 .image(spotifyArtistUrl)
                 .heartCount(0)
+                .genreList(new ArrayList<>())
                 .artistHeartList(new ArrayList<>())
                 .artistTopTrackList(new ArrayList<>())
                 .performanceList(new ArrayList<>())
