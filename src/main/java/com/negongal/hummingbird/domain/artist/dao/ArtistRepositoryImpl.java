@@ -2,11 +2,15 @@ package com.negongal.hummingbird.domain.artist.dao;
 
 import static com.negongal.hummingbird.domain.artist.domain.QArtist.artist;
 import static com.negongal.hummingbird.domain.artist.domain.QArtistHeart.artistHeart;
+import static com.negongal.hummingbird.domain.artist.domain.QGenre.genre;
+import static com.querydsl.core.group.GroupBy.groupBy;
+import static com.querydsl.core.group.GroupBy.list;
 
 import com.negongal.hummingbird.domain.artist.dto.ArtistDto;
-import com.negongal.hummingbird.domain.artist.dto.QArtistDto;
+import com.negongal.hummingbird.domain.artist.dto.ArtistGenresDto;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
@@ -27,25 +31,28 @@ public class ArtistRepositoryImpl implements ArtistRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Page<ArtistDto> findAllArtists(Long userId, Pageable pageable) {
-        JPAQuery<ArtistDto> results = findAllArtistsQuery(userId, pageable);
+    public Page<ArtistDto> findLikedArtists(Long userId, Pageable pageable) {
+        List<ArtistDto> results = findAllArtistsQuery(userId, pageable);
 
-        return new PageImpl<>(results.fetch(), pageable, results.fetch().size());
+        return new PageImpl<>(results, pageable, results.size());
     }
 
-    private JPAQuery<ArtistDto> findAllArtistsQuery(Long userId, Pageable pageable) {
+    private List<ArtistDto> findAllArtistsQuery(Long userId, Pageable pageable) {
         List<OrderSpecifier> orders = getAllOrderSpecifiers(pageable);
-        return jpaQueryFactory
-                .select(new QArtistDto(artist.id, artist.name, artist.image, artist.heartCount))
+        List<ArtistDto> results = jpaQueryFactory
+                .select(artist)
                 .from(artist)
-                .leftJoin(artist.artistHeartList, artistHeart)
-                .where(artistHeart.user.userId.eq(userId)
-                        .or(artistHeart.user.isNull()))
+                .leftJoin(genre).on(artist.id.eq(genre.artist.id))
+                .join(artist.artistHeartList, artistHeart)
+                .where(artistHeart.user.userId.eq(userId))
                 .orderBy(orders.stream().toArray(OrderSpecifier[]::new))
                 .offset(pageable.getOffset())
-                .limit(pageable.getPageSize());
+                .limit(pageable.getPageSize())
+                .transform(groupBy(artist.id).list(Projections.constructor(ArtistDto.class,
+                        artist.id, artist.name, artist.image, artist.heartCount, list(Projections.constructor(ArtistGenresDto.class, genre.genreName)
+                        ))));
+        return results;
     }
-
     private List<OrderSpecifier> getAllOrderSpecifiers(Pageable pageable) {
         List<OrderSpecifier> orders = new ArrayList<>();
         OrderSpecifier<LocalDateTime> defaultOrderSpecifier = artistHeart.createdDate.desc().nullsLast();
