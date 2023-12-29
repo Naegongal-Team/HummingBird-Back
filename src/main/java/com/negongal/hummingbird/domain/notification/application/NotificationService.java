@@ -4,6 +4,7 @@ import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
 import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.notification.dao.NotificationRepository;
 import com.negongal.hummingbird.domain.notification.domain.Notification;
+import com.negongal.hummingbird.domain.notification.dto.NotificationRequestDto;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceRepository;
 import com.negongal.hummingbird.domain.performance.domain.Performance;
 import com.negongal.hummingbird.domain.performance.domain.Ticketing;
@@ -34,9 +35,11 @@ public class NotificationService {
     private final String TICKETING_ALERT_NOTIFICATION_TITLE = "티켓팅 시간이 얼마 나지 않았습니다!";
     private final String TICKETING_ALERT_NOTIFICATION_BODY = "의 시간이 얼마 남지 않았습니다! 의자에 앉아서 티켓팅을 기다려 주세요.";
 
-    public void saveNotification(Long performId, int beforeTime) {
+    public void saveNotification(NotificationRequestDto dto) {
         log.info("Save Notification");
-        Performance findPerformance = performanceRepository.findById(performId).orElseThrow(() -> new NotExistException(
+        Long performanceId = dto.getPerformanceId();
+        int beforeTime = dto.getBeforeTime();
+        Performance findPerformance = performanceRepository.findById(performanceId).orElseThrow(() -> new NotExistException(
                 ErrorCode.PERFORMANCE_NOT_EXIST
         ));
         LocalDateTime notificationTime = getNotificationTime(beforeTime, findPerformance);

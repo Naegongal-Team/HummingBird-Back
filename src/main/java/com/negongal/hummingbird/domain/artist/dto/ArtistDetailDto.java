@@ -22,7 +22,7 @@ public class ArtistDetailDto {
 
     private String image;
 
-    private List<String> genres = new ArrayList<>();
+    private List<ArtistGenresDto> genres = new ArrayList<>();
 
     private List<TrackDto> topTracks;
 
@@ -31,7 +31,7 @@ public class ArtistDetailDto {
     private boolean isHearted;
 
     @Builder
-    public ArtistDetailDto(String id, String name, String image, List<String> genres, List<PerformanceDto> performances,
+    public ArtistDetailDto(String id, String name, String image, List<ArtistGenresDto> genres,
                            List<TrackDto> topTracks, List<ArtistHeart> artistHearts, boolean isHearted) {
         this.id = id;
         this.name = name;
@@ -43,11 +43,15 @@ public class ArtistDetailDto {
     }
 
     public static ArtistDetailDto of(Artist artist, boolean isHearted) {
+        List<ArtistGenresDto> artistGenres = artist.getGenreList().stream().map(genre ->
+                ArtistGenresDto.builder()
+                        .genres(genre.getGenreName())
+                        .build()).collect(Collectors.toList());
         return ArtistDetailDto.builder()
                 .id(artist.getId())
                 .name(artist.getName())
                 .image(artist.getImage())
-                .genres(artist.getGenreList())
+                .genres(artistGenres)
                 .topTracks(artist.getArtistTopTrackList().stream()
                         .map(track -> TrackDto.of(track))
                         .collect(Collectors.toList()))
