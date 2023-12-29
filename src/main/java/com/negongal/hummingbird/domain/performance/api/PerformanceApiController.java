@@ -1,6 +1,7 @@
 package com.negongal.hummingbird.domain.performance.api;
 
 import com.negongal.hummingbird.domain.chat.service.ChatRoomService;
+import com.negongal.hummingbird.domain.notification.application.NotificationService;
 import com.negongal.hummingbird.domain.performance.dto.PerformancePageDto;
 import com.negongal.hummingbird.domain.performance.dto.PerformanceSearchRequestDto;
 import com.negongal.hummingbird.global.common.response.ApiResponse;
@@ -50,6 +51,7 @@ public class PerformanceApiController {
     private final TicketingService ticketService;
     private final ChatRoomService chatRoomService;
     private final S3Uploader uploader;
+    private final NotificationService notificationService;
 
     @Operation(summary = "공연 등록", description = "관리자가 공연을 등록합니다.")
     @PostMapping(value = "/admin", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -60,6 +62,7 @@ public class PerformanceApiController {
         String photoUrl = (photo == null) ? null : uploader.saveFile(photo);
         Long performanceId = performanceService.save(requestDto, photoUrl);
         ticketService.save(performanceId, requestDto);
+        notificationService.pushPerformRegisterNotification(requestDto.getArtistName());
         chatRoomService.createChatRoom(performanceId); /** 채팅방 개설 **/
         return ResponseUtils.success();
     }
