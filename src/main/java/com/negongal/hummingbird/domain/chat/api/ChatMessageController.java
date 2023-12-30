@@ -31,9 +31,11 @@ public class ChatMessageController {
     @MessageMapping("/chat/message")
     public void message(ChatMessageDto message) {
         if(message.getType().equals(MessageType.ENTER)) {
+            log.info("/chat/message ENTER {}", message.toString());
             chatRoomService.enterChatRoom(message.getRoomId());
         }
         else {
+            log.info("/chat/message SEND {}", message.toString());
             chatMessageService.saveMessage(message);
             redisPublisher.publish(chatRoomService.getTopic(message.getRoomId()), message);
         }
