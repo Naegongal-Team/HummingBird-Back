@@ -125,12 +125,13 @@ public class JwtProvider {
             Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException e) {
-            throw new JwtException(TOKEN_EXPIRED.getMessage());
+            log.error("토큰이 만료되었습니다.", e);
         } catch (UnsupportedJwtException e) {
-            throw new JwtException(TOKEN_UNSUPPORTED.getMessage());
+            log.error("지원하지 않는 토큰입니다.", e);
         } catch (IllegalArgumentException e) {
-            throw new JwtException(TOKEN_NOT_MATCHED.getMessage());
+            log.error("올바르지 않은 토큰입니다.", e);
         }
+        return false;
     }
 
 

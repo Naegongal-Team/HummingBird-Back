@@ -49,8 +49,7 @@ public class AuthService {
         String token = request.getHeader(HttpHeaders.AUTHORIZATION);
         String oldAccessToken = token.substring(7);
         Authentication authentication = jwtProvider.getAuthentication(oldAccessToken);
-        CustomUserDetail user = (CustomUserDetail) authentication.getPrincipal();
-        Long userId = Long.valueOf(user.getName());
+        Long userId = Long.valueOf(authentication.getName());
 
         //repository 에 저장된 refresh token 과 일치하는지 확인
         String savedToken = userRepository.getRefreshTokenById(userId);
@@ -66,7 +65,6 @@ public class AuthService {
 
     public void validateSameToken(String token, String savedRefreshToken) {
         if (!token.equals(savedRefreshToken)) {
-            log.info("저장된 토큰과 일치하지 않습니다");
             throw new NotMatchException(TOKEN_NOT_MATCHED);
         }
     }
