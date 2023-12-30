@@ -62,8 +62,8 @@ public class PerformanceApiController {
         String photoUrl = (photo == null) ? null : uploader.saveFile(photo);
         Long performanceId = performanceService.save(requestDto, photoUrl);
         ticketService.save(performanceId, requestDto);
-        notificationService.pushPerformRegisterNotification(requestDto.getArtistName());
         chatRoomService.createChatRoom(performanceId); /** 채팅방 개설 **/
+        notificationService.pushPerformRegisterNotification(requestDto.getArtistName());
         return ResponseUtils.success();
     }
 
