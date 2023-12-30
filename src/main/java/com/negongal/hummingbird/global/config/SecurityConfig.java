@@ -61,15 +61,6 @@ public class SecurityConfig {
                 .successHandler(oauth2AuthenticationSuccessHandler)
                 .failureHandler(oauth2AuthenticationFailureHandler);
 
-
-        http
-                .logout()
-                .logoutUrl("/logout")
-                .clearAuthentication(true)
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-                .deleteCookies("refresh");
-
         http
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(new JwtExceptionHandlerFilter(), JwtAuthenticationFilter.class);
