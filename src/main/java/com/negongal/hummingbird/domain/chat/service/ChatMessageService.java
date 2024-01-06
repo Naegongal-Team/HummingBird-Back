@@ -42,8 +42,6 @@ public class ChatMessageService {
                 .sendTime(messageDto.getSendTime())
                 .build();
         chatMessageRepository.save(chatMessage);
-
-        /** Redis에 저장할 것인지 고려해보기 **/
     }
 
     public List<ChatMessageResponseDto> loadMessage(String roomId) {

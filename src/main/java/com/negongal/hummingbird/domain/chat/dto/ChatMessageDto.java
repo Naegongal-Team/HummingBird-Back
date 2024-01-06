@@ -30,10 +30,6 @@ public class ChatMessageDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime sendTime;
 
-    public void setEnterMessage() {
-        this.content = this.nickname + "님이 입장하셨습니다.";
-    }
-
     @Override
     public String toString() {
         return "ChatMessageDto{" +

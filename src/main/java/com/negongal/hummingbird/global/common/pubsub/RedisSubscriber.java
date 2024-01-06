@@ -1,7 +1,9 @@
 package com.negongal.hummingbird.global.common.pubsub;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.negongal.hummingbird.domain.chat.domain.MessageType;
 import com.negongal.hummingbird.domain.chat.dto.ChatMessageDto;
+import com.negongal.hummingbird.domain.chat.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
@@ -24,8 +26,10 @@ public class RedisSubscriber implements MessageListener {
         try {
             String publishMessage = (String) redisTemplate.getStringSerializer().deserialize(message.getBody());
             ChatMessageDto roomMessage = objectMapper.readValue(publishMessage, ChatMessageDto.class);
-            log.info("RedisSubscriber :: {}", roomMessage.toString());
-            messagingTemplate.convertAndSend("/sub/chat/room/" + roomMessage.getRoomId(), roomMessage);
+            if(roomMessage.getType().equals(MessageType.TALK)) {
+                log.info("RedisSubscriber :: {}", roomMessage.toString());
+                messagingTemplate.convertAndSend("/sub/chat/room/" + roomMessage.getRoomId(), roomMessage);
+            }
         } catch (Exception e) {
             log.error(e.getMessage());
         }

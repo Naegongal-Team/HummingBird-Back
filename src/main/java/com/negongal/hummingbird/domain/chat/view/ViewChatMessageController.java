@@ -27,11 +27,14 @@ public class ViewChatMessageController {
     @MessageMapping("/view/chat/message")
     public void viewMessage(ChatMessageDto message) {
         if(message.getType().equals(MessageType.ENTER)) {
-            message.setEnterMessage();
+            log.info("/chat/message ENTER {}", message.toString());
             chatRoomService.enterChatRoom(message.getRoomId());
         }
-        chatMessageService.saveMessage(message);
-        redisPublisher.publish(chatRoomService.getTopic(message.getRoomId()), message);
+        else {
+            log.info("/chat/message SEND {}", message.toString());
+            chatMessageService.saveMessage(message);
+            redisPublisher.publish(chatRoomService.getTopic(message.getRoomId()), message);
+        }
     }
 
     /**
