@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.negongal.hummingbird.domain.chat.domain.ChatMessage;
 import com.negongal.hummingbird.domain.chat.domain.MessageType;
+import com.querydsl.core.annotations.QueryProjection;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -29,29 +30,13 @@ public class ChatMessageResponseDto {
     @JsonProperty("is_sent")
     private boolean sent;
 
-    @Builder
+    @QueryProjection
     public ChatMessageResponseDto(String nickname, MessageType type, String content,
-                                  LocalDateTime sendTime, String profileImage, boolean sent) {
+                                  LocalDateTime sendTime, String profileImage) {
         this.nickname = nickname;
         this.type = type;
         this.content = content;
         this.sendTime = sendTime;
         this.profileImage = profileImage;
-        this.sent = sent;
-    }
-
-    public static ChatMessageResponseDto of(ChatMessage chatMessage, Long finalLoginUserId) {
-        boolean isSent = false;
-        if(finalLoginUserId != null && chatMessage.getUser().getUserId() == finalLoginUserId) {
-            isSent = true;
-        }
-        return ChatMessageResponseDto.builder()
-                .nickname(chatMessage.getUser().getNickname())
-                .type(chatMessage.getType())
-                .content(chatMessage.getContent())
-                .sendTime(chatMessage.getSendTime())
-                .profileImage(chatMessage.getUser().getProfileImage())
-                .sent(isSent)
-                .build();
     }
 }

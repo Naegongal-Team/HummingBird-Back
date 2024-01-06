@@ -8,8 +8,10 @@ import com.negongal.hummingbird.domain.chat.dao.ChatRoomRepository;
 import com.negongal.hummingbird.domain.chat.domain.ChatMessage;
 import com.negongal.hummingbird.domain.chat.domain.ChatRoom;
 import com.negongal.hummingbird.domain.chat.dto.ChatMessageDto;
+import com.negongal.hummingbird.domain.chat.dto.ChatMessagePageDto;
 import com.negongal.hummingbird.domain.chat.dto.ChatMessageResponseDto;
 import com.negongal.hummingbird.domain.chat.view.ViewChatMessage;
+import com.negongal.hummingbird.domain.performance.dto.PerformancePageDto;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.domain.user.domain.User;
 import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
@@ -17,6 +19,8 @@ import com.negongal.hummingbird.global.error.exception.NotExistException;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,18 +48,18 @@ public class ChatMessageService {
         chatMessageRepository.save(chatMessage);
     }
 
-    public List<ChatMessageResponseDto> loadMessage(String roomId) {
+    public ChatMessagePageDto loadMessage(String roomId, Pageable pageable) {
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId)
                 .orElseThrow(() -> new NotExistException(CHAT_ROOM_NOT_EXIST));
-        List<ChatMessage> chatMessageList = chatMessageRepository.findByIdOrderBySendTimeAsc(chatRoom.getId());
 
-        if(SecurityUtil.getCurrentUserId().isPresent()) {
-            Long loginUserId = SecurityUtil.getCurrentUserId().get();
-            return chatMessageList.stream().map(s -> ChatMessageResponseDto.of(s, loginUserId))
-                    .collect(Collectors.toList());
-        }
+        Page<ChatMessageResponseDto> dtoPage = chatMessageRepository.findAllCustom(chatRoom.getId(), pageable);
 
-        return chatMessageList.stream().map(s -> ChatMessageResponseDto.of(s, null))
-                .collect(Collectors.toList());
+        return ChatMessagePageDto.builder()
+                .chatMessageDto(dtoPage.getContent())
+                .totalPages(dtoPage.getTotalPages())
+                .totalElements(dtoPage.getTotalElements())
+                .isLast(dtoPage.isLast())
+                .currPage(dtoPage.getPageable().getPageNumber())
+                .build();
     }
 }
