@@ -27,8 +27,6 @@ public class ChatMessageResponseDto {
     private LocalDateTime sendTime;
 
     private String profileImage;
-    @JsonProperty("is_sent")
-    private boolean sent;
 
     @QueryProjection
     public ChatMessageResponseDto(String nickname, MessageType type, String content,
