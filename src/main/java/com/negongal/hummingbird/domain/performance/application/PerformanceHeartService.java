@@ -39,6 +39,10 @@ public class PerformanceHeartService {
         Performance performance = performanceRepository.findById(performanceId)
                 .orElseThrow(() -> new NotExistException(PERFORMANCE_NOT_EXIST));
 
+        if(performanceHeartRepository.findByUserAndPerformance(user, performance).isPresent()) {
+            throw new AlreadyExistException(PERFORMANCE_HEART_ALREADY_EXIST);
+        }
+
         PerformanceHeart performanceHeart = PerformanceHeart.builder()
                 .performance(performance)
                 .user(user)
