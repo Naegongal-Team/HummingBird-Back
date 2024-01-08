@@ -71,7 +71,7 @@ public class UserService {
         User findUser = userRepository.findById(user.getUserId())
                 .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
         findUser.updateInactiveDate();
-        userRepository.delete(findUser);
+        findUser.updateStatus();
     }
 
     @Transactional

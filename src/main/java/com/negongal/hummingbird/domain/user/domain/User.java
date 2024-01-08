@@ -2,7 +2,7 @@ package com.negongal.hummingbird.domain.user.domain;
 
 import com.negongal.hummingbird.domain.performance.domain.PerformanceHeart;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import lombok.AccessLevel;
@@ -13,14 +13,12 @@ import org.hibernate.annotations.*;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicUpdate
 @DynamicInsert
 @Getter
-@SQLDelete(sql = "UPDATE user SET status = 'INACTIVE' WHERE user_id = ?")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,7 +52,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
 
-    private LocalDateTime inactiveDate;
+    private LocalDate inactiveDate;
 
     @Builder
     public User(String oauth2Id, String nickname, String provider, Role role, MemberStatus status) {
@@ -75,10 +73,14 @@ public class User {
     }
 
     public void updateInactiveDate() {
-        this.inactiveDate = LocalDateTime.now();
+        this.inactiveDate = LocalDate.now();
     }
 
     public void activateStatus() {
         this.status = MemberStatus.ACTIVE;
+    }
+
+    public void updateStatus() {
+        this.status = MemberStatus.INACTIVE;
     }
 }
