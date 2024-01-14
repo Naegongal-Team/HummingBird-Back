@@ -17,4 +17,6 @@ public interface ArtistHeartRepository extends JpaRepository<ArtistHeart, Long> 
 
     @Query("SELECT ah FROM ArtistHeart ah WHERE ah.user.userId = :userId AND ah.artist.id = :artistId")
     Optional<ArtistHeart> findByUserIdAndArtistId(@Param("userId")Long userId, @Param("artistId") String artistId);
+
+
 }

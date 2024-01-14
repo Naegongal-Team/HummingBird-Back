@@ -3,12 +3,14 @@ package com.negongal.hummingbird.domain.artist.application;
 
 import com.negongal.hummingbird.domain.artist.dao.ArtistHeartRepository;
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepositoryCustom;
+import com.negongal.hummingbird.domain.artist.domain.ArtistHeart;
 import com.negongal.hummingbird.domain.artist.dto.ArtistDetailDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistGenresDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistSearchDto;
 import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
+import com.negongal.hummingbird.domain.notification.dao.NotificationRepository;
 import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,7 @@ public class ArtistService {
     private final ArtistRepository artistRepository;
     private final ArtistHeartRepository artistHeartRepository;
     private final ArtistRepositoryCustom artistRepositoryCustom;
+    private final NotificationRepository notificationRepository;
 
     /*
     전체 아티스트 검색 시 Artist의 리스트를 가져온다
@@ -74,14 +77,14 @@ public class ArtistService {
     /*
     아티스트 단건 조회
      */
-    public ArtistDetailDto findArtist(String id) {
-        Artist artist = artistRepository.findById(id).orElseThrow(() -> new NotExistException(ARTIST_NOT_EXIST));
+    public ArtistDetailDto findArtist(String artistId) {
+        Artist artist = artistRepository.findById(artistId).orElseThrow(() -> new NotExistException(ARTIST_NOT_EXIST));
         Long currentUserId = SecurityUtil.getCurrentUserId().orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
+        boolean isHearted = artistHeartRepository.findByUserIdAndArtistId(currentUserId, artistId).isPresent();
+        boolean isAlarmed = artistHeartRepository.findByUserIdAndArtistId(currentUserId, artistId).get().getIsAlarmed();
 
-        if (artistHeartRepository.findByUserIdAndArtistId(currentUserId, id).isPresent()) {
-            return ArtistDetailDto.of(artist, true);
-        }
-        return ArtistDetailDto.of(artist, false);
+        return ArtistDetailDto.of(artist, isHearted, isAlarmed);
+
     }
 
     /*

@@ -20,6 +20,8 @@ public class ArtistHeart extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Boolean isAlarmed;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artist_id")
     private Artist artist;
@@ -27,4 +29,13 @@ public class ArtistHeart extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+
+    public void updateAlarmed() {
+        if (isAlarmed)  {
+            isAlarmed = false;
+            return;
+        }
+        isAlarmed = true;
+    }
 }
