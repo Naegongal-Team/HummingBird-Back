@@ -27,12 +27,12 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         tokenProvider.createRefreshToken(authentication, response);
         log.info("access token={}", accessToken);
 
-        String targetUrl="http://3.37.50.80:8080/login/success?accessToken=" + accessToken;
+        String targetUrl="https://65a3f1b8d9b3730009ee4117--cool-nasturtium-4a60f8.netlify.app/login/success?accessToken=" + accessToken;
         CustomUserDetail user = (CustomUserDetail) authentication.getPrincipal();
 
         if(user.getNickname() == null) {
             //처음 로그인하는 사용자
-            targetUrl = "http://3.37.50.80:8080/firstLogin?accessToken=" + accessToken;
+            targetUrl = "https://65a3f1b8d9b3730009ee4117--cool-nasturtium-4a60f8.netlify.app/firstLogin?accessToken=" + accessToken;
         }
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
 
