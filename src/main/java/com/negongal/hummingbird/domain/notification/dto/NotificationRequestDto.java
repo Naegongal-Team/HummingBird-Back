@@ -6,7 +6,6 @@ import lombok.Getter;
 @Getter
 public class NotificationRequestDto {
 
-    @NotEmpty
     private Long performanceId;
 
     private int beforeTime;
