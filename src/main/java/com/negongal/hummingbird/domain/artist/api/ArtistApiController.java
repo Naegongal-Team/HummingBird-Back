@@ -68,8 +68,7 @@ public class ArtistApiController {
     @PostMapping("/{artistId}/heart")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse artistHeartAdd(@PathVariable String artistId,
-                                      @RequestParam(required = true) boolean isHearted)
-            throws FirebaseMessagingException {
+                                      @RequestParam(required = true) boolean isHearted) {
         if (isHearted) {
             artistHeartService.delete(artistId);
             return ResponseUtils.success("좋아요 삭제가 완료되었습니다.");
@@ -77,15 +76,17 @@ public class ArtistApiController {
         artistHeartService.save(artistId);
         return ResponseUtils.success("좋아요 등록이 완료되었습니다.");
     }
+
     @Operation(summary = "아티스트 알람 등록", description = "boolean값으로 isHearted를 필히 넘겨야 한다.")
     @PostMapping("/{artistId}/alarm")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse artistAlarmModify(@PathVariable String artistId,
-                                         @RequestParam(required = true) boolean isHearted) {
+                                         @RequestParam(required = true) boolean isHearted)
+            throws FirebaseMessagingException {
         if (isHearted == false) {
             return ResponseUtils.error("A003", "아티스트 좋아요 값이 false입니다.");
         }
-        boolean isAlarmed = artistHeartService.modifyAlarm(artistId);
+        boolean isAlarmed = artistHeartService.modifyArtistAlarm(artistId);
 
         if (isAlarmed) {
             return ResponseUtils.success("알람 취소가 완료되었습니다.");

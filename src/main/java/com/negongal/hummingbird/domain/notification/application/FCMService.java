@@ -48,9 +48,4 @@ public class FCMService {
         }
     }
 
-    public void sendMessageBySeveralTokens(List<String> tokens, String title, String body) {
-        /*
-        고민 좀 해봐야 할 거 가튼데
-         */
-    }
 }

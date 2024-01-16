@@ -34,7 +34,7 @@ public class ArtistHeartService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void save(String artistId) throws FirebaseMessagingException {
+    public void save(String artistId) {
         Long currentUserId = SecurityUtil.getCurrentUserId().orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
         Artist artist = artistRepository.findById(artistId)
                 .orElseThrow(() -> new NotExistException(ARTIST_NOT_EXIST));
@@ -46,36 +46,38 @@ public class ArtistHeartService {
                 .user(user)
                 .isAlarmed(false)
                 .build();
-        List<String> userToken = Arrays.asList(user.getFcmToken());
-        TopicManagementResponse response = FirebaseMessaging.getInstance()
-                .subscribeToTopic(userToken, artist.getName());
-        System.out.println(response.getSuccessCount() + "tokens were subscribed successfully");
         artistHeartRepository.save(artistHeart);
     }
 
     @Transactional
-    public void delete(String artistId) throws FirebaseMessagingException {
+    public void delete(String artistId) {
         Long currentUserId = SecurityUtil.getCurrentUserId().orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
         ArtistHeart artistHeart = artistHeartRepository.findByUserIdAndArtistId(currentUserId, artistId)
                 .orElseThrow(() -> new NoSuchElementException());
         Artist artist = artistRepository.findById(artistId)
                 .orElseThrow(() -> new NotExistException(ARTIST_NOT_EXIST));
-        User user = userRepository.findById(currentUserId)
-                .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
-
-        List<String> userToken = Arrays.asList(user.getFcmToken());
-        TopicManagementResponse response = FirebaseMessaging.getInstance()
-                .unsubscribeFromTopic(userToken, artist.getName());
-        System.out.println(response.getSuccessCount() + "tokens were subscribed successfully");
         artistHeartRepository.delete(artistHeart);
     }
 
     @Transactional
-    public boolean modifyAlarm(String artistId) {
+    public boolean modifyArtistAlarm(String artistId) throws FirebaseMessagingException {
         Long currentUserId = SecurityUtil.getCurrentUserId().orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
+        User user = userRepository.findById(currentUserId)
+                .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
         ArtistHeart artistHeart = artistHeartRepository.findByUserIdAndArtistId(currentUserId, artistId)
                 .orElseThrow(() -> new NotExistException(ARTIST_NOT_LIKE));
         boolean isAlarmed = artistHeart.getIsAlarmed();
+        if (isAlarmed) {
+            List<String> userToken = Arrays.asList(user.getFcmToken());
+            TopicManagementResponse response = FirebaseMessaging.getInstance()
+                    .unsubscribeFromTopic(userToken, artistId);
+            log.info("{} 토큰이 성공적으로 구독 취소 되었습니다.", response);
+        } else {
+            List<String> userToken = Arrays.asList(user.getFcmToken());
+            TopicManagementResponse response = FirebaseMessaging.getInstance()
+                    .subscribeToTopic(userToken, artistId);
+            log.info("{} 토큰이 성공적으로 구독 되었습니다.", response);
+        }
         artistHeart.updateAlarmed();
         return isAlarmed;
     }
