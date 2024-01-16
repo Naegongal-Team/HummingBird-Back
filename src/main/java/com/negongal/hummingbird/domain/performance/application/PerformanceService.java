@@ -7,6 +7,8 @@ import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
 import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.artist.domain.ArtistHeart;
 import com.negongal.hummingbird.domain.notification.application.NotificationService;
+import com.negongal.hummingbird.domain.notification.dao.NotificationRepository;
+import com.negongal.hummingbird.domain.notification.domain.Notification;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceHeartRepository;
 import com.negongal.hummingbird.domain.performance.domain.PerformanceHeart;
 import com.negongal.hummingbird.domain.performance.dto.PerformancePageDto;
@@ -44,6 +46,8 @@ public class PerformanceService {
     private final PerformanceDateRepository dateRepository;
     private final ArtistRepository artistRepository;
     private final UserRepository userRepository;
+    private final NotificationRepository notificationRepository;
+
 
     @Transactional
     public Long save(PerformanceRequestDto requestDto, String photo) {
@@ -118,14 +122,19 @@ public class PerformanceService {
                 .orElseThrow(() -> new NotExistException(PERFORMANCE_NOT_EXIST));
 
         boolean heartPressed = false;
-
+        boolean isAlarmed = false;
         if (SecurityUtil.getCurrentUserId().isPresent()) {
             Long userId = SecurityUtil.getCurrentUserId().get();
             User user = userRepository.findById(userId).orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
             heartPressed = performanceHeartRepository.findByUserAndPerformance(user, performance).isPresent();
+
+            if (heartPressed) {
+                isAlarmed = notificationRepository.findNotificationByUserAndPerformance(user, performance).isPresent();
+            }
         }
 
-        return PerformanceDetailDto.of(performance, heartPressed);
+
+        return PerformanceDetailDto.of(performance, heartPressed, isAlarmed);
     }
 
     public List<PerformanceDto> findByArtist(String artistId, boolean scheduled) {
