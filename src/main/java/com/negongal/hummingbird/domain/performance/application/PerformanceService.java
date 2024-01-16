@@ -43,7 +43,6 @@ public class PerformanceService {
     private final PerformanceHeartRepository performanceHeartRepository;
     private final PerformanceDateRepository dateRepository;
     private final ArtistRepository artistRepository;
-    private final ArtistHeartRepository artistHeartRepository;
     private final UserRepository userRepository;
 
     @Transactional
