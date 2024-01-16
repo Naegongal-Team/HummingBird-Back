@@ -41,13 +41,17 @@ public class PerformanceDetailDto {
 
     @JsonProperty("is_heart_pressed")
     private boolean heartPressed;
+    private boolean isAlarmed;
     private boolean past;
 
     private String roomId;
 
     @Builder
-    public PerformanceDetailDto(Long id, String name, String artistName, String location, Long runtime, String description, boolean heartPressed,
-                                List<LocalDateTime> date, String photo, List<TicketingDto> regularTicketing, List<TicketingDto> earlybirdTicketing,
+    public PerformanceDetailDto(Long id, String name, String artistName, String location, Long runtime,
+                                String description, boolean heartPressed,
+                                boolean isAlarmed,
+                                List<LocalDateTime> date, String photo, List<TicketingDto> regularTicketing,
+                                List<TicketingDto> earlybirdTicketing,
                                 String roomId, String artistId) {
         this.id = id;
         this.name = name;
@@ -60,14 +64,15 @@ public class PerformanceDetailDto {
         this.date = date;
         this.regularTicketing = regularTicketing;
         this.earlybirdTicketing = earlybirdTicketing;
-
         this.past = (date.get(date.size() - 1).isBefore(LocalDateTime.now())) ? true : false;
         this.heartPressed = heartPressed;
+        this.isAlarmed = isAlarmed;
         this.roomId = roomId;
     }
 
-    public static PerformanceDetailDto of(Performance p, boolean heartPressed) {
-        List<LocalDateTime> dateList = p.getDateList().stream().map(d -> d.getStartDate()).sorted().collect(Collectors.toList());
+    public static PerformanceDetailDto of(Performance p, boolean heartPressed, boolean isAlarmed) {
+        List<LocalDateTime> dateList = p.getDateList().stream().map(d -> d.getStartDate()).sorted()
+                .collect(Collectors.toList());
         return PerformanceDetailDto.builder()
                 .id(p.getId())
                 .name(p.getName())
@@ -89,6 +94,7 @@ public class PerformanceDetailDto {
                         .sorted(Comparator.comparing(TicketingDto::getDate))
                         .collect(Collectors.toList()))
                 .heartPressed(heartPressed)
+                .isAlarmed(isAlarmed)
                 .roomId(p.getChatRoom().getRoomId())
                 .build();
     }
