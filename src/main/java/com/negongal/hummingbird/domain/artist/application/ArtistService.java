@@ -3,14 +3,17 @@ package com.negongal.hummingbird.domain.artist.application;
 
 import com.negongal.hummingbird.domain.artist.dao.ArtistHeartRepository;
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepositoryCustom;
+import com.negongal.hummingbird.domain.artist.domain.ArtistHeart;
 import com.negongal.hummingbird.domain.artist.dto.ArtistDetailDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistGenresDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistSearchDto;
 import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
+import com.negongal.hummingbird.domain.notification.dao.NotificationRepository;
 import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -32,6 +35,7 @@ public class ArtistService {
     private final ArtistRepository artistRepository;
     private final ArtistHeartRepository artistHeartRepository;
     private final ArtistRepositoryCustom artistRepositoryCustom;
+    private final NotificationRepository notificationRepository;
 
     /*
     전체 아티스트 검색 시 Artist의 리스트를 가져온다
@@ -74,14 +78,21 @@ public class ArtistService {
     /*
     아티스트 단건 조회
      */
-    public ArtistDetailDto findArtist(String id) {
-        Artist artist = artistRepository.findById(id).orElseThrow(() -> new NotExistException(ARTIST_NOT_EXIST));
-        Long currentUserId = SecurityUtil.getCurrentUserId().orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
-
-        if (artistHeartRepository.findByUserIdAndArtistId(currentUserId, id).isPresent()) {
-            return ArtistDetailDto.of(artist, true);
+    public ArtistDetailDto findArtist(String artistId) {
+        Artist artist = artistRepository.findById(artistId).orElseThrow(() -> new NotExistException(ARTIST_NOT_EXIST));
+        Optional<Long> currentUserId = SecurityUtil.getCurrentUserId();
+        if (currentUserId.isEmpty()) {
+            return ArtistDetailDto.of(artist, false, false);
         }
-        return ArtistDetailDto.of(artist, false);
+        if (currentUserId.isPresent()) {
+            boolean isHearted = artistHeartRepository.findByUserIdAndArtistId(currentUserId.get(), artistId).isPresent();
+            if (isHearted) {
+                boolean isAlarmed = artistHeartRepository.findByUserIdAndArtistId(currentUserId.get(), artistId).get().getIsAlarmed();
+                return ArtistDetailDto.of(artist, true, isAlarmed);
+            }
+            return ArtistDetailDto.of(artist, false, false);
+        }
+        return ArtistDetailDto.of(artist, false, false);
     }
 
     /*

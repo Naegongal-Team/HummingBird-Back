@@ -64,15 +64,15 @@ public class NotificationService {
     }
 
     @Async
-    public void pushPerformRegisterNotification(String artistName) {
+    public void pushPerformRegisterNotification(String artistId) {
         /*
         일단 토픽 = 가수 이름으로 생각 중, 프론트앤드 테스트
          */
         log.info("Push Alert -> Register Perform Alert");
-        Optional<Artist> findArtist = artistRepository.findByName(artistName);
+        Optional<Artist> findArtist = artistRepository.findById(artistId);
         if (findArtist.isPresent()) {
-            fcmService.sendMessageByTopic(artistName, REGISTER_PERFORM_NOTIFICATION_TITLE,
-                    artistName + REGISTER_PERFORM_NOTIFICATION_BODY);
+            fcmService.sendMessageByTopic(artistId, REGISTER_PERFORM_NOTIFICATION_TITLE,
+                    artistId + REGISTER_PERFORM_NOTIFICATION_BODY);
         }
 
     }
