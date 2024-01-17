@@ -1,7 +1,7 @@
 package com.negongal.hummingbird.global.auth.oauth2;
 
-import com.negongal.hummingbird.domain.user.domain.Role;
 import com.negongal.hummingbird.domain.user.domain.User;
+
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

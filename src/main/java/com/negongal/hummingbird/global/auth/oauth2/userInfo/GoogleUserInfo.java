@@ -1,6 +1,5 @@
 package com.negongal.hummingbird.global.auth.oauth2.userInfo;
 
-import com.negongal.hummingbird.domain.user.domain.Role;
 import com.negongal.hummingbird.domain.user.domain.User;
 
 import java.util.Map;

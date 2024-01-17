@@ -1,12 +1,11 @@
 package com.negongal.hummingbird.global.auth;
 
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
-import com.negongal.hummingbird.domain.user.domain.MemberStatus;
 import com.negongal.hummingbird.domain.user.domain.User;
 import com.negongal.hummingbird.domain.user.dto.UserLoginResponseDto;
 import com.negongal.hummingbird.global.auth.jwt.JwtProvider;
-import com.negongal.hummingbird.global.auth.oauth2.CustomUserDetail;
 import com.negongal.hummingbird.global.auth.utils.CookieUtil;
+import com.negongal.hummingbird.global.common.response.ResponseUtils;
 import com.negongal.hummingbird.global.error.exception.InvalidException;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
 import com.negongal.hummingbird.global.error.exception.NotMatchException;
@@ -42,7 +41,8 @@ public class AuthService {
         String oldRefreshToken = CookieUtil.getCookie(request, cookieKey)
                 .map(Cookie::getValue).orElseThrow(() -> new NotExistException(TOKEN_NOT_EXIST));
         if (!jwtProvider.validateToken(oldRefreshToken)) {
-            throw new InvalidException(TOKEN_EXPIRED);
+            ResponseUtils.error(TOKEN_EXPIRED.getCode(), TOKEN_EXPIRED.getMessage());
+            // throw new InvalidException(TOKEN_EXPIRED);
         }
 
         //만료된 access token 으로 사용자 정보 불러오기

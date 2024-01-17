@@ -67,16 +67,16 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(UserDetailDto user) {
-        User findUser = userRepository.findById(user.getUserId())
+    public void deleteUser(Long userId) {
+        User findUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
         findUser.updateInactiveDate();
         findUser.updateStatus();
     }
 
     @Transactional
-    public void activateUser(UserDetailDto user) {
-        User findUser = userRepository.findById(user.getUserId())
+    public void activateUser(Long userId) {
+        User findUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
         findUser.activateStatus();
     }

@@ -124,16 +124,14 @@ public class UserApiController {
             )})
     @PostMapping("/remove")
     public ApiResponse<?> remove(@AuthenticationPrincipal CustomUserDetail customUserDetail) {
-        UserDetailDto user = userService.findUser(customUserDetail.getUserId());
-        userService.deleteUser(user);
+        userService.deleteUser(customUserDetail.getUserId());
         return ResponseUtils.success();
     }
 
     @Operation(summary = "탈퇴했던 사용자 활성화", description = "탈퇴했었던 회원이 다시 계정을 활성화합니다.")
     @PostMapping("/activate")
     public ApiResponse<?> activateUser(@AuthenticationPrincipal CustomUserDetail customUserDetail) {
-        UserDetailDto user = userService.findUser(customUserDetail.getUserId());
-        userService.activateUser(user);
+        userService.activateUser(customUserDetail.getUserId());
         return ResponseUtils.success();
     }
 }
