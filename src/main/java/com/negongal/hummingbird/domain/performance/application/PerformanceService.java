@@ -2,15 +2,11 @@ package com.negongal.hummingbird.domain.performance.application;
 
 import static com.negongal.hummingbird.global.error.ErrorCode.*;
 
-import com.negongal.hummingbird.domain.artist.dao.ArtistHeartRepository;
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
 import com.negongal.hummingbird.domain.artist.domain.Artist;
-import com.negongal.hummingbird.domain.artist.domain.ArtistHeart;
 import com.negongal.hummingbird.domain.notification.application.NotificationService;
 import com.negongal.hummingbird.domain.notification.dao.NotificationRepository;
-import com.negongal.hummingbird.domain.notification.domain.Notification;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceHeartRepository;
-import com.negongal.hummingbird.domain.performance.domain.PerformanceHeart;
 import com.negongal.hummingbird.domain.performance.dto.PerformancePageDto;
 import com.negongal.hummingbird.domain.performance.dto.PerformanceRequestDto;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceDateRepository;
@@ -127,12 +123,10 @@ public class PerformanceService {
             Long userId = SecurityUtil.getCurrentUserId().get();
             User user = userRepository.findById(userId).orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
             heartPressed = performanceHeartRepository.findByUserAndPerformance(user, performance).isPresent();
-
             if (heartPressed) {
-                isAlarmed = notificationRepository.findNotificationByUserAndPerformance(user, performance).isPresent();
+                isAlarmed = notificationRepository.findByUserAndPerformance(user, performance).isPresent();
             }
         }
-
 
         return PerformanceDetailDto.of(performance, heartPressed, isAlarmed);
     }
