@@ -21,7 +21,7 @@ public class ScheduleService {
     public void performTimeCheckAndPushNotification() {
         log.info("run Notification System");
         LocalDateTime now = LocalDateTime.now().withNano(0).withSecond(0);
-        List<Notification> findNotification = notificationRepository.findNotificationByNotificationTime(now);
+        List<Notification> findNotification = notificationRepository.findByNotificationTime(now);
 
         findNotification.forEach(notification ->
                 notificationService.pushTicketingAlertNotification(
