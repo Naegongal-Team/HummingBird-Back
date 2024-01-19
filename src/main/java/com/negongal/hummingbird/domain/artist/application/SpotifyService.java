@@ -152,7 +152,7 @@ public class SpotifyService {
 
         spotifyGenres.forEach(genre -> {
             Genre newGenre = Genre.builder()
-                    .genreName(genre)
+                    .name(genre)
                     .artist(artist)
                     .build();
 
