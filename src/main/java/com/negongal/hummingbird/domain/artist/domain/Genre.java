@@ -22,7 +22,7 @@ public class Genre {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String genreName;
+    private String name;
 
     private boolean isAlarmed;
 

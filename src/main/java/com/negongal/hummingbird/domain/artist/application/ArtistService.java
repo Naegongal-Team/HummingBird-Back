@@ -3,14 +3,12 @@ package com.negongal.hummingbird.domain.artist.application;
 
 import com.negongal.hummingbird.domain.artist.dao.ArtistHeartRepository;
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepositoryCustom;
-import com.negongal.hummingbird.domain.artist.domain.ArtistHeart;
 import com.negongal.hummingbird.domain.artist.dto.ArtistDetailDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistGenresDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistSearchDto;
 import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
-import com.negongal.hummingbird.domain.notification.dao.NotificationRepository;
 import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
 import java.util.Optional;
@@ -35,7 +33,6 @@ public class ArtistService {
     private final ArtistRepository artistRepository;
     private final ArtistHeartRepository artistHeartRepository;
     private final ArtistRepositoryCustom artistRepositoryCustom;
-    private final NotificationRepository notificationRepository;
 
     /*
     전체 아티스트 검색 시 Artist의 리스트를 가져온다
@@ -44,7 +41,7 @@ public class ArtistService {
         List<ArtistDto> artists = artistRepository.findAll(pageable).stream().map(artist -> {
                     List<ArtistGenresDto> artistGenres = artist.getGenreList().stream().map(genre ->
                             ArtistGenresDto.builder()
-                                    .genres(genre.getGenreName())
+                                    .name(genre.getName())
                                     .build()).collect(Collectors.toList());
                     ArtistDto getArtist = ArtistDto.builder()
                             .id(artist.getId())

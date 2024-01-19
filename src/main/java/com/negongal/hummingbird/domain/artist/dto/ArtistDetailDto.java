@@ -1,10 +1,7 @@
 package com.negongal.hummingbird.domain.artist.dto;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.artist.domain.ArtistHeart;
-import com.negongal.hummingbird.domain.performance.dto.PerformanceDto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,7 +45,7 @@ public class ArtistDetailDto {
     public static ArtistDetailDto of(Artist artist, boolean isHearted, boolean isAlarmed) {
         List<ArtistGenresDto> artistGenres = artist.getGenreList().stream().map(genre ->
                 ArtistGenresDto.builder()
-                        .genres(genre.getGenreName())
+                        .name(genre.getName())
                         .build()).collect(Collectors.toList());
         return ArtistDetailDto.builder()
                 .id(artist.getId())

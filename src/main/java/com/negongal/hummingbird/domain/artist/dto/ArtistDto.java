@@ -39,8 +39,7 @@ public class ArtistDto {
         List<ArtistGenresDto> genresDto = artist.getGenreList().stream().map(
                 genre -> {
                     ArtistGenresDto dto = ArtistGenresDto.builder()
-                            .genres(genre.getGenreName())
-                            .artistId(artist.getId())
+                            .name(genre.getName())
                             .build();
                     return dto;
                 })

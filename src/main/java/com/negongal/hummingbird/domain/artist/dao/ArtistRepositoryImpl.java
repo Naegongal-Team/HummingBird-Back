@@ -49,10 +49,12 @@ public class ArtistRepositoryImpl implements ArtistRepositoryCustom {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .transform(groupBy(artist.id).list(Projections.constructor(ArtistDto.class,
-                        artist.id, artist.name, artist.image, artist.heartCount, list(Projections.constructor(ArtistGenresDto.class, genre.genreName)
+                        artist.id, artist.name, artist.image, artist.heartCount,
+                        list(Projections.constructor(ArtistGenresDto.class, genre.name)
                         ))));
         return results;
     }
+
     private List<OrderSpecifier> getAllOrderSpecifiers(Pageable pageable) {
         List<OrderSpecifier> orders = new ArrayList<>();
         OrderSpecifier<LocalDateTime> defaultOrderSpecifier = artistHeart.createdDate.desc().nullsLast();
@@ -66,8 +68,7 @@ public class ArtistRepositoryImpl implements ArtistRepositoryCustom {
             if (order.getProperty().equals("name")) {
                 OrderSpecifier<String> orderSpecifier = new OrderSpecifier(direction, artist.name);
                 orders.add(orderSpecifier);
-            }
-            else if (order.getProperty().equals("heartCount")) {
+            } else if (order.getProperty().equals("heartCount")) {
                 OrderSpecifier<String> orderSpecifier = new OrderSpecifier(direction, artist.heartCount);
                 orders.add(orderSpecifier);
             } else {
