@@ -27,12 +27,12 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         tokenProvider.createRefreshToken(authentication, response);
         log.info("access token={}", accessToken);
 
-        String targetUrl="http://54.180.120.1:3000/login/success?accessToken=" + accessToken;
+        String targetUrl="http://hummingbird.kr/login/success?accessToken=" + accessToken;
         CustomUserDetail user = (CustomUserDetail) authentication.getPrincipal();
 
         if(user.getNickname() == null) {
             //처음 로그인하는 사용자
-            targetUrl = "http://54.180.120.1:3000/firstLogin?accessToken=" + accessToken;
+            targetUrl = "http://hummingbird.kr/firstLogin?accessToken=" + accessToken;
         }
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
 
