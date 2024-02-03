@@ -61,12 +61,13 @@ public class Performance extends BaseTimeEntity {
     private ChatRoom chatRoom;
 
     @Builder
-    public Performance(String name, Artist artist, String location, Long runtime, String description) {
+    public Performance(String name, Artist artist, String location, Long runtime, String description, String photo) {
         this.name = name;
         this.artist = artist;
         this.location = location;
         this.runtime = runtime;
         this.description = description;
+        this.photo = photo;
         this.ticketingList = new ArrayList<>();
         this.dateList = new ArrayList<>();
         this.performanceHeartList = new ArrayList<>();
@@ -74,18 +75,14 @@ public class Performance extends BaseTimeEntity {
         this.artist.getPerformanceList().add(this);
     }
 
-    public void addPhoto(String photo) {
-        this.photo = photo;
-    }
-
-    public void update(String name, Artist artist, String location, Long runtime, String description) {
+    public void update(String name, Artist artist, String location, Long runtime, String description, String photo) {
         this.name = name;
         this.artist = artist;
         this.location = location;
         this.runtime = runtime;
         this.description = description;
+        this.photo = photo;
 
-        this.photo = null;
         this.ticketingList.clear();
         this.dateList.clear();
         this.artist.getPerformanceList().add(this);

@@ -43,7 +43,7 @@ public class PerformanceRequestDto {
     private List<TicketingRequestDto> regularTicketing;
     private List<TicketingRequestDto> earlybirdTicketing;
 
-    public Performance toEntity(Artist artist) {
+    public Performance toEntity(Artist artist, String photo) {
         if(this.description == null) description = "";
         return Performance.builder()
                 .name(name)
@@ -51,6 +51,7 @@ public class PerformanceRequestDto {
                 .location(location)
                 .runtime(runtime)
                 .description(description)
+                .photo(photo)
                 .build();
     }
 }

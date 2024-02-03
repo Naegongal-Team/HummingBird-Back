@@ -1,29 +1,43 @@
 package com.negongal.hummingbird.domain.performance.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mockStatic;
 
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
 import com.negongal.hummingbird.domain.artist.domain.Artist;
+import com.negongal.hummingbird.domain.notification.application.NotificationService;
+import com.negongal.hummingbird.domain.performance.PerformanceTestHelper;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceDateRepository;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceHeartRepository;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceRepository;
 import com.negongal.hummingbird.domain.performance.domain.Performance;
+import com.negongal.hummingbird.domain.performance.dto.PerformanceDetailDto;
+import com.negongal.hummingbird.domain.performance.dto.PerformanceDto;
+import com.negongal.hummingbird.domain.performance.dto.PerformancePageDto;
 import com.negongal.hummingbird.domain.performance.dto.PerformanceRequestDto;
-import com.negongal.hummingbird.domain.performance.dto.TicketingRequestDto;
+import com.negongal.hummingbird.domain.performance.dto.PerformanceSearchRequestDto;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
+import com.negongal.hummingbird.global.error.exception.NotExistException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 class PerformanceServiceTest {
@@ -31,55 +45,160 @@ class PerformanceServiceTest {
     @InjectMocks private PerformanceService performanceService;
 
     @Mock private PerformanceRepository performanceRepository;
-//    @Mock private PerformanceHeartRepository heartRepository;
-//    @Mock private PerformanceDateRepository dateRepository;
-//    @Mock private ArtistRepository artistRepository;
-//    @Mock private UserRepository userRepository;
+    @Mock private PerformanceHeartRepository heartRepository;
+    @Mock private PerformanceDateRepository dateRepository;
+    @Mock private ArtistRepository artistRepository;
+    @Mock private UserRepository userRepository;
+    @Mock private NotificationService notificationService;
+    private static MockedStatic<SecurityUtil> mockedSecurityUtil;
 
-    public PerformanceRequestDto generatePerformance() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private Performance performance;
 
-        List<LocalDateTime> dateList = new ArrayList<>();
-        dateList.add(LocalDateTime.parse("2024-02-27 20:30", formatter));
-        dateList.add(LocalDateTime.parse("2024-02-28 20:30", formatter));
-
-        List<TicketingRequestDto> TicketingList = new ArrayList<>();
-        TicketingList.add(TicketingRequestDto.builder()
-                .startDate(LocalDateTime.parse("2024-01-30 20:30", formatter))
-                .platform("http://m.ticket.yes24.com/Perf/46461")
-                .link("예스24")
-                .build());
-        TicketingList.add(TicketingRequestDto.builder()
-                .startDate(LocalDateTime.parse("2024-01-31 20:30", formatter))
-                .platform("http://m.ticket.yes24.com/Perf/46461")
-                .link("예스24")
-                .build());
-
-        return PerformanceRequestDto.builder()
-                .name("Harry Styles 공연")
-                .artistName("Harry Styles")
-                .location("일산 킨텍스 제1전시장 4,5홀")
-                .description("설명")
-                .runtime(70L)
-                .dateList(dateList)
-                .regularTicketing(TicketingList)
-                .build();
+    @BeforeEach
+    void setUp() {
+        performance = PerformanceTestHelper.createPerformance(1L, "Harry Styles");
     }
 
-    @Test
+    @Nested
+    @DisplayName("공연 다중 조회")
+    class findPerformances {
+        @Test
+        @DisplayName("전체 공연 조회 시, 페이지네이션으로 공연 리스트 조회를 성공한다.")
+        void findPerformancesByBasicSortTest() {
+            //given
+            List<Performance> performanceList = PerformanceTestHelper.createList();
+            Pageable pageable = PageRequest.of(0, 5);
+            Page<PerformanceDto> dtoPage = new PageImpl(performanceList, pageable, performanceList.size());
+
+            // mocking
+            given(performanceRepository.findAllCustom(any(Pageable.class))).willReturn(dtoPage);
+
+            //when
+            PerformancePageDto performancePageDto = performanceService.findAll(pageable);
+
+            //then
+            assertThat(dtoPage.getTotalElements()).isEqualTo(performancePageDto.getTotalElements());
+            assertThat(dtoPage.getContent().size()).isEqualTo(performancePageDto.getPerformanceDto().size());
+            assertThat(performancePageDto.isLast()).isEqualTo(true);
+        }
+    }
+
+    @Nested
+    @DisplayName("공연 단일 조회")
+    class findOnePerformance {
+        @Test
+        @DisplayName("로그인을 하지 않으면 좋아요와 알람 여부는 false이다.")
+        void findPerformanceButNotLogInTest() {
+            //given
+            Long findId = 1L;
+            mockedSecurityUtil = mockStatic(SecurityUtil.class);
+
+            // mocking
+            given(SecurityUtil.getCurrentUserId()).willReturn(Optional.empty());
+            given(performanceRepository.findById(findId)).willReturn(Optional.ofNullable(performance));
+
+            //when
+            PerformanceDetailDto detailDto = performanceService.findOne(findId);
+
+            //then
+            assertThat(detailDto.getId()).isEqualTo(findId);
+            assertThat(detailDto.isHeartPressed()).isEqualTo(false);
+            assertThat(detailDto.isAlarmed()).isEqualTo(false);
+        }
+
+        @Test
+        @DisplayName("아이디 값이 존재하지 않으면 에러가 발생한다")
+        void findPerformanceButNotExistIdTest() {
+            Long performanceId = 1L;
+            given(performanceRepository.findById(any())).willThrow(NotExistException.class);
+            assertThatThrownBy(() -> performanceService.findOne(performanceId));
+        }
+    }
+
+    @Nested
+    @DisplayName("공연 검색")
+    class searchPerformance {
+        @Test
+        @DisplayName("가수 이름으로 공연 검색에 성공한다.")
+        void searchPerformanceByArtistNameTest() {
+            //given
+            PerformanceSearchRequestDto requestDto = PerformanceSearchRequestDto.builder().artistName("Harry Styles").build();
+            Pageable pageable = PageRequest.of(0, 10);
+            Page<PerformanceDto> dtoPage = new PageImpl(List.of(PerformanceDto.of(performance)), pageable, 1);
+
+            // mocking
+            given(performanceRepository.search(any(PerformanceSearchRequestDto.class), any(Pageable.class)))
+                    .willReturn(dtoPage);
+
+            //when
+            PerformancePageDto performancePageDto = performanceService.search(requestDto, pageable);
+
+            //then
+            assertThat(dtoPage.getTotalElements()).isEqualTo(performancePageDto.getTotalElements());
+            assertThat(dtoPage.getContent().size()).isEqualTo(performancePageDto.getPerformanceDto().size());
+            assertThat(requestDto.getArtistName()).isEqualTo(performancePageDto.getPerformanceDto().get(0).getArtistName());
+        }
+    }
+
+    @Nested
     @DisplayName("공연 저장")
-    void savePerformance() {
-        //given
-        PerformanceRequestDto request = generatePerformance();
-        Performance performance = request.toEntity(Artist.builder().build());
-        given(performanceRepository.save(any(Performance.class))).willReturn(performance);
+    class savePerformance {
+        @Test
+        @DisplayName("공연을 정상적으로 저장한다.")
+        void savePerformanceTest() {
+            //given
+            PerformanceRequestDto request = PerformanceRequestDto.builder()
+                    .name("Harry Styles 공연")
+                    .artistName("Harry Styles")
+                    .dateList(new ArrayList<>())
+                    .regularTicketing(new ArrayList<>())
+                    .build();
+            Artist artist = Artist.builder().name(request.getArtistName()).performanceList(new ArrayList<>()).build();
 
-        //when
-        String photo = "url";
-        Long saverId = performanceService.save(request, photo);
+            // mocking
+            given(performanceRepository.save(any(Performance.class))).willReturn(performance);
+            given(artistRepository.findByName(any(String.class))).willReturn(Optional.ofNullable(artist));
 
-        //then
-        assertThat(saverId).isEqualTo(performance.getId());
+            //when
+            Long saverId = performanceService.save(request, "");
+
+            //then
+            assertThat(performance.getId()).isEqualTo(saverId);
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 아티스트라면 공연 저장에 실패한다.")
+        void savePerformanceButNotExistArtistTest() {
+            PerformanceRequestDto request = PerformanceRequestDto.builder().build();
+            given(artistRepository.findByName(any())).willThrow(NotExistException.class);
+            assertThatThrownBy(() -> performanceService.save(request, ""))
+                    .isInstanceOf(NotExistException.class);
+        }
+    }
+
+    @Nested
+    @DisplayName("공연 수정")
+    class updatePerformance {
+        @Test
+        @DisplayName("공연 아이디 값이 존재하지 않으면 공연 수정에 실패한다.")
+        void updatePerformanceButNotPerformanceTest() {
+            Long performanceId = 1L;
+            PerformanceRequestDto request = PerformanceRequestDto.builder().build();
+            given(performanceRepository.findById(any())).willThrow(NotExistException.class);
+            assertThatThrownBy(() -> performanceService.update(performanceId, request, ""));
+        }
+    }
+
+    @Nested
+    @DisplayName("공연 삭제")
+    class deletePerformance {
+        @Test
+        @DisplayName("공연 아이디 값이 존재하지 않으면 공연 삭제에 실패한다.")
+        void deletePerformanceButNotPerformanceTest() {
+            Long performanceId = 1L;
+            given(performanceRepository.findById(any())).willThrow(NotExistException.class);
+            assertThatThrownBy(() -> performanceService.delete(performanceId));
+        }
     }
 
 }
