@@ -119,9 +119,8 @@ public class PerformanceService {
             Long userId = SecurityUtil.getCurrentUserId().get();
             User user = userRepository.findById(userId).orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
             heartPressed = performanceHeartRepository.findByUserAndPerformance(user, performance).isPresent();
-
             if (heartPressed) {
-                isAlarmed = notificationRepository.findNotificationByUserAndPerformance(user, performance).isPresent();
+                isAlarmed = notificationRepository.findByUserAndPerformance(user, performance).isPresent();
             }
         }
 

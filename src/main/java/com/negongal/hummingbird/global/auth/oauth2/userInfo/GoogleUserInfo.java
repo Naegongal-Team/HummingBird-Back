@@ -27,6 +27,7 @@ public class GoogleUserInfo implements Oauth2UserInfo {
         return User.builder()
                 .oauth2Id(getOauthId())
                 .provider(getProvider())
+                .role(Role.USER)
                 .build();
     }
 
