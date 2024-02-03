@@ -23,6 +23,7 @@ import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,10 +46,8 @@ class PerformanceServiceTest {
     @InjectMocks private PerformanceService performanceService;
 
     @Mock private PerformanceRepository performanceRepository;
-    @Mock private PerformanceHeartRepository heartRepository;
     @Mock private PerformanceDateRepository dateRepository;
     @Mock private ArtistRepository artistRepository;
-    @Mock private UserRepository userRepository;
     @Mock private NotificationService notificationService;
     private static MockedStatic<SecurityUtil> mockedSecurityUtil;
 
@@ -64,11 +63,11 @@ class PerformanceServiceTest {
     class findPerformances {
         @Test
         @DisplayName("전체 공연 조회 시, 페이지네이션으로 공연 리스트 조회를 성공한다.")
-        void findPerformancesByBasicSortTest() {
+        void findPerformancesByPaginationTest() {
             //given
-            List<Performance> performanceList = PerformanceTestHelper.createList();
+            Performance performance2 = PerformanceTestHelper.createPerformance(2L, "Jeff Bernat");
             Pageable pageable = PageRequest.of(0, 5);
-            Page<PerformanceDto> dtoPage = new PageImpl(performanceList, pageable, performanceList.size());
+            Page<PerformanceDto> dtoPage = new PageImpl(Arrays.asList(performance, performance2), pageable, 2);
 
             // mocking
             given(performanceRepository.findAllCustom(any(Pageable.class))).willReturn(dtoPage);

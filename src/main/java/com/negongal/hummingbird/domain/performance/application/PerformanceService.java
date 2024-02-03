@@ -2,15 +2,11 @@ package com.negongal.hummingbird.domain.performance.application;
 
 import static com.negongal.hummingbird.global.error.ErrorCode.*;
 
-import com.negongal.hummingbird.domain.artist.dao.ArtistHeartRepository;
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
 import com.negongal.hummingbird.domain.artist.domain.Artist;
-import com.negongal.hummingbird.domain.artist.domain.ArtistHeart;
 import com.negongal.hummingbird.domain.notification.application.NotificationService;
 import com.negongal.hummingbird.domain.notification.dao.NotificationRepository;
-import com.negongal.hummingbird.domain.notification.domain.Notification;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceHeartRepository;
-import com.negongal.hummingbird.domain.performance.domain.PerformanceHeart;
 import com.negongal.hummingbird.domain.performance.dto.PerformancePageDto;
 import com.negongal.hummingbird.domain.performance.dto.PerformanceRequestDto;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceDateRepository;

@@ -4,6 +4,8 @@ import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.chat.domain.ChatRoom;
 import com.negongal.hummingbird.domain.performance.domain.Performance;
 import com.negongal.hummingbird.domain.performance.domain.PerformanceDate;
+import com.negongal.hummingbird.domain.performance.domain.TicketType;
+import com.negongal.hummingbird.domain.performance.domain.Ticketing;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -17,21 +19,6 @@ public class PerformanceTestHelper {
         return createOne(id, artistName, new String[] {"2024-02-27 20:30", "2024-02-28 20:30"});
     }
 
-    public static List<Performance> createList() {
-        List<Performance> performanceList = new ArrayList<>();
-        performanceList.add(createOne(1L, "Harry Styles",
-                new String[] {"2024-02-05 20:30", "2024-02-06 20:30"}));
-        performanceList.add(createOne(2L, "Jeff Bernat",
-                new String[] {"2024-01-01 20:30", "2024-01-02 20:30"}));
-        performanceList.add(createOne(3L, "Slowdive",
-                new String[] {"2024-03-27 20:30", "2024-03-28 20:30"}));
-        performanceList.add(createOne(4L, "Novo Amor",
-                new String[] {"2024-02-14 20:30", "2024-02-15 20:30"}));
-        performanceList.add(createOne(5L, "Sam Smith",
-                new String[] {"2024-02-27 20:30", "2024-02-28 20:30"}));
-        return performanceList;
-    }
-
     public static Performance createOne(Long id, String artistName, String[] strDates) {
         Artist artist = Artist.builder().name(artistName).performanceList(new ArrayList<>()).build();
         Performance performance = Performance.builder().name(artist + " 콘서트").artist(artist).build();
@@ -39,17 +26,55 @@ public class PerformanceTestHelper {
 
         ChatRoom chatRoom = new ChatRoom("room" + id, performance);
         ReflectionTestUtils.setField(performance, "chatRoom", chatRoom);
-        ReflectionTestUtils.setField(performance, "dateList", createDate(performance, strDates));
+        ReflectionTestUtils.setField(performance, "dateList", createPerformanceDateList(performance, strDates));
 
         return performance;
     }
 
-    public static List<PerformanceDate> createDate(Performance p, String[] strDates) {
+    public static List<PerformanceDate> createPerformanceDateList(Performance p, String[] strDates) {
         List<PerformanceDate> dateList = new ArrayList<>();
         for(String strDate : strDates) {
             dateList.add(new PerformanceDate(p, LocalDateTime.parse(strDate, formatter)));
         }
         return dateList;
+    }
+
+    public static List<Ticketing> createTicketingList(Performance p, String[] strDates) {
+        List<Ticketing> ticketingList = new ArrayList<>();
+        for(String strDate : strDates) {
+            ticketingList.add(Ticketing.builder()
+                    .performance(p)
+                    .ticketType(TicketType.REGULAR)
+                    .startDate(LocalDateTime.parse(strDate, formatter))
+                    .platform("인터파트")
+                    .link("https://tickets.interpark.com/")
+                    .build());
+        }
+        return ticketingList;
+    }
+
+    public static String[] getArtistNames() {
+        return new String[] {"Harry Styless", "Harry Styless", "Slowdives", "Novo Amors", "Sam Smiths"};
+    }
+
+    public static String[][] getDates() {
+        return new String[][] {
+                {"2024-05-05 20:30", "2024-05-06 20:30"},
+                {"2024-01-10 20:30", "2024-01-11 20:30"},
+                {"2024-04-27 20:30", "2024-04-28 20:30"},
+                {"2024-06-14 20:30", "2024-06-15 20:30"},
+                {"2024-04-27 20:30", "2024-04-28 20:30"}
+        };
+    }
+
+    public static String[][] getTicketingDates() {
+        return new String[][]  {
+                {"2024-04-04 20:30", "2024-04-05 20:30"},
+                {"2024-01-01 20:30", "2024-01-02 20:30"},
+                {"2024-03-12 20:30", "2024-03-13 20:30"},
+                {"2024-05-14 20:30", "2024-05-15 20:30"},
+                {"2024-04-18 20:30", "2024-04-19 20:30"}
+        };
     }
 
 }
