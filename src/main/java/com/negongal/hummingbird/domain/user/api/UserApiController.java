@@ -27,7 +27,6 @@ import java.io.IOException;
 @Tag(name = "User API", description = "회원 관련 api 입니다.")
 @Slf4j
 @RestController
-@RequestMapping("user")
 @RequiredArgsConstructor
 public class UserApiController {
 
@@ -46,7 +45,7 @@ public class UserApiController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "401", description = "권한 없음"
             )})
-    @GetMapping("/info")
+    @GetMapping("/user/info")
     public ApiResponse<?> userDetail(@AuthenticationPrincipal CustomUserDetail userDetail) {
         Long userId = userDetail.getUserId();
         UserDetailDto user = userService.findUser(userId);
@@ -69,7 +68,7 @@ public class UserApiController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "401", description = "권한 없음"
             )})
-    @PostMapping(value = "/info", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/user/info", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ApiResponse<?> userNicknameAndPhotoAdd(
             @Valid @RequestPart(value = "user") UserDto saveParam,
             @RequestPart(required = false, value = "profileImage") MultipartFile profileImage,
@@ -92,7 +91,7 @@ public class UserApiController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "401", description = "권한 없음"
             )})
-    @PatchMapping(value = "/info", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PatchMapping(value = "/user/info", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ApiResponse<?> userNicknameAndPhotoModify(
             @Valid @RequestPart(value = "user") UserDto updateParam,
             @RequestPart(required = false, value = "photo") MultipartFile profileImage,
@@ -107,7 +106,7 @@ public class UserApiController {
     }
 
     @Operation(summary = "fcmToken등록", description = "회원 기기의 토큰을 등록합니다.")
-    @PostMapping("/fcm-token")
+    @PostMapping("/user/fcm-token")
     public ApiResponse postFCMToken(@RequestParam String token) {
         userService.saveFCMToken(token);
         return ResponseUtils.success(token);
@@ -122,14 +121,14 @@ public class UserApiController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "401", description = "권한 없음"
             )})
-    @PostMapping("/remove")
+    @PostMapping("/user/remove")
     public ApiResponse<?> remove(@AuthenticationPrincipal CustomUserDetail customUserDetail) {
         userService.deleteUser(customUserDetail.getUserId());
         return ResponseUtils.success();
     }
 
     @Operation(summary = "탈퇴했던 사용자 활성화", description = "탈퇴했었던 회원이 다시 계정을 활성화합니다.")
-    @PostMapping("/activate")
+    @PostMapping("/user/activate")
     public ApiResponse<?> activateUser(@AuthenticationPrincipal CustomUserDetail customUserDetail) {
         userService.activateUser(customUserDetail.getUserId());
         return ResponseUtils.success();
