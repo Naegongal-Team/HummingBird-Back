@@ -71,7 +71,7 @@ public class Performance extends BaseTimeEntity {
         this.dateList = new ArrayList<>();
         this.performanceHeartList = new ArrayList<>();
 
-        this.artist.getPerformanceList().add(this);
+        this.artist.getPerformances().add(this);
     }
 
     public void addPhoto(String photo) {
@@ -88,7 +88,7 @@ public class Performance extends BaseTimeEntity {
         this.photo = null;
         this.ticketingList.clear();
         this.dateList.clear();
-        this.artist.getPerformanceList().add(this);
+        this.artist.getPerformances().add(this);
     }
 
 }

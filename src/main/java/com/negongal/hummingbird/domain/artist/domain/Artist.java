@@ -8,13 +8,10 @@ import javax.persistence.*;
 import java.util.List;
 import org.hibernate.annotations.Formula;
 
-@Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString
+@Entity
 public class Artist {
     @Id
     private String id;
@@ -24,21 +21,28 @@ public class Artist {
 
     private String image;
 
-    private int popularity;
-
+    @Basic(fetch=FetchType.LAZY)
     @Formula("(SELECT COUNT(1) FROM artist_heart ah WHERE ah.artist_id = id)")
     private int heartCount;
 
     @OneToMany(mappedBy = "artist", orphanRemoval = true)
-    private List<Genre> genreList;
+    private List<Genre> genres;
 
     @OneToMany(mappedBy = "artist", orphanRemoval = true)
-    private List<ArtistHeart> artistHeartList;
+    private List<ArtistHeart> hearts;
 
     @OneToMany(mappedBy = "artist", orphanRemoval = true)
-    private List<Track> artistTopTrackList;
+    private List<Track> topTracks;
 
     @OneToMany(mappedBy = "artist")
-    private List<Performance> performanceList;
+    private List<Performance> performances;
 
+    @Builder
+    public Artist(String id, String name, String image, List<Genre> genres, List<Track> topTracks) {
+        this.id = id;
+        this.name = name;
+        this.image = image;
+        this.genres = genres;
+        this.topTracks = topTracks;
+    }
 }
