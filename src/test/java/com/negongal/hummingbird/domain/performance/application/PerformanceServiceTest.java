@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -44,7 +46,6 @@ import org.springframework.data.domain.Pageable;
 class PerformanceServiceTest {
 
     @InjectMocks private PerformanceService performanceService;
-
     @Mock private PerformanceRepository performanceRepository;
     @Mock private PerformanceDateRepository dateRepository;
     @Mock private ArtistRepository artistRepository;
@@ -52,6 +53,16 @@ class PerformanceServiceTest {
     private static MockedStatic<SecurityUtil> mockedSecurityUtil;
 
     private Performance performance;
+
+    @BeforeAll
+    public static void beforeALl() {
+        mockedSecurityUtil = mockStatic(SecurityUtil.class);
+    }
+
+    @AfterAll
+    public static void afterAll() {
+        mockedSecurityUtil.close();
+    }
 
     @BeforeEach
     void setUp() {
@@ -90,7 +101,6 @@ class PerformanceServiceTest {
         void findPerformanceButNotLogInTest() {
             //given
             Long findId = 1L;
-            mockedSecurityUtil = mockStatic(SecurityUtil.class);
 
             // mocking
             given(SecurityUtil.getCurrentUserId()).willReturn(Optional.empty());
@@ -109,7 +119,7 @@ class PerformanceServiceTest {
         @DisplayName("아이디 값이 존재하지 않으면 에러가 발생한다")
         void findPerformanceButNotExistIdTest() {
             Long performanceId = 1L;
-            given(performanceRepository.findById(any())).willThrow(NotExistException.class);
+            given(performanceRepository.findById(any())).willReturn(Optional.empty());
             assertThatThrownBy(() -> performanceService.findOne(performanceId));
         }
     }
@@ -169,7 +179,7 @@ class PerformanceServiceTest {
         @DisplayName("존재하지 않는 아티스트라면 공연 저장에 실패한다.")
         void savePerformanceButNotExistArtistTest() {
             PerformanceRequestDto request = PerformanceRequestDto.builder().build();
-            given(artistRepository.findByName(any())).willThrow(NotExistException.class);
+            given(artistRepository.findByName(any())).willReturn(Optional.empty());
             assertThatThrownBy(() -> performanceService.save(request, ""))
                     .isInstanceOf(NotExistException.class);
         }
@@ -183,7 +193,7 @@ class PerformanceServiceTest {
         void updatePerformanceButNotPerformanceTest() {
             Long performanceId = 1L;
             PerformanceRequestDto request = PerformanceRequestDto.builder().build();
-            given(performanceRepository.findById(any())).willThrow(NotExistException.class);
+            given(performanceRepository.findById(any())).willReturn(Optional.empty());
             assertThatThrownBy(() -> performanceService.update(performanceId, request, ""));
         }
     }
@@ -195,7 +205,7 @@ class PerformanceServiceTest {
         @DisplayName("공연 아이디 값이 존재하지 않으면 공연 삭제에 실패한다.")
         void deletePerformanceButNotPerformanceTest() {
             Long performanceId = 1L;
-            given(performanceRepository.findById(any())).willThrow(NotExistException.class);
+            given(performanceRepository.findById(any())).willReturn(Optional.empty());
             assertThatThrownBy(() -> performanceService.delete(performanceId));
         }
     }

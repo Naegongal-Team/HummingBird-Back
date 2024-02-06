@@ -4,8 +4,10 @@ import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.chat.domain.ChatRoom;
 import com.negongal.hummingbird.domain.performance.domain.Performance;
 import com.negongal.hummingbird.domain.performance.domain.PerformanceDate;
+import com.negongal.hummingbird.domain.performance.domain.PerformanceHeart;
 import com.negongal.hummingbird.domain.performance.domain.TicketType;
 import com.negongal.hummingbird.domain.performance.domain.Ticketing;
+import com.negongal.hummingbird.domain.user.domain.User;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -15,6 +17,11 @@ import org.springframework.test.util.ReflectionTestUtils;
 public class PerformanceTestHelper {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
+    public static PerformanceHeart createPerformanceHeart(Long id, User user, Performance performance) {
+        PerformanceHeart performanceHeart = PerformanceHeart.builder().user(user).performance(performance).build();
+        ReflectionTestUtils.setField(performanceHeart, "id", id);
+        return performanceHeart;
+    }
     public static Performance createPerformance(Long id, String artistName) {
         return createOne(id, artistName, new String[] {"2024-02-27 20:30", "2024-02-28 20:30"});
     }
@@ -27,7 +34,7 @@ public class PerformanceTestHelper {
         ChatRoom chatRoom = new ChatRoom("room" + id, performance);
         ReflectionTestUtils.setField(performance, "chatRoom", chatRoom);
         ReflectionTestUtils.setField(performance, "dateList", createPerformanceDateList(performance, strDates));
-
+        ReflectionTestUtils.setField(performance, "performanceHeartList", new ArrayList<>());
         return performance;
     }
 
