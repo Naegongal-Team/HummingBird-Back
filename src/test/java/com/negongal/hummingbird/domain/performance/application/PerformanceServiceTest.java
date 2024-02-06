@@ -55,12 +55,12 @@ class PerformanceServiceTest {
     private Performance performance;
 
     @BeforeAll
-    public static void beforeALl() {
+    static void beforeALl() {
         mockedSecurityUtil = mockStatic(SecurityUtil.class);
     }
 
     @AfterAll
-    public static void afterAll() {
+    static void afterAll() {
         mockedSecurityUtil.close();
     }
 

@@ -1,20 +1,20 @@
 package com.negongal.hummingbird.domain.performance.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
 import com.negongal.hummingbird.domain.artist.domain.Artist;
-import com.negongal.hummingbird.domain.chat.dao.ChatRoomRepository;
-import com.negongal.hummingbird.domain.chat.domain.ChatRoom;
 import com.negongal.hummingbird.domain.performance.PerformanceTestHelper;
 import com.negongal.hummingbird.domain.performance.domain.Performance;
 import com.negongal.hummingbird.domain.performance.domain.PerformanceDate;
+import com.negongal.hummingbird.domain.performance.domain.PerformanceHeart;
 import com.negongal.hummingbird.domain.performance.domain.Ticketing;
 import com.negongal.hummingbird.domain.performance.dto.PerformanceDto;
-import com.negongal.hummingbird.global.common.BaseTimeEntity;
+import com.negongal.hummingbird.domain.user.dao.UserRepository;
+import com.negongal.hummingbird.domain.user.domain.User;
 import com.negongal.hummingbird.global.config.JpaConfig;
 import com.negongal.hummingbird.global.config.QueryDSLConfig;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,21 +27,30 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-
 
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import({QueryDSLConfig.class, JpaConfig.class})
 @DataJpaTest
-class PerformanceRepositoryTest {
+class PerformanceHeartRepositoryTest {
 
+    @Autowired PerformanceHeartRepository performanceHeartRepository;
     @Autowired PerformanceRepository performanceRepository;
     @Autowired ArtistRepository artistRepository;
     @Autowired PerformanceDateRepository performanceDateRepository;
     @Autowired TicketingRepository ticketingRepository;
+    @Autowired UserRepository userRepository;
+
+    private Long userId;
 
     @BeforeEach
     void setUp() {
+        User user = User.builder()
+                .oauth2Id("oauth2Id")
+                .nickname("jim")
+                .provider("provider")
+                .build();
+       userId = userRepository.save(user).getUserId();
+
         String[] artistName = PerformanceTestHelper.getArtistNames();
         String[][] dates = PerformanceTestHelper.getDates();
         String[][] ticketingDates = PerformanceTestHelper.getTicketingDates();
@@ -70,61 +79,28 @@ class PerformanceRepositoryTest {
 
             List<Ticketing> ticketingList = PerformanceTestHelper.createTicketingList(performance, ticketingDates[i]);
             ticketingRepository.saveAll(ticketingList);
+
+            if(i % 2 == 0) { // 짝수만 좋아요 저장
+                PerformanceHeart performanceHeart = PerformanceHeart.builder()
+                        .performance(performance)
+                        .user(user)
+                        .build();
+                performanceHeartRepository.save(performanceHeart);
+            }
         }
     }
 
     @Test
-    @DisplayName("공연 시작 날짜가 지난 경우는 조회되지 않는다.")
-    void findPerformancesButStartDatePassedTest() {
+    @DisplayName("유저가 좋아요한 공연만 조회된다")
+    void findAllPerformanceByUserHeartTest() {
         Pageable pageable = PageRequest.of(0, 5);
 
-        Page<PerformanceDto> dtoPage = performanceRepository.findAllCustom(pageable);
+        Page<PerformanceDto> dtoPage = performanceHeartRepository.findAllByUserHeart(pageable, userId);
         List<PerformanceDto> content = dtoPage.getContent();
 
-//        for (PerformanceDto p : content) {
-//            System.out.println(p.getDate());
-//        }
-
-        assertThat(dtoPage.getTotalElements()).isEqualTo(4);
-        for(int i = 0; i < content.size(); i++) {
-            assertThat(content.get(i).getDate()).isAfterOrEqualTo(LocalDateTime.now());
+        assertThat(dtoPage.getTotalElements()).isEqualTo(3);
+        for (PerformanceDto p : content) {
+            assertThat(p.getName()).containsAnyOf(new String[]{"0", "2", "4"});
         }
     }
-
-    @Test
-    @DisplayName("정렬 조건이 없다면 공연 시작 날짜를 기준으로 조회한다.")
-    void findPerformancesButNotSortConditionTest() {
-        Pageable pageable = PageRequest.of(0, 5);
-
-        Page<PerformanceDto> dtoPage = performanceRepository.findAllCustom(pageable);
-        List<PerformanceDto> content = dtoPage.getContent();
-
-        for(int i = 0; i < content.size() - 1; i++) {
-            assertThat(content.get(i).getDate()).isBeforeOrEqualTo(content.get(i + 1).getDate());
-        }
-    }
-
-    @Test
-    @DisplayName("티켓팅 날짜 기준으로 공연 조회를 성공한다.")
-    void findPerformancesByTicketingDateTest() {
-        Pageable pageable = PageRequest.of(0, 5, Sort.by("ticketing"));
-
-        Page<PerformanceDto> dtoPage = performanceRepository.findAllCustom(pageable);
-        List<PerformanceDto> content = dtoPage.getContent();
-
-        assertThat(content.get(0).getArtistName()).isEqualTo("Slowdives");
-        assertThat(content.get(content.size() - 1).getArtistName()).isEqualTo("Novo Amors");
-    }
-
-    @Test
-    @DisplayName("가수의 공연 조회 시, scheduled 조건에 따라 조회에 성공한다.")
-    void findArtistPerformancesButStartDatePassedTest() {
-        String findArtistId = "Harry StylessID123";
-        List<PerformanceDto> scheduledPerformances = performanceRepository.findByArtist(findArtistId, true);
-        List<PerformanceDto> pastPerformances = performanceRepository.findByArtist(findArtistId, false);
-
-        assertThat(scheduledPerformances.size()).isEqualTo(1);
-        assertThat(pastPerformances.size()).isEqualTo(1);
-    }
-
 }
