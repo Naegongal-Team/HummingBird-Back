@@ -1,84 +1,43 @@
 package com.negongal.hummingbird.domain.user.application;
 
-import com.negongal.hummingbird.domain.user.dto.UserDto;
-import com.negongal.hummingbird.domain.user.dto.UserDetailDto;
 import com.negongal.hummingbird.domain.user.domain.User;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
-import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
-import com.negongal.hummingbird.infra.awsS3.S3Uploader;
+
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.util.Optional;
-
 import static com.negongal.hummingbird.global.error.ErrorCode.USER_NOT_EXIST;
 
-@Service
-@Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
+@Service
 public class UserService {
 
-    private final UserRepository userRepository;
-    private final S3Uploader uploader;
+	private final UserRepository userRepository;
 
-    @Transactional
-    public void addUserNicknameAndImage(Long userId, UserDto saveParam, String profileImage) {
-        User findUser = userRepository.findById(userId)
-                .orElseThrow(()->new NotExistException(USER_NOT_EXIST));
-        findUser.updateNicknameAndProfileImage(saveParam.getNickname(), profileImage);
-    }
+	public User getById(Long id) {
+		return userRepository.findById(id)
+			.orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
+	}
 
-    @Transactional
-    public void modifyUserNicknameAndImage(Long userId, UserDto updateParam, String profileImage) throws IOException {
-        User findUser = userRepository.findById(userId)
-                .orElseThrow(()->new NotExistException(USER_NOT_EXIST));
-        String file = findUser.getProfileImage();
-        if(file != null){
-            uploader.deleteFile(file);
-        }
-        findUser.updateNicknameAndProfileImage(updateParam.getNickname(), profileImage);
-    }
+	public boolean existByNickname(String nickname) {
+		return userRepository.existsByNickname(nickname);
+	}
 
-    @Transactional
-    public void saveFCMToken(String fcmToken) {
-        User findUser = userRepository.findById(SecurityUtil.getCurrentUserId().get())
-                .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
-        findUser.updateFCMToken(fcmToken);
-    }
+	@Transactional
+	public void deleteUser(Long userId) {
+		User findUser = getById(userId);
+		findUser.updateInactiveDate();
+		findUser.updateStatus();
+	}
 
-    public UserDetailDto findUser(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(()->new NotExistException(USER_NOT_EXIST));
-        return UserDetailDto.of(user);
-    }
-
-    public int findByNickname(String nickname) {
-        Optional<User> byNickname = userRepository.findByNickname(nickname);
-        if(byNickname.isPresent()) { //중복
-            return 0;
-        }
-        else { //사용 가능
-            return 1;
-        }
-    }
-
-    @Transactional
-    public void deleteUser(Long userId) {
-        User findUser = userRepository.findById(userId)
-                .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
-        findUser.updateInactiveDate();
-        findUser.updateStatus();
-    }
-
-    @Transactional
-    public void activateUser(Long userId) {
-        User findUser = userRepository.findById(userId)
-                .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
-        findUser.activateStatus();
-    }
+	@Transactional
+	public void activateUser(Long userId) {
+		User findUser = getById(userId);
+		findUser.activateStatus();
+	}
 
 }

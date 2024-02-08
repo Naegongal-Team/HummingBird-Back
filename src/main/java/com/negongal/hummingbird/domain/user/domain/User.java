@@ -63,9 +63,12 @@ public class User {
         this.status = status;
     }
 
-    public void updateNicknameAndProfileImage(String nickname, String profileImage) {
+    public void updateNickname(String nickname) {
         this.nickname = nickname;
-        this.profileImage = profileImage;
+    }
+
+    public void updatePhoto(String photoUrl) {
+        this.profileImage = photoUrl;
     }
 
     public void updateFCMToken(String fcmToken) {

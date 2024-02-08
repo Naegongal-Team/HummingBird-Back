@@ -19,7 +19,7 @@ public class S3Uploader {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String saveFile(MultipartFile multipartFile) throws IOException {
+    public String saveFile(MultipartFile multipartFile) {
         String filename = createFilename(multipartFile.getOriginalFilename());
 
         ObjectMetadata metadata = new ObjectMetadata();
@@ -35,7 +35,7 @@ public class S3Uploader {
         return amazonS3.getUrl(bucket, filename).toString();
     }
 
-    public String saveFileInFolder(MultipartFile multipartFile, String folder) throws IOException{
+    public String saveFileInFolder(MultipartFile multipartFile, String folder){
         String filename = folder + createFilename(multipartFile.getOriginalFilename());
 
         ObjectMetadata metadata = new ObjectMetadata();
@@ -51,7 +51,7 @@ public class S3Uploader {
         return amazonS3.getUrl(bucket, filename).toString();
     }
 
-    public void deleteFile(String filename) throws IOException {
+    public void deleteFile(String filename){
         try {
             amazonS3.deleteObject(bucket, filename);
         } catch (SdkClientException e) {

@@ -39,7 +39,7 @@ public class ArtistRepositoryImpl implements ArtistRepositoryCustom {
 
     private List<ArtistDto> findAllArtistsQuery(Long userId, Pageable pageable) {
         List<OrderSpecifier> orders = getAllOrderSpecifiers(pageable);
-        List<ArtistDto> results = jpaQueryFactory
+        return jpaQueryFactory
                 .select(artist)
                 .from(artist)
                 .leftJoin(genre).on(artist.id.eq(genre.artist.id))
@@ -52,7 +52,6 @@ public class ArtistRepositoryImpl implements ArtistRepositoryCustom {
                         artist.id, artist.name, artist.image, artist.heartCount,
                         list(Projections.constructor(ArtistGenresDto.class, genre.name)
                         ))));
-        return results;
     }
 
     private List<OrderSpecifier> getAllOrderSpecifiers(Pageable pageable) {
