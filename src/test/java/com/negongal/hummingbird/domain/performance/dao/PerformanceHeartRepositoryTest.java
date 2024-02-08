@@ -12,6 +12,7 @@ import com.negongal.hummingbird.domain.performance.domain.PerformanceHeart;
 import com.negongal.hummingbird.domain.performance.domain.Ticketing;
 import com.negongal.hummingbird.domain.performance.dto.PerformanceDto;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
+import com.negongal.hummingbird.domain.user.domain.Role;
 import com.negongal.hummingbird.domain.user.domain.User;
 import com.negongal.hummingbird.global.config.JpaConfig;
 import com.negongal.hummingbird.global.config.QueryDSLConfig;
@@ -48,6 +49,7 @@ class PerformanceHeartRepositoryTest {
                 .oauth2Id("oauth2Id")
                 .nickname("jim")
                 .provider("provider")
+                .role(Role.USER)
                 .build();
        userId = userRepository.save(user).getUserId();
 
