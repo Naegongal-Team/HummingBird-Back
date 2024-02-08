@@ -59,9 +59,6 @@ class PerformanceHeartRepositoryTest {
                     .id(artistName[i] + "ID123")
                     .name(artistName[i])
                     .image("image")
-                    .popularity(100)
-                    .heartCount(10)
-                    .performanceList(new ArrayList<>())
                     .build();
             artistRepository.save(artist);
 

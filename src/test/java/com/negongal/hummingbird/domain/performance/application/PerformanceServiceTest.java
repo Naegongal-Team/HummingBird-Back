@@ -162,7 +162,7 @@ class PerformanceServiceTest {
                     .dateList(new ArrayList<>())
                     .regularTicketing(new ArrayList<>())
                     .build();
-            Artist artist = Artist.builder().name(request.getArtistName()).performanceList(new ArrayList<>()).build();
+            Artist artist = Artist.builder().name(request.getArtistName()).build();
 
             // mocking
             given(performanceRepository.save(any(Performance.class))).willReturn(performance);

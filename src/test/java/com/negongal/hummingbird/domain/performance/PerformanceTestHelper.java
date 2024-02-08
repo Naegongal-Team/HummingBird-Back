@@ -27,7 +27,7 @@ public class PerformanceTestHelper {
     }
 
     public static Performance createOne(Long id, String artistName, String[] strDates) {
-        Artist artist = Artist.builder().name(artistName).performanceList(new ArrayList<>()).build();
+        Artist artist = Artist.builder().name(artistName).build();
         Performance performance = Performance.builder().name(artist + " 콘서트").artist(artist).build();
         ReflectionTestUtils.setField(performance, "id", id);
 
