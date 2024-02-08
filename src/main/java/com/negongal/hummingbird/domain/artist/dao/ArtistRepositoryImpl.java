@@ -43,7 +43,7 @@ public class ArtistRepositoryImpl implements ArtistRepositoryCustom {
                 .select(artist)
                 .from(artist)
                 .leftJoin(genre).on(artist.id.eq(genre.artist.id))
-                .join(artist.artistHeartList, artistHeart)
+                .join(artist.hearts, artistHeart)
                 .where(artistHeart.user.userId.eq(userId))
                 .orderBy(orders.stream().toArray(OrderSpecifier[]::new))
                 .offset(pageable.getOffset())

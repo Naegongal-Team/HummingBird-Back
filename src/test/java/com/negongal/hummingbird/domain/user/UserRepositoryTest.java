@@ -2,6 +2,7 @@ package com.negongal.hummingbird.domain.user;
 
 import static org.assertj.core.api.Assertions.*;
 
+import com.negongal.hummingbird.global.config.JpaConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
-import com.negongal.hummingbird.HummingbirdTest;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.domain.user.domain.Role;
 import com.negongal.hummingbird.domain.user.domain.User;
@@ -20,7 +20,7 @@ import com.negongal.hummingbird.global.error.exception.NotExistException;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import({QueryDSLConfig.class, HummingbirdTest.class})
+@Import({QueryDSLConfig.class, JpaConfig.class})
 public class UserRepositoryTest {
 
 	@Autowired
