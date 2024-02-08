@@ -50,7 +50,7 @@ public class ArtistRepositoryImpl implements ArtistRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .transform(groupBy(artist.id).list(Projections.constructor(ArtistDto.class,
                         artist.id, artist.name, artist.image, artist.heartCount,
-                        list(Projections.constructor(ArtistGenresDto.class, genre.genreName)
+                        list(Projections.constructor(ArtistGenresDto.class, genre.name)
                         ))));
         return results;
     }

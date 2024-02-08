@@ -8,10 +8,15 @@ import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
 import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.artist.domain.ArtistHeart;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
+import com.negongal.hummingbird.domain.user.domain.Role;
 import com.negongal.hummingbird.domain.user.domain.User;
 import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
+
+import java.util.List;
 import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -36,6 +41,7 @@ class ArtistHeartServiceTest {
     @Autowired
     private UserRepository userRepository;
     private static MockedStatic<SecurityUtil> mockedSecurityUtil;
+    User user;
 
     @BeforeEach
     void setUp() {
@@ -44,11 +50,17 @@ class ArtistHeartServiceTest {
                 .name("artist1")
                 .build();
         artistRepository.save(artist);
-        User user = User.builder()
+        user = User.builder()
                 .oauth2Id("test")
                 .provider("test")
+                .role(Role.USER)
                 .build();
         userRepository.save(user);
+    }
+
+    @BeforeAll
+    static void setUp2() {
+        mockedSecurityUtil = mockStatic(SecurityUtil.class);
     }
 
     @DisplayName("로그인 하지 않고 아티스트 좋아요 등록")
@@ -58,7 +70,6 @@ class ArtistHeartServiceTest {
     void notLoginLikeArtistTest() {
         // Given
         String artistId = "159125";
-        mockedSecurityUtil = mockStatic(SecurityUtil.class);
         BDDMockito.given(SecurityUtil.getCurrentUserId()).willReturn(Optional.empty());
 
         Throwable notExistException = assertThrows(NotExistException.class, () ->
@@ -73,7 +84,6 @@ class ArtistHeartServiceTest {
     void NotExistArtistLikeTest() {
         // Given
         String notExistArtistId = "159123";
-        mockedSecurityUtil = mockStatic(SecurityUtil.class);
         BDDMockito.given(SecurityUtil.getCurrentUserId()).willReturn(Optional.of(1L));
 
         Throwable notExistException = assertThrows(NotExistException.class, () ->
@@ -88,8 +98,8 @@ class ArtistHeartServiceTest {
     void artistLikeTest() {
         // Given
         String artistId = "159125";
-        Long userId = 1L;
-        mockedSecurityUtil = mockStatic(SecurityUtil.class);
+        Long userId = userRepository.findById(user.getUserId()).get().getUserId();
+
         BDDMockito.given(SecurityUtil.getCurrentUserId()).willReturn(Optional.of(userId));
 
         // When
@@ -108,7 +118,7 @@ class ArtistHeartServiceTest {
     void notLoginDislikeArtistTest() {
         // Given
         String artistId = "159125";
-        mockedSecurityUtil = mockStatic(SecurityUtil.class);
+        // mockedSecurityUtil = mockStatic(SecurityUtil.class);
         BDDMockito.given(SecurityUtil.getCurrentUserId()).willReturn(Optional.empty());
 
         Throwable notExistException = assertThrows(NotExistException.class, () ->
@@ -124,7 +134,6 @@ class ArtistHeartServiceTest {
         // Given
         String artistId = "159125";
         Long userId = 1L;
-        mockedSecurityUtil = mockStatic(SecurityUtil.class);
         BDDMockito.given(SecurityUtil.getCurrentUserId()).willReturn(Optional.of(userId));
 
         Throwable notExistException = assertThrows(NotExistException.class, () ->
@@ -139,8 +148,7 @@ class ArtistHeartServiceTest {
     void dislikeLikeArtistTest() {
         // Given
         String artistId = "159125";
-        Long userId = 1L;
-        mockedSecurityUtil = mockStatic(SecurityUtil.class);
+        Long userId = userRepository.findById(user.getUserId()).get().getUserId();
         BDDMockito.given(SecurityUtil.getCurrentUserId()).willReturn(Optional.of(userId));
         artistHeartService.save(artistId);
 
