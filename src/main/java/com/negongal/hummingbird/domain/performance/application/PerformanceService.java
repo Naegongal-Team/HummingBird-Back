@@ -44,23 +44,20 @@ public class PerformanceService {
     private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
 
-
     @Transactional
     public Long save(PerformanceRequestDto requestDto, String photo) {
         Artist artist = artistRepository.findByName(requestDto.getArtistName())
                 .orElseThrow(() -> new NotExistException(ARTIST_NOT_EXIST));
 
-        Performance performance = requestDto.toEntity(artist);
-        performance.addPhoto(photo);
-        performanceRepository.save(performance);
+        Performance savePerformance = performanceRepository.save(requestDto.toEntity(artist, photo));
 
-        List<PerformanceDate> dateList = createDate(requestDto.getDateList(), performance);
+        List<PerformanceDate> dateList = createDate(requestDto.getDateList(), savePerformance);
         dateRepository.saveAll(dateList);
 
         String topicName = artist.getId();
         notificationService.pushPerformRegisterNotification(topicName);
 
-        return performance.getId();
+        return savePerformance.getId();
     }
 
     public List<PerformanceDate> createDate(List<LocalDateTime> dateList, Performance performance) {
@@ -80,8 +77,7 @@ public class PerformanceService {
                 .orElseThrow(() -> new NotExistException(ARTIST_NOT_EXIST));
 
         findPerformance.update(request.getName(), artist, request.getLocation(), request.getRuntime(),
-                request.getDescription());
-        findPerformance.addPhoto(photo);
+                request.getDescription(), photo);
         dateRepository.saveAll(createDate(request.getDateList(), findPerformance));
     }
 
@@ -137,6 +133,7 @@ public class PerformanceService {
 
     public PerformancePageDto search(PerformanceSearchRequestDto requestDto, Pageable pageable) {
         Page<PerformanceDto> dtoPage = performanceRepository.search(requestDto, pageable);
+
         return PerformancePageDto.builder()
                 .performanceDto(dtoPage.getContent())
                 .totalPages(dtoPage.getTotalPages())

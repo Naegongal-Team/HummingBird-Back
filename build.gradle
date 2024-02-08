@@ -31,12 +31,15 @@ repositories {
 	mavenCentral()
 }
 
+test {
+	useJUnitPlatform()
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
-	implementation 'junit:junit:4.13.1'
 
 	//spotify
 //	implementation 'com.github.thelinmichael:spotify-web-api-java:master-SNAPSHOT'
@@ -81,10 +84,17 @@ dependencies {
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:3.1.4'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	//JUnit4 추가
-	testImplementation("org.junit.vintage:junit-vintage-engine") {
-		exclude group: "org.hamcrest", module: "hamcrest-core"
+
+	//JUnit5 추가
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude module: 'junit'
 	}
+	testImplementation 'org.junit.platform:junit-platform-launcher:1.5.2'
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.5.2'
+	testImplementation 'org.mockito:mockito-inline:3.6.0'
+
+	//assertj
+	testImplementation 'org.assertj:assertj-core'
 }
 
 allprojects {

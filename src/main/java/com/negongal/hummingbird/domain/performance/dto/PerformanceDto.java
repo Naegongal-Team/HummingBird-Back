@@ -57,4 +57,14 @@ public class PerformanceDto {
                 .build();
     }
 
+    @Override
+    public String toString() {
+        return "PerformanceDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", artistName='" + artistName + '\'' +
+                ", photo='" + photo + '\'' +
+                ", date=" + date +
+                '}';
+    }
 }
