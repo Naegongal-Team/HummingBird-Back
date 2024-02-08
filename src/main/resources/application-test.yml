@@ -1,0 +1,22 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+  h2:
+    console:
+      enable: true
+  jpa:
+    database: h2
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  datasource:
+    url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1;MODE=MySQL;NON_KEYWORDS=USER;DATABASE_TO_UPPER=FALSE;DB_CLOSE_ON_EXIT=FALSE;
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  redis:
+    host: localhost
+    port: 6379

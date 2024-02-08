@@ -3,6 +3,7 @@ package com.negongal.hummingbird.domain.artist.application;
 
 import com.negongal.hummingbird.domain.artist.dao.ArtistHeartRepository;
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepositoryCustom;
+import com.negongal.hummingbird.domain.artist.domain.ArtistHeart;
 import com.negongal.hummingbird.domain.artist.dto.ArtistDetailDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistGenresDto;
@@ -11,7 +12,6 @@ import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
 import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -39,31 +39,37 @@ public class ArtistService {
      */
     public Page<ArtistDto> findAllArtist(Pageable pageable) {
         List<ArtistDto> artists = artistRepository.findAll(pageable).stream().map(artist -> {
-                    List<ArtistGenresDto> artistGenres = artist.getGenreList().stream().map(genre ->
-                            ArtistGenresDto.builder()
-                                    .name(genre.getName())
-                                    .build()).collect(Collectors.toList());
-                    ArtistDto getArtist = ArtistDto.builder()
-                            .id(artist.getId())
-                            .name(artist.getName())
-                            .heartCount(artist.getHeartCount())
-                            .genres(artistGenres)
-                            .image(artist.getImage())
-                            .build();
+            List<ArtistGenresDto> artistGenres = getArtistGenres(artist);
+            ArtistDto getArtist = ArtistDto.builder()
+                    .id(artist.getId())
+                    .name(artist.getName())
+                    .heartCount(artist.getHeartCount())
+                    .genres(artistGenres)
+                    .image(artist.getImage())
+                    .build();
             return getArtist;
         }).collect(Collectors.toList());
 
         int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()),artists.size());
+        int end = Math.min((start + pageable.getPageSize()), artists.size());
 
         return new PageImpl<>(artists.subList(start, end), pageable, artists.size());
+    }
+
+    private List<ArtistGenresDto> getArtistGenres(Artist artist) {
+        List<ArtistGenresDto> artistGenres = artist.getGenres().stream().map(genre ->
+                ArtistGenresDto.builder()
+                        .name(genre.getName())
+                        .build()).collect(Collectors.toList());
+        return artistGenres;
     }
 
     /*
     아티스트 이름으로 아티스트 검색
     */
     public List<ArtistSearchDto> findArtistByName(String name) {
-        List<ArtistSearchDto> artistList = artistRepository.findByNameContainingOrderByName(name).stream().map(a ->
+        List<ArtistSearchDto> artistList = artistRepository.findAllByNameStartingWithOrderByNameAsc(name).stream()
+                .map(a ->
                         ArtistSearchDto.builder()
                                 .id(a.getId())
                                 .name(a.getName())
@@ -77,19 +83,15 @@ public class ArtistService {
      */
     public ArtistDetailDto findArtist(String artistId) {
         Artist artist = artistRepository.findById(artistId).orElseThrow(() -> new NotExistException(ARTIST_NOT_EXIST));
-        Optional<Long> currentUserId = SecurityUtil.getCurrentUserId();
-        if (currentUserId.isEmpty()) {
+        Long currentUserId = SecurityUtil.getCurrentUserId().orElse(0L);
+        ArtistHeart artistHeart = artistHeartRepository.findByUserIdAndArtistId(currentUserId,
+                artistId).orElse(null);
+        if (currentUserId == 0L || artistHeart == null) {
             return ArtistDetailDto.of(artist, false, false);
         }
-        if (currentUserId.isPresent()) {
-            boolean isHearted = artistHeartRepository.findByUserIdAndArtistId(currentUserId.get(), artistId).isPresent();
-            if (isHearted) {
-                boolean isAlarmed = artistHeartRepository.findByUserIdAndArtistId(currentUserId.get(), artistId).get().getIsAlarmed();
-                return ArtistDetailDto.of(artist, true, isAlarmed);
-            }
-            return ArtistDetailDto.of(artist, false, false);
-        }
-        return ArtistDetailDto.of(artist, false, false);
+        boolean isHearted = true;
+        boolean isAlarmed = artistHeart.getIsAlarmed();
+        return ArtistDetailDto.of(artist, isHearted, isAlarmed);
     }
 
     /*

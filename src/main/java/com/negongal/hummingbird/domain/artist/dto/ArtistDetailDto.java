@@ -43,7 +43,7 @@ public class ArtistDetailDto {
     }
 
     public static ArtistDetailDto of(Artist artist, boolean isHearted, boolean isAlarmed) {
-        List<ArtistGenresDto> artistGenres = artist.getGenreList().stream().map(genre ->
+        List<ArtistGenresDto> artistGenres = artist.getGenres().stream().map(genre ->
                 ArtistGenresDto.builder()
                         .name(genre.getName())
                         .build()).collect(Collectors.toList());
@@ -52,7 +52,7 @@ public class ArtistDetailDto {
                 .name(artist.getName())
                 .image(artist.getImage())
                 .genres(artistGenres)
-                .topTracks(artist.getArtistTopTrackList().stream()
+                .topTracks(artist.getTopTracks().stream()
                         .map(track -> TrackDto.of(track))
                         .collect(Collectors.toList()))
                 .isHearted(isHearted)

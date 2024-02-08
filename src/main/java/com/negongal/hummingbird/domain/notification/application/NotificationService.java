@@ -35,17 +35,17 @@ public class NotificationService {
     private final String TICKETING_ALERT_NOTIFICATION_TITLE = "티켓팅 시간이 얼마 나지 않았습니다!";
     private final String TICKETING_ALERT_NOTIFICATION_BODY = "의 시간이 얼마 남지 않았습니다! 의자에 앉아서 티켓팅을 기다려 주세요.";
 
-    public void saveNotification(NotificationRequestDto dto) {
-        Long performanceId = dto.getPerformanceId();
-        int beforeTime = dto.getBeforeTime();
+    public void save(NotificationRequestDto request) {
+        Long performanceId = request.getPerformanceId();
+        int beforeTime = request.getBeforeTime();
         Performance findPerformance = performanceRepository.findById(performanceId).orElseThrow(() -> new NotExistException(
                 ErrorCode.PERFORMANCE_NOT_EXIST
         ));
-        LocalDateTime notificationTime = getNotificationTime(beforeTime, findPerformance);
         Long findCurrentUserId = SecurityUtil.getCurrentUserId().orElseThrow(() -> new NotExistException(
                 ErrorCode.USER_NOT_EXIST));
         User user = userRepository.findById(findCurrentUserId).orElseThrow(() -> new NotExistException(
                 ErrorCode.USER_NOT_EXIST));
+        LocalDateTime notificationTime = getNotificationTime(beforeTime, findPerformance);
         if (notificationRepository.findByUserAndPerformance(user, findPerformance).isPresent()) {
             throw new NotExistException(ErrorCode.NOTIFICATION_ALREADY_EXIST);
         }

@@ -10,6 +10,7 @@ import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.domain.user.domain.User;
 import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
+import com.negongal.hummingbird.global.error.exception.AlreadyExistException;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
 import java.util.Arrays;
 import java.util.List;
@@ -35,12 +36,15 @@ public class ArtistHeartService {
 
     @Transactional
     public void save(String artistId) {
-        Long currentUserId = SecurityUtil.getCurrentUserId().orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
+        Long currentUserId = getCurrentUserId();
         Artist artist = artistRepository.findById(artistId)
                 .orElseThrow(() -> new NotExistException(ARTIST_NOT_EXIST));
         User user = userRepository.findById(currentUserId)
                 .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
-
+        Long userId = user.getUserId();
+        if (artistHeartRepository.findByUserIdAndArtistId(userId, artistId).isPresent()) {
+            throw new AlreadyExistException(ARTIST_ALREADY_EXIST);
+        }
         ArtistHeart artistHeart = ArtistHeart.builder()
                 .artist(artist)
                 .user(user)
@@ -51,17 +55,15 @@ public class ArtistHeartService {
 
     @Transactional
     public void delete(String artistId) {
-        Long currentUserId = SecurityUtil.getCurrentUserId().orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
+        Long currentUserId = getCurrentUserId();
         ArtistHeart artistHeart = artistHeartRepository.findByUserIdAndArtistId(currentUserId, artistId)
-                .orElseThrow(() -> new NoSuchElementException());
-        Artist artist = artistRepository.findById(artistId)
-                .orElseThrow(() -> new NotExistException(ARTIST_NOT_EXIST));
+                .orElseThrow(() -> new NotExistException(ARTIST_NOT_LIKE));
         artistHeartRepository.delete(artistHeart);
     }
 
     @Transactional
     public boolean modifyArtistAlarm(String artistId) throws FirebaseMessagingException {
-        Long currentUserId = SecurityUtil.getCurrentUserId().orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
+        Long currentUserId = getCurrentUserId();
         User user = userRepository.findById(currentUserId)
                 .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
         ArtistHeart artistHeart = artistHeartRepository.findByUserIdAndArtistId(currentUserId, artistId)
@@ -82,4 +84,7 @@ public class ArtistHeartService {
         return isAlarmed;
     }
 
+    private Long getCurrentUserId() {
+        return SecurityUtil.getCurrentUserId().orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
+    }
 }
