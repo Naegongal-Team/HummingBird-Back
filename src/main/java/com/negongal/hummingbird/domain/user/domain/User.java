@@ -3,6 +3,7 @@ package com.negongal.hummingbird.domain.user.domain;
 import com.negongal.hummingbird.domain.performance.domain.PerformanceHeart;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AccessLevel;
@@ -60,6 +61,8 @@ public class User {
         this.nickname = nickname;
         this.role = role;
         this.status = status;
+
+        performanceHeartList = new ArrayList<>();
     }
 
     public void updateNicknameAndProfileImage(String nickname, String profileImage) {
