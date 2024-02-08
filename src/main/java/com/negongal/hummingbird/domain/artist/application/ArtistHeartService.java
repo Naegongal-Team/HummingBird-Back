@@ -10,6 +10,7 @@ import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.domain.user.domain.User;
 import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
+import com.negongal.hummingbird.global.error.exception.AlreadyExistException;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
 import java.util.Arrays;
 import java.util.List;
@@ -40,6 +41,10 @@ public class ArtistHeartService {
                 .orElseThrow(() -> new NotExistException(ARTIST_NOT_EXIST));
         User user = userRepository.findById(currentUserId)
                 .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
+        Long userId = user.getUserId();
+        if (artistHeartRepository.findByUserIdAndArtistId(userId, artistId).isPresent()) {
+            throw new AlreadyExistException(ARTIST_ALREADY_EXIST);
+        }
         ArtistHeart artistHeart = ArtistHeart.builder()
                 .artist(artist)
                 .user(user)

@@ -2,6 +2,7 @@ package com.negongal.hummingbird.domain.artist.domain;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.negongal.hummingbird.domain.performance.domain.Performance;
+import java.util.ArrayList;
 import lombok.*;
 
 import javax.persistence.*;
@@ -44,5 +45,8 @@ public class Artist {
         this.image = image;
         this.genres = genres;
         this.topTracks = topTracks;
+        this.performances = new ArrayList<>();
+        this.hearts = new ArrayList<>();
+        this.heartCount = 0;
     }
 }
