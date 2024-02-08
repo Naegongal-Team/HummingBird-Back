@@ -29,7 +29,7 @@ public class PerformanceHeartService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void save(Long performanceId) {
+    public Long save(Long performanceId) {
         Long userId = SecurityUtil.getCurrentUserId()
                 .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
 
@@ -48,7 +48,8 @@ public class PerformanceHeartService {
                 .user(user)
                 .build();
 
-        performanceHeartRepository.save(performanceHeart);
+        PerformanceHeart savePerformanceHeart = performanceHeartRepository.save(performanceHeart);
+        return savePerformanceHeart.getId();
     }
 
     @Transactional
