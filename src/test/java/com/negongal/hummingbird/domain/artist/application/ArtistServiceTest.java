@@ -11,6 +11,7 @@ import com.negongal.hummingbird.domain.artist.dto.ArtistDetailDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistSearchDto;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
+import com.negongal.hummingbird.domain.user.domain.Role;
 import com.negongal.hummingbird.domain.user.domain.User;
 import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
@@ -180,7 +181,7 @@ class ArtistServiceTest {
         mockedSecurityUtil = mockStatic(SecurityUtil.class);
         BDDMockito.given(SecurityUtil.getCurrentUserId()).willReturn(Optional.of(1L));
 
-        User user = User.builder().nickname("test").oauth2Id("test").provider("test").build();
+        User user = User.builder().nickname("test").oauth2Id("test").provider("test").role(Role.USER).build();
         userRepository.save(user);
 
         Artist artist = randomArtists.get(0);
@@ -212,7 +213,7 @@ class ArtistServiceTest {
         mockedSecurityUtil = mockStatic(SecurityUtil.class);
         BDDMockito.given(SecurityUtil.getCurrentUserId()).willReturn(Optional.of(1L));
 
-        User user = User.builder().nickname("test").oauth2Id("test").provider("test").build();
+        User user = User.builder().nickname("test").oauth2Id("test").provider("test").role(Role.USER).build();
         userRepository.save(user);
 
         Artist artist = randomArtists.get(0);
@@ -264,7 +265,7 @@ class ArtistServiceTest {
         mockedSecurityUtil = mockStatic(SecurityUtil.class);
         BDDMockito.given(SecurityUtil.getCurrentUserId()).willReturn(Optional.of(1L));
 
-        User user = User.builder().nickname("test").oauth2Id("test").provider("test").build();
+        User user = User.builder().nickname("test").oauth2Id("test").provider("test").role(Role.USER).build();
         userRepository.save(user);
 
         List<ArtistHeart> artistHearts = createArtistHearts(randomArtists, user);

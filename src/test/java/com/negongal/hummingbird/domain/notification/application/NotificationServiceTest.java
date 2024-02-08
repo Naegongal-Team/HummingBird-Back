@@ -3,6 +3,7 @@ package com.negongal.hummingbird.domain.notification.application;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mockStatic;
 
+import com.negongal.hummingbird.HummingbirdApplication;
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
 import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.notification.dao.NotificationRepository;
@@ -11,20 +12,26 @@ import com.negongal.hummingbird.domain.performance.dao.PerformanceRepository;
 import com.negongal.hummingbird.domain.performance.dao.TicketingRepository;
 import com.negongal.hummingbird.domain.performance.domain.Performance;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
+import com.negongal.hummingbird.domain.user.domain.Role;
 import com.negongal.hummingbird.domain.user.domain.User;
 import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
 import java.util.Optional;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(properties = "spring.profiles.active=test")
@@ -46,6 +53,16 @@ class NotificationServiceTest {
     private PerformanceRepository performanceRepository;
     private static MockedStatic<SecurityUtil> mockedSecurityUtil;
 
+    @BeforeAll
+    static void beforeALl() {
+        mockedSecurityUtil = mockStatic(SecurityUtil.class);
+    }
+
+    @AfterAll
+    static void afterAll() {
+        mockedSecurityUtil.close();
+    }
+
     @BeforeEach
     public void setUp() {
         Artist artist = Artist.builder()
@@ -64,6 +81,7 @@ class NotificationServiceTest {
                 .oauth2Id("id")
                 .nickname("헤헤")
                 .provider("제공")
+                .role(Role.USER)
                 .build();
         userRepository.save(user);
     }
@@ -80,7 +98,6 @@ class NotificationServiceTest {
                 .performanceId(performanceId)
                 .beforeTime(1)
                 .build();
-        mockedSecurityUtil = mockStatic(SecurityUtil.class);
         BDDMockito.given(SecurityUtil.getCurrentUserId()).willReturn(Optional.of(1L));
 
         Throwable notExistException = assertThrows(NotExistException.class, () ->
@@ -99,7 +116,6 @@ class NotificationServiceTest {
                 .performanceId(performanceId)
                 .beforeTime(1)
                 .build();
-        mockedSecurityUtil = mockStatic(SecurityUtil.class);
         BDDMockito.given(SecurityUtil.getCurrentUserId()).willReturn(Optional.empty());
 
         Throwable notExistException = assertThrows(NotExistException.class, () ->
@@ -119,7 +135,6 @@ class NotificationServiceTest {
                 .performanceId(performanceId)
                 .beforeTime(1)
                 .build();
-        mockedSecurityUtil = mockStatic(SecurityUtil.class);
         BDDMockito.given(SecurityUtil.getCurrentUserId()).willReturn(Optional.of(1L));
 
         Throwable notExistException = assertThrows(NotExistException.class, () ->
@@ -139,7 +154,6 @@ class NotificationServiceTest {
                 .performanceId(performanceId)
                 .beforeTime(1)
                 .build();
-        mockedSecurityUtil = mockStatic(SecurityUtil.class);
         BDDMockito.given(SecurityUtil.getCurrentUserId()).willReturn(Optional.of(1L));
     }
 }
