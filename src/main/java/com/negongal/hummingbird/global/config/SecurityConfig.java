@@ -7,10 +7,16 @@ import com.negongal.hummingbird.global.auth.jwt.JwtExceptionHandlerFilter;
 import com.negongal.hummingbird.global.auth.oauth2.Oauth2UserService;
 import com.negongal.hummingbird.global.auth.oauth2.handler.Oauth2AuthenticationFailureHandler;
 import com.negongal.hummingbird.global.auth.oauth2.handler.Oauth2AuthenticationSuccessHandler;
-import java.util.Arrays;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -22,71 +28,78 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final Oauth2UserService oauth2UserService;
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final Oauth2AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler;
-    private final Oauth2AuthenticationFailureHandler oauth2AuthenticationFailureHandler;
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+	private final Oauth2UserService oauth2UserService;
+	private final JwtAuthenticationFilter jwtAuthenticationFilter;
+	private final Oauth2AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler;
+	private final Oauth2AuthenticationFailureHandler oauth2AuthenticationFailureHandler;
+	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+	private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .cors().configurationSource(corsConfigurationSource())
-                .and()
-                .csrf().disable()
-                .httpBasic().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .formLogin().disable()
-                .exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint) // 인증 실패 핸들링
-                .accessDeniedHandler(jwtAccessDeniedHandler); // 인가 실패 핸들링
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		http
+			.cors().configurationSource(corsConfigurationSource())
+			.and()
+			.csrf().disable()
+			.httpBasic().disable()
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			.and()
+			.formLogin().disable()
+			.exceptionHandling()
+			.authenticationEntryPoint(jwtAuthenticationEntryPoint) // 인증 실패 핸들링
+			.accessDeniedHandler(jwtAccessDeniedHandler); // 인가 실패 핸들링
 
-        http
-                .authorizeRequests()
-                .antMatchers("/user/**", "/**/heart/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/**/admin/**", "/spotify/**").hasRole("ADMIN")
-                .anyRequest().permitAll();
+		http
+			.oauth2Login()
+			.redirectionEndpoint()
+			.baseUri("/oauth/callback/*")
+			.and()
+			.userInfoEndpoint()
+			.userService(oauth2UserService)
+			.and()
+			.successHandler(oauth2AuthenticationSuccessHandler)
+			.failureHandler(oauth2AuthenticationFailureHandler);
 
-        http
-                .oauth2Login()
-                .redirectionEndpoint()
-                .baseUri("/oauth/callback/*")
-                .and()
-                .userInfoEndpoint()
-                .userService(oauth2UserService)
-                .and()
-                .successHandler(oauth2AuthenticationSuccessHandler)
-                .failureHandler(oauth2AuthenticationFailureHandler);
+		http
+			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+			.addFilterBefore(new JwtExceptionHandlerFilter(), JwtAuthenticationFilter.class);
 
-        http
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(new JwtExceptionHandlerFilter(), JwtAuthenticationFilter.class);
+		return http.build();
 
+	}
 
-        return http.build();
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration config = new CorsConfiguration();
+		config.addAllowedOrigin("http://localhost:3000");
+		config.addAllowedOrigin("http://54.180.120.1:3000");
+		config.addAllowedOrigin("http://hummingbird.kr");
+		config.addAllowedHeader("*");
+		config.addAllowedMethod("*");
+		config.setAllowCredentials(true);
+		config.addExposedHeader("Authorization");
+		config.addExposedHeader("refresh");
 
-    }
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", config);
+		return source;
+	}
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://localhost:3000");
-        config.addAllowedOrigin("http://54.180.120.1:3000");
-        config.addAllowedOrigin("http://hummingbird.kr");
-//        config.addAllowedOriginPattern("*");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        config.setAllowCredentials(true);
-        config.addExposedHeader("Authorization");
-        config.addExposedHeader("refresh");
+	@Bean
+	static RoleHierarchy roleHierarchy() {
+		RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
+		hierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
+		return hierarchy;
+	}
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return source;
-    }
+	@Bean
+	static MethodSecurityExpressionHandler methodSecurityExpressionHandler(RoleHierarchy roleHierarchy) {
+		DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
+		expressionHandler.setRoleHierarchy(roleHierarchy);
+		return expressionHandler;
+	}
 }

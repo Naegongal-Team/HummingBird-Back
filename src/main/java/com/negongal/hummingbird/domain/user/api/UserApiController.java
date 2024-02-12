@@ -8,11 +8,13 @@ import com.negongal.hummingbird.global.common.response.ApiResponse;
 import com.negongal.hummingbird.global.common.response.ResponseUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,7 +30,9 @@ public class UserApiController {
 	private final UserService userService;
 	private final UserInfoService userInfoService;
 
-	@Operation(summary = "회원 디테일 조회", description = "회원 디테일을 조회합니다.")
+	@Operation(summary = "회원 디테일 조회 - 인증 필요", description = "회원 디테일 조회 - 인증 필요",
+		security = {@SecurityRequirement(name = "access-token")})
+	@PreAuthorize("hasRole('USER')")
 	@GetMapping("/user/info")
 	public ApiResponse<?> userDetail(@AuthenticationPrincipal CustomUserDetail userDetail) {
 		return ResponseUtils.success(userInfoService.getUser(userDetail.getUserId()));
@@ -40,7 +44,9 @@ public class UserApiController {
 		return ResponseUtils.success(userInfoService.nicknameInUse(nickname));
 	}
 
-	@Operation(summary = "프로필 이미지 변경", description = "프로필 사진을 변경합니다.")
+	@Operation(summary = "프로필 이미지 변경 - 인증 필요", description = "프로필 이미지 변경 - 인증 필요",
+		security = {@SecurityRequirement(name = "access-token")})
+	@PreAuthorize("hasRole('USER')")
 	@PutMapping(value = "/user/photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ApiResponse<?> userPhotoAdd(
 		@RequestPart(required = false, value = "profileImage") MultipartFile profileImage,
@@ -49,7 +55,9 @@ public class UserApiController {
 		return ResponseUtils.success();
 	}
 
-	@Operation(summary = "닉네임 변경", description = "닉네임을 변경합니다.")
+	@Operation(summary = "닉네임 변경 - 인증 필요", description = "닉네임을 변경 - 인증 필요",
+		security = {@SecurityRequirement(name = "access-token")})
+	@PreAuthorize("hasRole('USER')")
 	@PatchMapping("/user/nickname")
 	public ApiResponse<?> userNicknameAdd(
 		@Valid @RequestBody UpdateNicknameRequest request,
@@ -58,7 +66,9 @@ public class UserApiController {
 		return ResponseUtils.success();
 	}
 
-	@Operation(summary = "fcmToken 등록", description = "회원 기기의 토큰을 등록합니다.")
+	@Operation(summary = "fcmToken 등록 - 인증 필요", description = "회원 기기의 토큰을 등록 - 인증 필요",
+		security = {@SecurityRequirement(name = "access-token")})
+	@PreAuthorize("hasRole('USER')")
 	@PostMapping("/user/fcm-token")
 	public ApiResponse postFCMToken(
 		@RequestParam String token,
@@ -67,14 +77,18 @@ public class UserApiController {
 		return ResponseUtils.success(token);
 	}
 
-	@Operation(summary = "사용자 탈퇴", description = "회원이 탈퇴할 수 있습니다.")
+	@Operation(summary = "사용자 탈퇴 - 인증 필요", description = "회원 탈퇴 - 인증 필요",
+		security = {@SecurityRequirement(name = "access-token")})
+	@PreAuthorize("hasRole('USER')")
 	@PostMapping("/user/remove")
 	public ApiResponse<?> remove(@AuthenticationPrincipal CustomUserDetail customUserDetail) {
 		userService.deleteUser(customUserDetail.getUserId());
 		return ResponseUtils.success();
 	}
 
-	@Operation(summary = "탈퇴했던 사용자 활성화", description = "탈퇴했었던 회원이 다시 계정을 활성화합니다.")
+	@Operation(summary = "탈퇴했던 사용자 활성화", description = "탈퇴했었던 회원이 다시 계정을 활성화합니다.",
+		security = {@SecurityRequirement(name = "access-token")})
+	@PreAuthorize("hasRole('USER')")
 	@PostMapping("/user/activate")
 	public ApiResponse<?> activateUser(@AuthenticationPrincipal CustomUserDetail customUserDetail) {
 		userService.activateUser(customUserDetail.getUserId());

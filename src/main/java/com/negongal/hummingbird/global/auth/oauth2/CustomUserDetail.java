@@ -1,8 +1,10 @@
 package com.negongal.hummingbird.global.auth.oauth2;
 
+import com.negongal.hummingbird.domain.user.domain.Role;
 import com.negongal.hummingbird.domain.user.domain.User;
 
 import lombok.Getter;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -15,60 +17,60 @@ import java.util.Map;
 @Getter
 public class CustomUserDetail implements OAuth2User {
 
-    private final Long userId;
-    private final String provider;
-    private final String nickname;
-    private final Collection<? extends GrantedAuthority> authorities;
-    private Map<String, Object> attributes;
+	private final Long userId;
+	private final String provider;
+	private final String nickname;
+	private final Collection<? extends GrantedAuthority> authorities;
+	private Map<String, Object> attributes;
 
-    public CustomUserDetail(Long userId, String provider, String nickname, Collection<? extends GrantedAuthority> authorities) {
-        this.userId = userId;
-        this.provider=provider;
-        this.nickname=nickname;
-        this.authorities = authorities;
-    }
+	public CustomUserDetail(Long userId, String provider, String nickname,
+		Collection<? extends GrantedAuthority> authorities) {
+		this.userId = userId;
+		this.provider = provider;
+		this.nickname = nickname;
+		this.authorities = authorities;
+	}
 
-    public static CustomUserDetail create(User user) {
-        List<GrantedAuthority> authorities;
-        if(user.getRole().toString().equals("USER")){
-            authorities = Collections.
-                    singletonList(new SimpleGrantedAuthority("ROLE_USER"));
-        }
-        else {
-            authorities = Collections.
-                    singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        }
+	public static CustomUserDetail create(User user) {
+		List<GrantedAuthority> authorities;
+		if (user.getRole().toString().equals("USER")) {
+			authorities = Collections.
+				singletonList(new SimpleGrantedAuthority(Role.USER.getAuthority()));
+		} else {
+			authorities = Collections.
+				singletonList(new SimpleGrantedAuthority(Role.ADMIN.getAuthority()));
+		}
 
-        return new CustomUserDetail(
-                user.getId(),
-                user.getProvider(),
-                user.getNickname(),
-                authorities
-        );
-    }
+		return new CustomUserDetail(
+			user.getId(),
+			user.getProvider(),
+			user.getNickname(),
+			authorities
+		);
+	}
 
-    public static CustomUserDetail create(User user, Map<String, Object> attributes) {
-        CustomUserDetail userDetails = CustomUserDetail.create(user);
-        userDetails.setAttributes(attributes);
-        return userDetails;
-    }
+	public static CustomUserDetail create(User user, Map<String, Object> attributes) {
+		CustomUserDetail userDetails = CustomUserDetail.create(user);
+		userDetails.setAttributes(attributes);
+		return userDetails;
+	}
 
-    @Override
-    public Map<String, Object> getAttributes() {
-        return attributes;
-    }
+	@Override
+	public Map<String, Object> getAttributes() {
+		return attributes;
+	}
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return authorities;
+	}
 
-    @Override
-    public String getName() {
-        return String.valueOf(userId);
-    }
+	@Override
+	public String getName() {
+		return String.valueOf(userId);
+	}
 
-    public void setAttributes(Map<String, Object> attributes) {
-        this.attributes = attributes;
-    }
+	public void setAttributes(Map<String, Object> attributes) {
+		this.attributes = attributes;
+	}
 }

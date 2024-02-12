@@ -11,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import org.hibernate.annotations.*;
 
 import javax.persistence.*;
@@ -22,69 +23,69 @@ import javax.validation.constraints.NotNull;
 @DynamicUpdate
 @Getter
 public class User extends BaseTimeEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @NotNull
-    private String oauth2Id;
+	@NotNull
+	private String oauth2Id;
 
-    @Column(length = 8)
-    private String nickname;
+	@Column(length = 8)
+	private String nickname;
 
-    @NotNull
-    private String provider;
+	@NotNull
+	private String provider;
 
-    @Column(length = 1000)
-    private String profileImage;
+	@Column(length = 1000)
+	private String profileImage;
 
-    private String fcmToken;
+	private String fcmToken;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private Role role;
+	@NotNull
+	@Enumerated(EnumType.STRING)
+	private Role role;
 
-    private String refreshToken;
+	private String refreshToken;
 
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    private List<PerformanceHeart> performanceHeartList = new ArrayList<>();;
+	@OneToMany(mappedBy = "user", orphanRemoval = true)
+	private List<PerformanceHeart> performanceHeartList = new ArrayList<>();
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private UserStatus status;
+	@NotNull
+	@Enumerated(EnumType.STRING)
+	private UserStatus status;
 
-    private LocalDate inactiveDate;
+	private LocalDate inactiveDate;
 
-    @Builder
-    public User(String oauth2Id, String nickname, String provider, Role role, UserStatus status) {
-        this.oauth2Id = oauth2Id;
-        this.provider = provider;
-        this.nickname = nickname;
-        this.role = role;
-        this.status = status;
-    }
+	@Builder
+	public User(String oauth2Id, String nickname, String provider, Role role, UserStatus status) {
+		this.oauth2Id = oauth2Id;
+		this.provider = provider;
+		this.nickname = nickname;
+		this.role = role;
+		this.status = status;
+	}
 
-    public void updateNickname(String nickname) {
-        this.nickname = nickname;
-    }
+	public void updateNickname(String nickname) {
+		this.nickname = nickname;
+	}
 
-    public void updatePhoto(String photoUrl) {
-        this.profileImage = photoUrl;
-    }
+	public void updatePhoto(String photoUrl) {
+		this.profileImage = photoUrl;
+	}
 
-    public void updateFCMToken(String fcmToken) {
-        this.fcmToken = fcmToken;
-    }
+	public void updateFCMToken(String fcmToken) {
+		this.fcmToken = fcmToken;
+	}
 
-    public void updateInactiveDate() {
-        this.inactiveDate = LocalDate.now();
-    }
+	public void updateInactiveDate() {
+		this.inactiveDate = LocalDate.now();
+	}
 
-    public void activateStatus() {
-        this.status = UserStatus.ACTIVE;
-    }
+	public void activateStatus() {
+		this.status = UserStatus.ACTIVE;
+	}
 
-    public void updateStatus() {
-        this.status = UserStatus.INACTIVE;
-    }
+	public void updateStatus() {
+		this.status = UserStatus.INACTIVE;
+	}
 }
