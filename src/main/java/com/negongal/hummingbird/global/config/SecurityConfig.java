@@ -1,5 +1,7 @@
 package com.negongal.hummingbird.global.config;
 
+import java.util.List;
+
 import com.negongal.hummingbird.global.auth.jwt.JwtAccessDeniedHandler;
 import com.negongal.hummingbird.global.auth.jwt.JwtAuthenticationEntryPoint;
 import com.negongal.hummingbird.global.auth.jwt.JwtAuthenticationFilter;
@@ -19,6 +21,7 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -42,13 +45,9 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
-			.cors().configurationSource(corsConfigurationSource())
-			.and()
-			.csrf().disable()
-			.httpBasic().disable()
-			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-			.and()
-			.formLogin().disable()
+			.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+			.csrf(AbstractHttpConfigurer::disable)
+			.formLogin(AbstractHttpConfigurer::disable)
 			.exceptionHandling()
 			.authenticationEntryPoint(jwtAuthenticationEntryPoint) // 인증 실패 핸들링
 			.accessDeniedHandler(jwtAccessDeniedHandler); // 인가 실패 핸들링
@@ -72,17 +71,14 @@ public class SecurityConfig {
 
 	}
 
-	@Bean
-	public CorsConfigurationSource corsConfigurationSource() {
+	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
-		config.addAllowedOrigin("http://localhost:3000");
-		config.addAllowedOrigin("http://54.180.120.1:3000");
-		config.addAllowedOrigin("http://hummingbird.kr");
-		config.addAllowedHeader("*");
-		config.addAllowedMethod("*");
+		config.setAllowedOrigins(List.of("http://localhost:3000", "http://54.180.120.1:3000", "http://hummingbird.kr"));
+		config.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT", "PATCH"));
 		config.setAllowCredentials(true);
-		config.addExposedHeader("Authorization");
-		config.addExposedHeader("refresh");
+		config.setAllowedHeaders(List.of("Authorization", "refresh"));
+		config.setExposedHeaders(List.of("Authorization", "refresh"));
+		config.setMaxAge(3600L);
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", config);
