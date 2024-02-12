@@ -26,6 +26,6 @@ public class ScheduleService {
         findNotification.forEach(notification ->
                 notificationService.pushTicketingAlertNotification(
                         notification.getPerformance().getId(),
-                        notification.getUser().getUserId()));
+                        notification.getUser().getId()));
     }
 }

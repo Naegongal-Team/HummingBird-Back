@@ -1,6 +1,7 @@
 package com.negongal.hummingbird.domain.user.domain;
 
 import com.negongal.hummingbird.domain.performance.domain.PerformanceHeart;
+import com.negongal.hummingbird.global.common.BaseTimeEntity;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,24 +15,24 @@ import org.hibernate.annotations.*;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicUpdate
-@DynamicInsert
 @Getter
-public class User {
+public class User extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long id;
 
-    @Column(nullable = false)
+    @NotNull
     private String oauth2Id;
 
     @Column(length = 8)
     private String nickname;
 
-    @Column(nullable = false)
+    @NotNull
     private String provider;
 
     @Column(length = 1000)
@@ -39,30 +40,28 @@ public class User {
 
     private String fcmToken;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Role role;
 
     private String refreshToken;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
-    private List<PerformanceHeart> performanceHeartList;
+    private List<PerformanceHeart> performanceHeartList = new ArrayList<>();;
 
-    @ColumnDefault("'ACTIVE'")
     @Enumerated(EnumType.STRING)
-    private MemberStatus status;
+    @NotNull
+    private UserStatus status;
 
     private LocalDate inactiveDate;
 
     @Builder
-    public User(String oauth2Id, String nickname, String provider, Role role, MemberStatus status) {
+    public User(String oauth2Id, String nickname, String provider, Role role, UserStatus status) {
         this.oauth2Id = oauth2Id;
         this.provider = provider;
         this.nickname = nickname;
         this.role = role;
         this.status = status;
-
-        performanceHeartList = new ArrayList<>();
     }
 
     public void updateNickname(String nickname) {
@@ -82,10 +81,10 @@ public class User {
     }
 
     public void activateStatus() {
-        this.status = MemberStatus.ACTIVE;
+        this.status = UserStatus.ACTIVE;
     }
 
     public void updateStatus() {
-        this.status = MemberStatus.INACTIVE;
+        this.status = UserStatus.INACTIVE;
     }
 }

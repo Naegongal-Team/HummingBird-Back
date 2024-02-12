@@ -16,10 +16,10 @@ import org.springframework.stereotype.Repository;
 public interface ArtistHeartRepository extends JpaRepository<ArtistHeart, Long> {
 
 
-    @Query("SELECT ah.artist FROM ArtistHeart ah WHERE ah.user.userId = :userId ORDER BY ah.artist.name ASC")
+    @Query("SELECT ah.artist FROM ArtistHeart ah WHERE ah.user.id = :userId ORDER BY ah.artist.name ASC")
     Page<Artist> findArtistsByUserId(@Param("userId") Long userId, Pageable pageable);
 
-    @Query("SELECT ah FROM ArtistHeart ah WHERE ah.user.userId = :userId AND ah.artist.id = :artistId")
+    @Query("SELECT ah FROM ArtistHeart ah WHERE ah.user.id = :userId AND ah.artist.id = :artistId")
     Optional<ArtistHeart> findByUserIdAndArtistId(@Param("userId")Long userId, @Param("artistId") String artistId);
 
     @Query("SELECT ah FROM ArtistHeart ah WHERE ah.artist.name = :artistName AND ah.isAlarmed = true")

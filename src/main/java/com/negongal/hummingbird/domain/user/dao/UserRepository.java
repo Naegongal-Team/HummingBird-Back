@@ -1,7 +1,8 @@
 package com.negongal.hummingbird.domain.user.dao;
 
-import com.negongal.hummingbird.domain.user.domain.MemberStatus;
+import com.negongal.hummingbird.domain.user.domain.UserStatus;
 import com.negongal.hummingbird.domain.user.domain.User;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,15 +19,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByNickname(String nickname);
 
-    List<User> findAllByStatusIs(MemberStatus memberStatus);
+    List<User> findAllByStatusIs(UserStatus userStatus);
 
     @Transactional
     @Modifying
-    @Query("UPDATE User u SET u.refreshToken=:token WHERE u.userId=:id AND u.provider=:provider")
+    @Query("UPDATE User u SET u.refreshToken=:token WHERE u.id=:id AND u.provider=:provider")
     void updateRefreshToken(@Param("id") Long id,
                             @Param("provider") String provider,
                             @Param("token") String token);
 
-    @Query("SELECT u.refreshToken FROM User u WHERE u.userId=:id")
+    @Query("SELECT u.refreshToken FROM User u WHERE u.id=:id")
     String getRefreshTokenById(@Param("id") Long id);
 }
