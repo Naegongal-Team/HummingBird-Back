@@ -12,9 +12,6 @@ import lombok.Getter;
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class GetUserResponse {
 
-    @Schema(description = "회원 ID", example = "1")
-    private final Long userId;
-
     @Schema(description = "회원 닉네임", example = "cherry")
     private final String nickname;
 
@@ -26,7 +23,6 @@ public class GetUserResponse {
 
     public static GetUserResponse of(User user){
         return GetUserResponse.builder()
-                .userId(user.getId())
                 .nickname(user.getNickname())
                 .profileImage(user.getProfileImage())
                 .role(user.getRole().toString())
