@@ -26,16 +26,16 @@ public class Artist {
     @Formula("(SELECT COUNT(1) FROM artist_heart ah WHERE ah.artist_id = id)")
     private int heartCount;
 
-    @OneToMany(mappedBy = "artist", orphanRemoval = true)
+    @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Genre> genres;
 
-    @OneToMany(mappedBy = "artist", orphanRemoval = true)
+    @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ArtistHeart> hearts;
 
-    @OneToMany(mappedBy = "artist", orphanRemoval = true)
+    @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Track> topTracks;
 
-    @OneToMany(mappedBy = "artist")
+    @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL)
     private List<Performance> performances;
 
     @Builder

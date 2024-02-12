@@ -37,9 +37,6 @@ public class ArtistService {
     private final ArtistHeartRepository artistHeartRepository;
     private final ArtistRepositoryCustom artistRepositoryCustom;
 
-    /*
-    전체 아티스트 검색 시 Artist의 리스트를 가져온다
-     */
     public Page<ArtistDto> findAllArtist(Pageable pageable) {
         List<ArtistDto> artists = artistRepository.findAll(pageable).stream().map(artist -> {
             List<ArtistGenresDto> artistGenres = getArtistGenres(artist);

@@ -31,11 +31,7 @@ public class ArtistHeart extends BaseTimeEntity {
     private User user;
 
 
-    public void updateAlarmed() {
-        if (isAlarmed)  {
-            isAlarmed = false;
-            return;
-        }
-        isAlarmed = true;
+    public void toggleAlarmed() {
+        isAlarmed = !isAlarmed;
     }
 }
