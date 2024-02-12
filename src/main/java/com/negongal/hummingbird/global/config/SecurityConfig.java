@@ -48,6 +48,7 @@ public class SecurityConfig {
 			.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 			.csrf(AbstractHttpConfigurer::disable)
 			.formLogin(AbstractHttpConfigurer::disable)
+			.httpBasic(AbstractHttpConfigurer::disable)
 			.exceptionHandling()
 			.authenticationEntryPoint(jwtAuthenticationEntryPoint) // 인증 실패 핸들링
 			.accessDeniedHandler(jwtAccessDeniedHandler); // 인가 실패 핸들링
