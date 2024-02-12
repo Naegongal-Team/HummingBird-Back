@@ -33,8 +33,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			Authentication authentication = tokenProvider.getAuthentication(token);
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			log.info(authentication.getName() + "의 인증정보 저장");
-		} else if (!StringUtils.hasText(token)) {
-			log.error("JWT 토큰을 찾을 수 없습니다.");
 		}
 
 		filterChain.doFilter(request, response);
