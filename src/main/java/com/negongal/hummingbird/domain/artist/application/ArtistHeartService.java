@@ -80,7 +80,7 @@ public class ArtistHeartService {
                     .subscribeToTopic(userToken, artistId);
             log.info("{} 토큰이 성공적으로 구독 되었습니다.", response);
         }
-        artistHeart.updateAlarmed();
+        artistHeart.toggleAlarmed();
         return isAlarmed;
     }
 

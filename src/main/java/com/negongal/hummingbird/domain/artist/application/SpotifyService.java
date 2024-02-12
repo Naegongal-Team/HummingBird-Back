@@ -48,28 +48,6 @@ public class SpotifyService {
 
     private final GenreRepository genreRepository;
 
-    @Value("${spotifyArtists.ids.array}")
-    private String[] artistIds;
-
-    private GetSeveralArtistsRequest getSeveralArtistsRequest;
-
-    /*
-    SpotifyApi Artist 정보를 CustomArtist 객체로 변환 후 DB에 저장
-    */
-//    @PostConstruct
-//    public void initArtists()
-//            throws IOException, ParseException, SpotifyWebApiException {
-//        getSeveralArtistsRequest = spotifyApi.getSeveralArtists(artistIds).build();
-//        Artist[] artists = getSeveralArtistsRequest.execute();
-//        Arrays.stream(artists).forEach(artist -> {
-//            com.negongal.hummingbird.domain.artist.domain.Artist customArtist = convertSpotifyToCustomArtist(artist);
-//            artistRepository.save(customArtist);
-//            findTrackByArtist(artist.getId());
-//            findGenreByArtist(artist);
-//        });
-//        getSeveralArtistSpotifyTrack();
-//    }
-
     public List<ArtistSearchDto> searchArtists(String artistName)
             throws IOException, ParseException, SpotifyWebApiException {
         SpotifyConfig.setAccessToken();
@@ -103,12 +81,6 @@ public class SpotifyService {
                 artistId);
         if (searchArtist.isPresent()) {
             throw new AlreadyExistException(ARTIST_ALREADY_EXIST);
-        }
-    }
-
-    private void getSeveralArtistSpotifyTrack() throws IOException, ParseException, SpotifyWebApiException {
-        for (String artist : artistIds) {
-            findTrackByArtist(artist);
         }
     }
 

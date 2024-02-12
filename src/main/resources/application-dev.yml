@@ -8,11 +8,12 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     properties:
       hibernate:
         show_sql: false
         format_sql: false
+    generate-ddl: true
 
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
