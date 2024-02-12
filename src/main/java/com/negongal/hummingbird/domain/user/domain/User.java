@@ -13,6 +13,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import org.hibernate.annotations.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
@@ -87,5 +89,9 @@ public class User extends BaseTimeEntity {
 
 	public void updateRefreshToken(String refreshToken) {
 		this.refreshToken = refreshToken;
+	}
+
+	public GrantedAuthority toGrantedAuthority() {
+		return new SimpleGrantedAuthority(role.getAuthority());
 	}
 }

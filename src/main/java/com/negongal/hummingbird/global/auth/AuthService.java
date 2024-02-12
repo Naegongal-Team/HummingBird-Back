@@ -3,7 +3,6 @@ package com.negongal.hummingbird.global.auth;
 import com.negongal.hummingbird.domain.user.application.UserService;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.domain.user.domain.User;
-import com.negongal.hummingbird.domain.user.dto.response.GetLoginResponse;
 import com.negongal.hummingbird.global.auth.jwt.JwtProvider;
 import com.negongal.hummingbird.global.auth.utils.CookieUtil;
 import com.negongal.hummingbird.global.common.response.ResponseUtils;
@@ -15,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,7 +60,9 @@ public class AuthService {
 
 		//access token, refresh token 새로 발급
 		String accessToken = jwtProvider.createAccessToken(authentication);
-		jwtProvider.createRefreshToken(authentication, response);
+		String refreshToken = jwtProvider.createRefreshToken(authentication);
+		ResponseCookie cookie = jwtProvider.createRefreshTokenCookie(refreshToken);
+		response.addHeader("Set-Cookie", cookie.toString());
 		response.setHeader(HttpHeaders.AUTHORIZATION, accessToken);
 
 		return accessToken;
@@ -70,13 +72,5 @@ public class AuthService {
 		if (!token.equals(savedRefreshToken)) {
 			throw new NotMatchException(TOKEN_NOT_MATCHED);
 		}
-	}
-
-	public GetLoginResponse validateStatus(String accessToken) {
-		String userId = jwtProvider.parseClaims(accessToken).getSubject();
-		User user = userRepository.findById(Long.valueOf(userId))
-			.orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
-		String status = user.getStatus().toString();
-		return new GetLoginResponse(accessToken, status);
 	}
 }

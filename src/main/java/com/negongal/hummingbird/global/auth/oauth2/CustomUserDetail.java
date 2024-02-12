@@ -1,12 +1,10 @@
 package com.negongal.hummingbird.global.auth.oauth2;
 
-import com.negongal.hummingbird.domain.user.domain.Role;
 import com.negongal.hummingbird.domain.user.domain.User;
 
 import lombok.Getter;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
@@ -20,31 +18,27 @@ public class CustomUserDetail implements OAuth2User {
 	private final Long userId;
 	private final String provider;
 	private final String nickname;
+	private final String status;
 	private final Collection<? extends GrantedAuthority> authorities;
 	private Map<String, Object> attributes;
 
-	public CustomUserDetail(Long userId, String provider, String nickname,
+	public CustomUserDetail(Long userId, String provider, String nickname, String status,
 		Collection<? extends GrantedAuthority> authorities) {
 		this.userId = userId;
 		this.provider = provider;
 		this.nickname = nickname;
+		this.status = status;
 		this.authorities = authorities;
 	}
 
 	public static CustomUserDetail create(User user) {
-		List<GrantedAuthority> authorities;
-		if (user.getRole().toString().equals("USER")) {
-			authorities = Collections.
-				singletonList(new SimpleGrantedAuthority(Role.USER.getAuthority()));
-		} else {
-			authorities = Collections.
-				singletonList(new SimpleGrantedAuthority(Role.ADMIN.getAuthority()));
-		}
+		List<GrantedAuthority> authorities = Collections.singletonList(user.toGrantedAuthority());
 
 		return new CustomUserDetail(
 			user.getId(),
 			user.getProvider(),
 			user.getNickname(),
+			user.getStatus().toString(),
 			authorities
 		);
 	}

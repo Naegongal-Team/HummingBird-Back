@@ -1,7 +1,6 @@
 package com.negongal.hummingbird.global.auth.jwt;
 
 import com.negongal.hummingbird.domain.user.application.UserService;
-import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.global.auth.oauth2.CustomUserDetail;
 
 import io.jsonwebtoken.*;
@@ -15,8 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
-
-import javax.servlet.http.HttpServletResponse;
 
 import java.util.Arrays;
 import java.util.Base64;
@@ -48,25 +45,23 @@ public class JwtProvider {
 
 		CustomUserDetail user = (CustomUserDetail)authentication.getPrincipal();
 
-		String userId = user.getName();
-		String provider = user.getProvider();
-		String nickname = user.getNickname();
 		String role = authentication.getAuthorities().stream()
 			.map(GrantedAuthority::getAuthority)
 			.collect(Collectors.joining(","));
 
 		return Jwts.builder()
 			.signWith(SignatureAlgorithm.HS512, SECRET_KEY)
-			.setSubject(userId)
+			.setSubject(user.getName())
 			.claim("role", role)
-			.claim("provider", provider)
-			.claim("nickname", nickname)
+			.claim("provider", user.getProvider())
+			.claim("nickname", user.getNickname())
+			.claim("status", user.getStatus())
 			.setIssuedAt(now)
 			.setExpiration(validity)
 			.compact();
 	}
 
-	public void createRefreshToken(Authentication authentication, HttpServletResponse response) {
+	public String createRefreshToken(Authentication authentication) {
 		Date now = new Date();
 		Date validity = new Date(now.getTime() + REFRESH_TOKEN_EXPIRE_LENGTH);
 
@@ -77,19 +72,22 @@ public class JwtProvider {
 			.compact();
 		saveRefreshToken(authentication, refreshToken);
 
-		ResponseCookie cookie = ResponseCookie.from(COOKIE_REFRESH_TOKEN_KEY, refreshToken)
+		return refreshToken;
+	}
+
+	private void saveRefreshToken(Authentication authentication, String refreshToken) {
+		CustomUserDetail user = (CustomUserDetail)authentication.getPrincipal();
+		userService.updateRefreshToken(user.getUserId(), refreshToken);
+	}
+
+	public ResponseCookie createRefreshTokenCookie(String refreshToken) {
+		return ResponseCookie.from(COOKIE_REFRESH_TOKEN_KEY, refreshToken)
 			.httpOnly(true)
 			.secure(true)
 			.sameSite("None")
 			.maxAge(REFRESH_TOKEN_EXPIRE_LENGTH / 1000)
 			.path("/")
 			.build();
-		response.addHeader("Set-Cookie", cookie.toString());
-	}
-
-	private void saveRefreshToken(Authentication authentication, String refreshToken) {
-		CustomUserDetail user = (CustomUserDetail)authentication.getPrincipal();
-		userService.updateRefreshToken(user.getUserId(), refreshToken);
 	}
 
 	// Access Token을 검사하고 얻은 정보로 Authentication 객체 생성
@@ -104,6 +102,7 @@ public class JwtProvider {
 			Long.valueOf(claims.getSubject()),
 			String.valueOf(claims.get("provider")),
 			String.valueOf(claims.get("nickname")),
+			String.valueOf(claims.get("status")),
 			authorities);
 
 		return new UsernamePasswordAuthenticationToken(principal, "", authorities);
