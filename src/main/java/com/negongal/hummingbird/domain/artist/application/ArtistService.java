@@ -12,6 +12,9 @@ import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
 import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -57,6 +60,9 @@ public class ArtistService {
     }
 
     private List<ArtistGenresDto> getArtistGenres(Artist artist) {
+        if (artist == null || artist.getGenres() == null) {
+            return Collections.emptyList();
+        }
         List<ArtistGenresDto> artistGenres = artist.getGenres().stream().map(genre ->
                 ArtistGenresDto.builder()
                         .name(genre.getName())
@@ -83,10 +89,10 @@ public class ArtistService {
      */
     public ArtistDetailDto findArtist(String artistId) {
         Artist artist = artistRepository.findById(artistId).orElseThrow(() -> new NotExistException(ARTIST_NOT_EXIST));
-        Long currentUserId = SecurityUtil.getCurrentUserId().orElse(0L);
+        Long currentUserId = SecurityUtil.getCurrentUserId().orElse(null);
         ArtistHeart artistHeart = artistHeartRepository.findByUserIdAndArtistId(currentUserId,
                 artistId).orElse(null);
-        if (currentUserId == 0L || artistHeart == null) {
+        if (currentUserId == null || artistHeart == null) {
             return ArtistDetailDto.of(artist, false, false);
         }
         boolean isHearted = true;

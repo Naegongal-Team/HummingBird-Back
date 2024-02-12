@@ -19,9 +19,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.mockito.BDDMockito;
+import org.mockito.InjectMocks;
 import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,6 +34,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
+@TestInstance(Lifecycle.PER_CLASS)
 @SpringBootTest(properties = "spring.profiles.active=test")
 class ArtistServiceTest {
     @Autowired
@@ -40,6 +46,20 @@ class ArtistServiceTest {
     @Autowired
     private ArtistHeartRepository artistHeartRepository;
     private static MockedStatic<SecurityUtil> mockedSecurityUtil;
+
+
+    @BeforeAll
+    void mockInit() {
+        mockedSecurityUtil = mockStatic(SecurityUtil.class);
+        User user = User.builder().nickname("test").oauth2Id("test").provider("test").role(Role.USER).build();
+        userRepository.save(user);
+    }
+
+    @AfterEach
+    public void deleteRepository() {
+        artistRepository.deleteAll();
+        artistHeartRepository.deleteAll();
+    }
 
 
     @DisplayName("아티스트 저장 후 모든 아티스트 조회")
@@ -54,11 +74,11 @@ class ArtistServiceTest {
         int artistSize = allArtist.size();
 
         assertAll(
-                () -> assertEquals(allArtist.get(0).getId(), "0"),
-                () -> assertEquals(allArtist.get(9).getId(), ""),
-                () -> assertEquals(artistSize, 5),
+                () -> assertEquals(allArtist.get(0).getId(), "1"),
+                () -> assertEquals(allArtist.get(9).getId(), "50"),
+                () -> assertEquals(artistSize, 10),
                 () -> assertThrows(IndexOutOfBoundsException.class, () -> {
-                    allArtist.get(6).getId();
+                    allArtist.get(10).getId();
                 })
         );
     }
@@ -138,7 +158,6 @@ class ArtistServiceTest {
     @Test
     void findArtistButNotLogInTest() {
         artistRepository.saveAll(createRandomArtists());
-        mockedSecurityUtil = mockStatic(SecurityUtil.class);
         BDDMockito.given(SecurityUtil.getCurrentUserId()).willReturn(Optional.empty());
         String findId = "1";
         ArtistDetailDto artist = artistService.findArtist(findId);
@@ -149,7 +168,6 @@ class ArtistServiceTest {
                 () -> assertFalse(isHearted),
                 () -> assertFalse(isAlarmed)
         );
-        mockedSecurityUtil.close();
     }
 
     @DisplayName("아티스트 단일 조회 시 유저는 존재하지만 좋아하지 않는 아티스트일 경우 ishearted, isalarmed는 false")
@@ -157,7 +175,6 @@ class ArtistServiceTest {
     void findArtistUserNotLikeTest() {
         artistRepository.saveAll(createRandomArtists());
         String findId = "1";
-        mockedSecurityUtil = mockStatic(SecurityUtil.class);
         BDDMockito.given(SecurityUtil.getCurrentUserId()).willReturn(Optional.of(1L));
 
         ArtistDetailDto artist = artistService.findArtist(findId);
@@ -168,7 +185,6 @@ class ArtistServiceTest {
                 () -> assertEquals(false, isHearted),
                 () -> assertEquals(false, isAlarmed)
         );
-        mockedSecurityUtil.close();
     }
 
     @DisplayName("아티스트 단일 조회 시 유저도 존재하고 좋아요도 있지만 알람은 하지 않을 경우 ishearted, isalarmed는 false")
@@ -177,13 +193,8 @@ class ArtistServiceTest {
         // Given
         List<Artist> randomArtists = createRandomArtists();
         artistRepository.saveAll(randomArtists);
-
-        mockedSecurityUtil = mockStatic(SecurityUtil.class);
         BDDMockito.given(SecurityUtil.getCurrentUserId()).willReturn(Optional.of(1L));
-
-        User user = User.builder().nickname("test").oauth2Id("test").provider("test").role(Role.USER).build();
-        userRepository.save(user);
-
+        User user = userRepository.findById(1L).get();
         Artist artist = randomArtists.get(0);
 
         ArtistHeart artistHeart = ArtistHeart.builder()
@@ -209,12 +220,8 @@ class ArtistServiceTest {
         // Given
         List<Artist> randomArtists = createRandomArtists();
         artistRepository.saveAll(randomArtists);
-
-        mockedSecurityUtil = mockStatic(SecurityUtil.class);
         BDDMockito.given(SecurityUtil.getCurrentUserId()).willReturn(Optional.of(1L));
-
-        User user = User.builder().nickname("test").oauth2Id("test").provider("test").role(Role.USER).build();
-        userRepository.save(user);
+        User user = userRepository.findById(1L).get();
 
         Artist artist = randomArtists.get(0);
 
@@ -224,10 +231,8 @@ class ArtistServiceTest {
                 .isAlarmed(true)
                 .build();
         artistHeartRepository.save(artistHeart);
-
         // When
         ArtistDetailDto artistDetailDto = artistService.findArtist(artist.getId());
-
         assertAll(
                 () -> assertTrue(artistDetailDto.isHearted()),
                 () -> assertTrue(artistDetailDto.isAlarmed())
@@ -239,8 +244,6 @@ class ArtistServiceTest {
     void findUserNotLikedAnyoneTest() {
         artistRepository.saveAll(createRandomArtists());
         Pageable pageable = PageRequest.of(0, 10);
-
-        mockedSecurityUtil = mockStatic(SecurityUtil.class);
         BDDMockito.given(SecurityUtil.getCurrentUserId()).willReturn(Optional.of(1L));
 
         List<ArtistDto> artists = artistService.findLikeArtists(pageable).toList();
@@ -261,13 +264,8 @@ class ArtistServiceTest {
         Pageable pageable = PageRequest.of(0, 10);
         List<Artist> randomArtists = createLikedArtists();
         artistRepository.saveAll(randomArtists);
-
-        mockedSecurityUtil = mockStatic(SecurityUtil.class);
         BDDMockito.given(SecurityUtil.getCurrentUserId()).willReturn(Optional.of(1L));
-
-        User user = User.builder().nickname("test").oauth2Id("test").provider("test").role(Role.USER).build();
-        userRepository.save(user);
-
+        User user = userRepository.findById(1L).get();
         List<ArtistHeart> artistHearts = createArtistHearts(randomArtists, user);
         artistHeartRepository.saveAll(artistHearts);
 
