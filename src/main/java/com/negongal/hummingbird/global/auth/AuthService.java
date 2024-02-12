@@ -1,5 +1,6 @@
 package com.negongal.hummingbird.global.auth;
 
+import com.negongal.hummingbird.domain.user.application.UserService;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.domain.user.domain.User;
 import com.negongal.hummingbird.domain.user.dto.response.GetLoginResponse;
@@ -30,6 +31,7 @@ import static com.negongal.hummingbird.global.error.ErrorCode.*;
 public class AuthService {
 
 	private final UserRepository userRepository;
+	private final UserService userService;
 	private final JwtProvider jwtProvider;
 
 	@Value("${auth.token.refresh-cookie-key}")
@@ -52,11 +54,12 @@ public class AuthService {
 		Long userId = Long.valueOf(authentication.getName());
 
 		//repository 에 저장된 refresh token 과 일치하는지 확인
-		String savedToken = userRepository.getRefreshTokenById(userId);
+		User user = userService.getById(userId);
+		String savedToken = user.getRefreshToken();
 		validateSameToken(oldRefreshToken, savedToken);
 
 		//access token, refresh token 새로 발급
-		String accessToken = jwtProvider.createAccessToken(authentication, response);
+		String accessToken = jwtProvider.createAccessToken(authentication);
 		jwtProvider.createRefreshToken(authentication, response);
 		response.setHeader(HttpHeaders.AUTHORIZATION, accessToken);
 

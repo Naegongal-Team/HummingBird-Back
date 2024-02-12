@@ -1,5 +1,6 @@
 package com.negongal.hummingbird.global.auth.jwt;
 
+import com.negongal.hummingbird.domain.user.application.UserService;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.global.auth.oauth2.CustomUserDetail;
 
@@ -31,20 +32,17 @@ public class JwtProvider {
 	private final String COOKIE_REFRESH_TOKEN_KEY;
 	private final Long ACCESS_TOKEN_EXPIRE_LENGTH = 1000L * 60 * 60 * 12;        // 1hour
 	private final Long REFRESH_TOKEN_EXPIRE_LENGTH = 1000L * 60 * 60 * 24 * 7 * 2;    // 2week
-	private final String AUTHORITIES_KEY = "role";
-	private final String PROVIDER = "provider";
-	private final String NICKNAME = "nickname";
-	private final UserRepository userRepository;
+	private final UserService userService;
 
 	@Autowired
 	public JwtProvider(@Value("${auth.token.secret-key}") String secretKey,
-		@Value("${auth.token.refresh-cookie-key}") String cookieKey, UserRepository userRepository) {
+		@Value("${auth.token.refresh-cookie-key}") String cookieKey, UserService userService) {
 		this.SECRET_KEY = Base64.getEncoder().encodeToString(secretKey.getBytes());
 		this.COOKIE_REFRESH_TOKEN_KEY = cookieKey;
-		this.userRepository = userRepository;
+		this.userService = userService;
 	}
 
-	public String createAccessToken(Authentication authentication, HttpServletResponse response) {
+	public String createAccessToken(Authentication authentication) {
 		Date now = new Date();
 		Date validity = new Date(now.getTime() + ACCESS_TOKEN_EXPIRE_LENGTH);
 
@@ -60,10 +58,9 @@ public class JwtProvider {
 		return Jwts.builder()
 			.signWith(SignatureAlgorithm.HS512, SECRET_KEY)
 			.setSubject(userId)
-			.claim(AUTHORITIES_KEY, role)
-			.claim(PROVIDER, provider)
-			.claim(NICKNAME, nickname)
-			.setIssuer("naegongal")
+			.claim("role", role)
+			.claim("provider", provider)
+			.claim("nickname", nickname)
 			.setIssuedAt(now)
 			.setExpiration(validity)
 			.compact();
@@ -75,11 +72,9 @@ public class JwtProvider {
 
 		String refreshToken = Jwts.builder()
 			.signWith(SignatureAlgorithm.HS512, SECRET_KEY)
-			.setIssuer("naegongal")
 			.setIssuedAt(now)
 			.setExpiration(validity)
 			.compact();
-
 		saveRefreshToken(authentication, refreshToken);
 
 		ResponseCookie cookie = ResponseCookie.from(COOKIE_REFRESH_TOKEN_KEY, refreshToken)
@@ -89,16 +84,12 @@ public class JwtProvider {
 			.maxAge(REFRESH_TOKEN_EXPIRE_LENGTH / 1000)
 			.path("/")
 			.build();
-
 		response.addHeader("Set-Cookie", cookie.toString());
 	}
 
 	private void saveRefreshToken(Authentication authentication, String refreshToken) {
 		CustomUserDetail user = (CustomUserDetail)authentication.getPrincipal();
-		Long userId = user.getUserId();
-		String provider = user.getProvider();
-
-		userRepository.updateRefreshToken(userId, provider, refreshToken);
+		userService.updateRefreshToken(user.getUserId(), refreshToken);
 	}
 
 	// Access Token을 검사하고 얻은 정보로 Authentication 객체 생성
@@ -106,13 +97,13 @@ public class JwtProvider {
 		Claims claims = parseClaims(accessToken);
 
 		Collection<? extends GrantedAuthority> authorities =
-			Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+			Arrays.stream(claims.get("role").toString().split(","))
 				.map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
 		CustomUserDetail principal = new CustomUserDetail(
 			Long.valueOf(claims.getSubject()),
-			String.valueOf(claims.get(PROVIDER)),
-			String.valueOf(claims.get(NICKNAME)),
+			String.valueOf(claims.get("provider")),
+			String.valueOf(claims.get("nickname")),
 			authorities);
 
 		return new UsernamePasswordAuthenticationToken(principal, "", authorities);

@@ -26,7 +26,7 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 		Authentication authentication) throws IOException {
 		// JWT 생성
-		String accessToken = tokenProvider.createAccessToken(authentication, response);
+		String accessToken = tokenProvider.createAccessToken(authentication);
 		tokenProvider.createRefreshToken(authentication, response);
 		log.info("access token={}", accessToken);
 

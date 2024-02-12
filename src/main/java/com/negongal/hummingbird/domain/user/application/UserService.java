@@ -2,6 +2,7 @@ package com.negongal.hummingbird.domain.user.application;
 
 import com.negongal.hummingbird.domain.user.domain.User;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
+import com.negongal.hummingbird.domain.user.domain.UserStatus;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
 
 import lombok.RequiredArgsConstructor;
@@ -31,13 +32,19 @@ public class UserService {
 	public void deleteUser(Long userId) {
 		User findUser = getById(userId);
 		findUser.updateInactiveDate();
-		findUser.updateStatus();
+		findUser.updateStatus(UserStatus.INACTIVE);
 	}
 
 	@Transactional
 	public void activateUser(Long userId) {
 		User findUser = getById(userId);
-		findUser.activateStatus();
+		findUser.updateStatus(UserStatus.ACTIVE);
+	}
+
+	@Transactional
+	public void updateRefreshToken(Long id, String refreshToken) {
+		User user = getById(id);
+		user.updateRefreshToken(refreshToken);
 	}
 
 }

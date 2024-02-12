@@ -81,11 +81,11 @@ public class User extends BaseTimeEntity {
 		this.inactiveDate = LocalDate.now();
 	}
 
-	public void activateStatus() {
-		this.status = UserStatus.ACTIVE;
+	public void updateStatus(UserStatus status) {
+		this.status = status;
 	}
 
-	public void updateStatus() {
-		this.status = UserStatus.INACTIVE;
+	public void updateRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
 	}
 }
