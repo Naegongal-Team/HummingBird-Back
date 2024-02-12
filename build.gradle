@@ -1,129 +1,136 @@
 buildscript {
-	ext {
-		//querydsl 추가
-		queryDslVersion = "5.0.0"
-	}
+    ext {
+        //querydsl 추가
+        queryDslVersion = "5.0.0"
+    }
 }
 
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '2.7.16'
-	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-	id("com.google.osdetector") version "1.7.1"
-	//querydsl 추가
-	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+    id 'java'
+    id 'org.springframework.boot' version '2.7.16'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id("com.google.osdetector") version "1.7.1"
+    //querydsl 추가
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'com.negongal'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '11'
+    sourceCompatibility = '11'
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
+}
+
+test {
+	useJUnitPlatform()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
-	implementation 'org.springdoc:springdoc-openapi-security:1.7.0'
-	implementation 'junit:junit:4.13.1'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
 
-	//spotify
-//	implementation 'com.github.thelinmichael:spotify-web-api-java:master-SNAPSHOT'
-//	implementation 'org.modelmapper:modelmapper:2.4.2'
-	implementation 'se.michaelthelin.spotify:spotify-web-api-java:8.3.4'
+    //spotify
+    implementation 'se.michaelthelin.spotify:spotify-web-api-java:8.3.4'
 
-	//firebase
-	implementation 'com.google.firebase:firebase-admin:8.1.0'
+    //firebase
+    implementation 'com.google.firebase:firebase-admin:8.1.0'
 
-	implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
-	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
-	//spring security
-	implementation ("org.springframework.boot:spring-boot-starter-oauth2-client")
-	implementation("org.springframework.boot:spring-boot-starter-security")
-	implementation("org.springframework.security:spring-security-test")
-	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+    //spring security
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.security:spring-security-test")
+    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 
-	//자바 역직렬화 문제 해결 패키지
-	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-	implementation 'com.fasterxml.jackson.core:jackson-databind'
+    //자바 역직렬화 문제 해결 패키지
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
 
-	//websocket
-	implementation 'org.springframework.boot:spring-boot-starter-websocket'
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    //websocket
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
-	//querydsl
-	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
-	annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
-	
-	// view
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-freemarker'
-	implementation 'org.springframework.boot:spring-boot-devtools'
-	implementation 'org.webjars.bower:bootstrap:4.3.1'
-	implementation 'org.webjars.bower:vue:2.5.16'
-	implementation 'org.webjars.bower:axios:0.17.1'
-	implementation 'org.webjars:sockjs-client:1.1.2'
-	implementation 'org.webjars:stomp-websocket:2.3.3-1'
+    //querydsl
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+    annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
 
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:3.1.4'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	//JUnit4 추가
-	testImplementation("org.junit.vintage:junit-vintage-engine") {
-		exclude group: "org.hamcrest", module: "hamcrest-core"
-	}
+    // view
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-freemarker'
+    implementation 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.webjars.bower:bootstrap:4.3.1'
+    implementation 'org.webjars.bower:vue:2.5.16'
+    implementation 'org.webjars.bower:axios:0.17.1'
+    implementation 'org.webjars:sockjs-client:1.1.2'
+    implementation 'org.webjars:stomp-websocket:2.3.3-1'
+
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:3.1.4'
+    runtimeOnly 'com.h2database:h2'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.mockito:mockito-inline:3.6.0'
+    testImplementation 'com.h2database:h2:2.2.220'
+    testRuntimeOnly 'com.h2database:h2'
+
+    //JUnit4 추가
+//    testImplementation("org.junit.vintage:junit-vintage-engine") {
+//        exclude group: "org.hamcrest", module: "hamcrest-core"
+//    }
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
 
 allprojects {
-	repositories {
-		maven { url 'https://jitpack.io'}
-	}
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 //querydsl 추가 시작
 def querydslDir = "$buildDir/generated/querydsl"
 
 querydsl {
-	jpa = true
-	querydslSourcesDir = querydslDir
+    jpa = true
+    querydslSourcesDir = querydslDir
 }
 sourceSets {
-	main.java.srcDir querydslDir
+    main.java.srcDir querydslDir
 }
 configurations {
-	querydsl.extendsFrom compileClasspath
+    querydsl.extendsFrom compileClasspath
 }
 compileQuerydsl {
-	options.annotationProcessorPath = configurations.querydsl
+    options.annotationProcessorPath = configurations.querydsl
 }
 
 //Querydsl 추가, 자동 생성된 Q클래스 gradle clean으로 제거
 clean {
-	delete file(querydslDir)
+    delete file(querydslDir)
 }
 
 processResources.dependsOn('copySecret')
 
 tasks.register('copySecret', Copy) {
-	from './secret-submodule' // 서브모듈 디렉토리 경로
-	include "*.yml", "*.json"  // 복사할 파일들
-	into './src/main/resources'  // 복사 위치
+    from './secret-submodule' // 서브모듈 디렉토리 경로
+    include "*.yml", "*.json"  // 복사할 파일들
+    into './src/main/resources'  // 복사 위치
 }

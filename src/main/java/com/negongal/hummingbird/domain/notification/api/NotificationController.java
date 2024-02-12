@@ -27,7 +27,7 @@ public class NotificationController {
     public ApiResponse notificationSave(
             @RequestBody @Valid NotificationRequestDto notificationRequestDto) {
         log.info("Execute NotificationSave");
-        notificationService.saveNotification(notificationRequestDto);
+        notificationService.save(notificationRequestDto);
         return ResponseUtils.success();
     }
 }

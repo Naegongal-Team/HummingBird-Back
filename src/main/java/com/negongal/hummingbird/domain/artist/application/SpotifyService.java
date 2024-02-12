@@ -170,13 +170,7 @@ public class SpotifyService {
         return com.negongal.hummingbird.domain.artist.domain.Artist.builder()
                 .id(spotifyArtistId)
                 .name(spotifyArtist.getName())
-                .popularity(spotifyArtist.getPopularity())
                 .image(spotifyArtistUrl)
-                .heartCount(0)
-                .genreList(new ArrayList<>())
-                .artistHeartList(new ArrayList<>())
-                .artistTopTrackList(new ArrayList<>())
-                .performanceList(new ArrayList<>())
                 .build();
     }
 }

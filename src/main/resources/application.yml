@@ -1,6 +1,6 @@
 spring:
   profiles:
-    default: prod
+    default: dev
   output:
     ansi:
       enabled: always
@@ -12,6 +12,8 @@ spring:
     properties:
       hibernate:
         show_sql: true
+        format_sql: true
+        highlight_sql: true
     open-in-view: true
 
   redis:
