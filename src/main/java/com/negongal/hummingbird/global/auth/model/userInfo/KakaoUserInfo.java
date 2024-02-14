@@ -1,8 +1,9 @@
-package com.negongal.hummingbird.global.auth.oauth2.userInfo;
+package com.negongal.hummingbird.global.auth.model.userInfo;
 
 import com.negongal.hummingbird.domain.user.domain.Role;
 import com.negongal.hummingbird.domain.user.domain.User;
 import com.negongal.hummingbird.domain.user.domain.UserStatus;
+import com.negongal.hummingbird.global.auth.model.Oauth2Attributes;
 
 import lombok.Getter;
 
@@ -33,6 +34,15 @@ public class KakaoUserInfo implements Oauth2UserInfo {
 			.provider(getProvider())
 			.role(Role.USER)
 			.status(UserStatus.ACTIVE)
+			.build();
+	}
+
+	@Override
+	public Oauth2Attributes extract(String attributeKey, Map<String, Object> attributes) {
+		return Oauth2Attributes.builder()
+			.attributes(attributes)
+			.oauth2Id(getOauthId())
+			.provider(getProvider())
 			.build();
 	}
 

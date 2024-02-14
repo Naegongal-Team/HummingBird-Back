@@ -1,7 +1,8 @@
-package com.negongal.hummingbird.global.auth.oauth2.userInfo;
+package com.negongal.hummingbird.global.auth.model.userInfo;
 
 import com.negongal.hummingbird.domain.user.domain.Role;
 import com.negongal.hummingbird.domain.user.domain.User;
+import com.negongal.hummingbird.global.auth.model.Oauth2Attributes;
 
 import java.util.Map;
 
@@ -27,6 +28,15 @@ public class GoogleUserInfo implements Oauth2UserInfo {
 			.oauth2Id(getOauthId())
 			.provider(getProvider())
 			.role(Role.USER)
+			.build();
+	}
+
+	@Override
+	public Oauth2Attributes extract(String attributeKey, Map<String, Object> attributes) {
+		return Oauth2Attributes.builder()
+			.attributes(attributes)
+			.oauth2Id(getOauthId())
+			.provider(getProvider())
 			.build();
 	}
 

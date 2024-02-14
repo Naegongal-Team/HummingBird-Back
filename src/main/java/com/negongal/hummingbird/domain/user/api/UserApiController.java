@@ -3,7 +3,7 @@ package com.negongal.hummingbird.domain.user.api;
 import com.negongal.hummingbird.domain.user.application.UserInfoService;
 import com.negongal.hummingbird.domain.user.application.UserService;
 import com.negongal.hummingbird.domain.user.dto.request.UpdateNicknameRequest;
-import com.negongal.hummingbird.global.auth.oauth2.CustomUserDetail;
+import com.negongal.hummingbird.global.auth.model.CustomUserDetail;
 import com.negongal.hummingbird.global.common.response.ApiResponse;
 import com.negongal.hummingbird.global.common.response.ResponseUtils;
 

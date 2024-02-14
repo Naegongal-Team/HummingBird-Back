@@ -1,4 +1,4 @@
-package com.negongal.hummingbird.global.auth.oauth2.handler;
+package com.negongal.hummingbird.global.auth.handler;
 
 import com.negongal.hummingbird.global.common.response.ResponseUtils;
 import com.negongal.hummingbird.global.error.ErrorCode;

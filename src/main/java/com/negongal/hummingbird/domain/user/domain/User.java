@@ -1,6 +1,7 @@
 package com.negongal.hummingbird.domain.user.domain;
 
 import com.negongal.hummingbird.domain.performance.domain.PerformanceHeart;
+import com.negongal.hummingbird.global.auth.model.Oauth2Attributes;
 import com.negongal.hummingbird.global.common.BaseTimeEntity;
 
 import java.time.LocalDate;
@@ -59,12 +60,20 @@ public class User extends BaseTimeEntity {
 	private LocalDate inactiveDate;
 
 	@Builder
-	public User(String oauth2Id, String nickname, String provider, Role role, UserStatus status) {
+	public User(String oauth2Id, String provider, Role role, UserStatus status) {
 		this.oauth2Id = oauth2Id;
 		this.provider = provider;
-		this.nickname = nickname;
 		this.role = role;
 		this.status = status;
+	}
+
+	public static User createUser(Oauth2Attributes attributes) {
+		return User.builder()
+			.oauth2Id(attributes.getOauth2Id())
+			.provider(attributes.getProvider())
+			.role(Role.USER)
+			.status(UserStatus.ACTIVE)
+			.build();
 	}
 
 	public void updateNickname(String nickname) {

@@ -1,10 +1,9 @@
-package com.negongal.hummingbird.global.auth.oauth2;
+package com.negongal.hummingbird.global.auth.application;
 
-import com.negongal.hummingbird.domain.user.domain.User;
-import com.negongal.hummingbird.global.auth.oauth2.userInfo.GoogleUserInfo;
-import com.negongal.hummingbird.domain.user.dao.UserRepository;
-import com.negongal.hummingbird.global.auth.oauth2.userInfo.KakaoUserInfo;
-import com.negongal.hummingbird.global.auth.oauth2.userInfo.Oauth2UserInfo;
+import com.negongal.hummingbird.global.auth.model.Oauth2Attributes;
+import com.negongal.hummingbird.global.auth.model.userInfo.GoogleUserInfo;
+import com.negongal.hummingbird.global.auth.model.userInfo.KakaoUserInfo;
+import com.negongal.hummingbird.global.auth.model.userInfo.Oauth2UserInfo;
 import com.negongal.hummingbird.global.error.ErrorCode;
 
 import lombok.RequiredArgsConstructor;
@@ -13,17 +12,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class Oauth2UserService extends DefaultOAuth2UserService {
-
-	private final UserRepository userRepository;
 
 	@Override
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -32,6 +31,8 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
 
 		Oauth2UserInfo oAuth2UserInfo = null;
 		Map<String, Object> userAttributes = oauth2User.getAttributes();
+		String userNameAttributeName = userRequest.getClientRegistration()
+			.getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
 
 		if (userRequest.getClientRegistration().getRegistrationId().equals("google")) {
 			log.info("구글 로그인 요청");
@@ -43,19 +44,7 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
 		} else {
 			throw new OAuth2AuthenticationException(ErrorCode.LOGIN_FAILED.toString());
 		}
-
-		User user = save(oAuth2UserInfo);
-
-		return CustomUserDetail.create(user, userAttributes);
-	}
-
-	private User save(Oauth2UserInfo oAuth2UserInfo) {
-		String oauthId = oAuth2UserInfo.getOauthId();
-		String provider = oAuth2UserInfo.getProvider();
-
-		User user = userRepository.findByOauth2IdAndProvider(oauthId, provider)
-			.orElse(oAuth2UserInfo.toUser());
-
-		return userRepository.save(user);
+		Oauth2Attributes attributes = oAuth2UserInfo.extract(userNameAttributeName, userAttributes);
+		return new DefaultOAuth2User(List.of(), attributes.convertToMap(), "oauth2Id");
 	}
 }

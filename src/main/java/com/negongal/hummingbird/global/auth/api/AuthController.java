@@ -1,5 +1,6 @@
-package com.negongal.hummingbird.global.auth;
+package com.negongal.hummingbird.global.auth.api;
 
+import com.negongal.hummingbird.global.auth.application.AuthService;
 import com.negongal.hummingbird.global.common.response.ApiResponse;
 import com.negongal.hummingbird.global.common.response.ResponseUtils;
 

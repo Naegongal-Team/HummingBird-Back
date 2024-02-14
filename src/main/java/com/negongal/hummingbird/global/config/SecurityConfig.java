@@ -6,9 +6,9 @@ import com.negongal.hummingbird.global.auth.jwt.JwtAccessDeniedHandler;
 import com.negongal.hummingbird.global.auth.jwt.JwtAuthenticationEntryPoint;
 import com.negongal.hummingbird.global.auth.jwt.JwtAuthenticationFilter;
 import com.negongal.hummingbird.global.auth.jwt.JwtExceptionHandlerFilter;
-import com.negongal.hummingbird.global.auth.oauth2.Oauth2UserService;
-import com.negongal.hummingbird.global.auth.oauth2.handler.Oauth2AuthenticationFailureHandler;
-import com.negongal.hummingbird.global.auth.oauth2.handler.Oauth2AuthenticationSuccessHandler;
+import com.negongal.hummingbird.global.auth.application.Oauth2UserService;
+import com.negongal.hummingbird.global.auth.handler.Oauth2AuthenticationFailureHandler;
+import com.negongal.hummingbird.global.auth.handler.Oauth2AuthenticationSuccessHandler;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,7 +22,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;

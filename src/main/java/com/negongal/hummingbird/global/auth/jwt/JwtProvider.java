@@ -1,7 +1,8 @@
 package com.negongal.hummingbird.global.auth.jwt;
 
 import com.negongal.hummingbird.domain.user.application.UserService;
-import com.negongal.hummingbird.global.auth.oauth2.CustomUserDetail;
+import com.negongal.hummingbird.domain.user.domain.User;
+import com.negongal.hummingbird.global.auth.model.CustomUserDetail;
 
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
@@ -9,16 +10,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.Base64;
-import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -39,45 +38,45 @@ public class JwtProvider {
 		this.userService = userService;
 	}
 
-	public String createAccessToken(Authentication authentication) {
+	public String createAccessToken(CustomUserDetail principal) {
 		Date now = new Date();
 		Date validity = new Date(now.getTime() + ACCESS_TOKEN_EXPIRE_LENGTH);
 
-		CustomUserDetail user = (CustomUserDetail)authentication.getPrincipal();
 
-		String role = authentication.getAuthorities().stream()
+		String role = principal.getAuthorities().stream()
 			.map(GrantedAuthority::getAuthority)
 			.collect(Collectors.joining(","));
 
 		return Jwts.builder()
 			.signWith(SignatureAlgorithm.HS512, SECRET_KEY)
-			.setSubject(user.getName())
+			.setSubject("auth")
+			.claim("oauth2Id", principal.getOauth2Id())
 			.claim("role", role)
-			.claim("provider", user.getProvider())
-			.claim("nickname", user.getNickname())
-			.claim("status", user.getStatus())
+			.claim("provider", principal.getProvider())
+			.claim("nickname", principal.getNickname())
+			.claim("status", principal.getStatus())
 			.setIssuedAt(now)
 			.setExpiration(validity)
 			.compact();
 	}
 
-	public String createRefreshToken(Authentication authentication) {
+	public String createRefreshToken(CustomUserDetail principal) {
 		Date now = new Date();
 		Date validity = new Date(now.getTime() + REFRESH_TOKEN_EXPIRE_LENGTH);
 
 		String refreshToken = Jwts.builder()
+			.setSubject("refresh")
 			.signWith(SignatureAlgorithm.HS512, SECRET_KEY)
 			.setIssuedAt(now)
 			.setExpiration(validity)
 			.compact();
-		saveRefreshToken(authentication, refreshToken);
+		saveRefreshToken(principal, refreshToken);
 
 		return refreshToken;
 	}
 
-	private void saveRefreshToken(Authentication authentication, String refreshToken) {
-		CustomUserDetail user = (CustomUserDetail)authentication.getPrincipal();
-		userService.updateRefreshToken(user.getUserId(), refreshToken);
+	private void saveRefreshToken(CustomUserDetail principal, String refreshToken) {
+		userService.updateRefreshToken(principal.getUserId(), refreshToken);
 	}
 
 	public ResponseCookie createRefreshTokenCookie(String refreshToken) {
@@ -91,21 +90,15 @@ public class JwtProvider {
 	}
 
 	// Access Token을 검사하고 얻은 정보로 Authentication 객체 생성
-	public Authentication getAuthentication(String accessToken) {
+	public CustomUserDetail getAuthentication(String accessToken) {
 		Claims claims = parseClaims(accessToken);
 
-		Collection<? extends GrantedAuthority> authorities =
+		Set<? extends GrantedAuthority> authorities =
 			Arrays.stream(claims.get("role").toString().split(","))
-				.map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+				.map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
+		User user = userService.getByOauth2Id(String.valueOf(claims.get("oauth2Id")));
 
-		CustomUserDetail principal = new CustomUserDetail(
-			Long.valueOf(claims.getSubject()),
-			String.valueOf(claims.get("provider")),
-			String.valueOf(claims.get("nickname")),
-			String.valueOf(claims.get("status")),
-			authorities);
-
-		return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+		return CustomUserDetail.of(user, authorities);
 	}
 
 	public boolean validateToken(String token) {

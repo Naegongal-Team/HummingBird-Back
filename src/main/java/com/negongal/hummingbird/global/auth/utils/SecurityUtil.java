@@ -1,13 +1,12 @@
 package com.negongal.hummingbird.global.auth.utils;
 
-import com.negongal.hummingbird.global.auth.oauth2.CustomUserDetail;
+import com.negongal.hummingbird.global.auth.model.CustomUserDetail;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
-import org.springframework.security.core.userdetails.UserDetails;
 
 @Slf4j
 @NoArgsConstructor
