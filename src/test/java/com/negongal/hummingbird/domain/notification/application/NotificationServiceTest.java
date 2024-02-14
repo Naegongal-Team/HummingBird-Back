@@ -7,15 +7,19 @@ import com.negongal.hummingbird.HummingbirdApplication;
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
 import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.notification.dao.NotificationRepository;
+import com.negongal.hummingbird.domain.notification.domain.Notification;
 import com.negongal.hummingbird.domain.notification.dto.NotificationRequestDto;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceRepository;
 import com.negongal.hummingbird.domain.performance.dao.TicketingRepository;
 import com.negongal.hummingbird.domain.performance.domain.Performance;
+import com.negongal.hummingbird.domain.performance.domain.Ticketing;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.domain.user.domain.Role;
 import com.negongal.hummingbird.domain.user.domain.User;
 import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -39,10 +43,6 @@ class NotificationServiceTest {
     @InjectMocks
     @Autowired
     private NotificationService notificationService;
-    @MockBean
-    private FCMService fcmService;
-    @Mock
-    private Performance mockPerformance;
     @Autowired
     private NotificationRepository notificationRepository;
     @Autowired
@@ -51,6 +51,8 @@ class NotificationServiceTest {
     private UserRepository userRepository;
     @Autowired
     private PerformanceRepository performanceRepository;
+    @Autowired
+    private TicketingRepository ticketingRepository;
     private static MockedStatic<SecurityUtil> mockedSecurityUtil;
 
     @BeforeAll
@@ -123,7 +125,7 @@ class NotificationServiceTest {
         assertEquals("USER_NOT_EXIST", notExistException.getMessage());
     }
 
-    @DisplayName("알림 저장")
+    @DisplayName("알림 저장시 저장된 예매 시간이 없을 경우")
     @Transactional
     @Test
     void saveNotificationNotTicketTest() {
@@ -142,18 +144,42 @@ class NotificationServiceTest {
         assertEquals("TICKET_NOT_EXIST", notExistException.getMessage());
     }
 
-    @DisplayName("공연에서 예매처가 존재하지 않은 채로 알림 저장")
+    @DisplayName("알림 저장 테스트")
     @Transactional
     @Test
     void saveNotificationTest() {
         // Given
         Long performanceId = 1L;
         Long userId = 1L;
-        int beforeTime = 1;
+        int beforeTime = 120;
+        Performance performance = performanceRepository.findById(1L).get();
+        List<Ticketing> ticketing = createTicket(performance);
+        ticketingRepository.saveAll(ticketing);
         NotificationRequestDto request = NotificationRequestDto.builder()
                 .performanceId(performanceId)
                 .beforeTime(1)
                 .build();
         BDDMockito.given(SecurityUtil.getCurrentUserId()).willReturn(Optional.of(1L));
+
+        // When
+        notificationService.save(request);
+
+        // Then
+        Notification notification = notificationRepository.findById(1L).get();
+        System.out.println(notification.getNotificationTime());
+    }
+
+    private List<Ticketing> createTicket(Performance performance) {
+        Ticketing ticket1 = Ticketing.builder()
+                .performance(performance)
+                .startDate(LocalDateTime.of(2023, 12, 13, 0, 0, 0))
+                .build();
+
+        Ticketing ticket2 = Ticketing.builder()
+                .performance(performance)
+                .startDate(LocalDateTime.of(2023, 12, 15, 0, 0, 0))
+                .build();
+
+        return List.of(ticket1, ticket2);
     }
 }

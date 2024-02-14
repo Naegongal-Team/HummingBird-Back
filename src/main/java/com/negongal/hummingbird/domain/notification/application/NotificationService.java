@@ -58,7 +58,7 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
-    public void deleteNotification(Long notificationId) {
+    public void delete(Long notificationId) {
         log.info("Delete Notification");
         Notification findNotification = notificationRepository.findById(notificationId).orElseThrow(()-> new NotExistException(
                 ErrorCode.NOTIFICATION_NOT_FOUND

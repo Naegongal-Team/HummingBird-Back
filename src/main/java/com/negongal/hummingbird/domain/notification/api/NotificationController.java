@@ -30,4 +30,5 @@ public class NotificationController {
         notificationService.save(notificationRequestDto);
         return ResponseUtils.success();
     }
+
 }
