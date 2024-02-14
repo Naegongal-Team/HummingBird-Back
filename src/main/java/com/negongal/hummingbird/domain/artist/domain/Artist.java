@@ -24,7 +24,7 @@ public class Artist {
 
     @Basic(fetch=FetchType.LAZY)
     @Formula("(SELECT COUNT(1) FROM artist_heart ah WHERE ah.artist_id = id)")
-    private int heartCount;
+    private Integer heartCount;
 
     @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Genre> genres;

@@ -25,13 +25,16 @@ public class ArtistDetailDto {
 
     private List<ArtistHeart> artistHearts;
 
+    private Integer heartCount;
+
     private boolean isHearted;
 
     private boolean isAlarmed;
 
     @Builder
     public ArtistDetailDto(String id, String name, String image, List<ArtistGenresDto> genres,
-                           List<TrackDto> topTracks, List<ArtistHeart> artistHearts, boolean isHearted, boolean isAlarmed) {
+                           List<TrackDto> topTracks, Integer heartCount, List<ArtistHeart> artistHearts,
+                           boolean isHearted, boolean isAlarmed) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -40,6 +43,7 @@ public class ArtistDetailDto {
         this.artistHearts = artistHearts;
         this.isHearted = isHearted;
         this.isAlarmed = isAlarmed;
+        this.heartCount = heartCount;
     }
 
     public static ArtistDetailDto of(Artist artist, boolean isHearted, boolean isAlarmed) {
@@ -52,9 +56,10 @@ public class ArtistDetailDto {
                 .name(artist.getName())
                 .image(artist.getImage())
                 .genres(artistGenres)
+                .heartCount(artist.getHeartCount())
                 .topTracks(artist.getTopTracks().stream()
-                        .map(track -> TrackDto.of(track))
-                        .collect(Collectors.toList()))
+                .map(track -> TrackDto.of(track))
+                .collect(Collectors.toList()))
                 .isHearted(isHearted)
                 .isAlarmed(isAlarmed)
                 .build();

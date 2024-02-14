@@ -8,6 +8,8 @@ import static com.querydsl.core.group.GroupBy.list;
 
 import com.negongal.hummingbird.domain.artist.dto.ArtistDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistGenresDto;
+import com.negongal.hummingbird.global.error.ErrorCode;
+import com.negongal.hummingbird.global.error.exception.InvalidException;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -23,10 +25,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Repository
 @RequiredArgsConstructor
+@Transactional
 public class ArtistRepositoryImpl implements ArtistRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
@@ -71,7 +75,7 @@ public class ArtistRepositoryImpl implements ArtistRepositoryCustom {
                 OrderSpecifier<String> orderSpecifier = new OrderSpecifier(direction, artist.heartCount);
                 orders.add(orderSpecifier);
             } else {
-                throw new IllegalArgumentException("can't sort");
+                throw new InvalidException(ErrorCode.ARTIST_CAN_NOT_SORT_THIS_TYPE);
             }
         }
         return orders;
