@@ -2,6 +2,7 @@ package com.negongal.hummingbird.domain.user.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -14,4 +15,7 @@ public class UpdateNicknameRequest {
     @Schema(description = "회원 닉네임", example = "cherry")
     private String nickname;
 
+    public UpdateNicknameRequest(String nickname) {
+        this.nickname = nickname;
+    }
 }
