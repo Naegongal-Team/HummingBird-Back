@@ -68,15 +68,22 @@ public class ArtistRepositoryImpl implements ArtistRepositoryCustom {
 
         for (Sort.Order order : pageable.getSort()) {
             Order direction = order.getDirection().isAscending() ? Order.ASC : Order.DESC;
-            if (order.getProperty().equals("name")) {
-                OrderSpecifier<String> orderSpecifier = new OrderSpecifier(direction, artist.name);
-                orders.add(orderSpecifier);
-            } else if (order.getProperty().equals("heartCount")) {
-                OrderSpecifier<String> orderSpecifier = new OrderSpecifier(direction, artist.heartCount);
-                orders.add(orderSpecifier);
-            } else {
-                throw new InvalidException(ErrorCode.ARTIST_CAN_NOT_SORT_THIS_TYPE);
+            String property = order.getProperty();
+
+            OrderSpecifier<?> orderSpecifier;
+
+            switch (property) {
+                case "name":
+                    orderSpecifier = new OrderSpecifier<>(direction, artist.name);
+                    break;
+                case "heartCount":
+                    orderSpecifier = new OrderSpecifier<>(direction, artist.heartCount);
+                    break;
+                default:
+                    throw new InvalidException(ErrorCode.ARTIST_CAN_NOT_SORT_THIS_TYPE);
             }
+
+            orders.add(orderSpecifier);
         }
         return orders;
     }
