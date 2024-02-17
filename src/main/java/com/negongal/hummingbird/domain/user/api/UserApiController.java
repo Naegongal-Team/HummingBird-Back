@@ -3,6 +3,7 @@ package com.negongal.hummingbird.domain.user.api;
 import com.negongal.hummingbird.domain.user.application.UserInfoService;
 import com.negongal.hummingbird.domain.user.application.UserService;
 import com.negongal.hummingbird.domain.user.dto.request.UpdateNicknameRequest;
+import com.negongal.hummingbird.domain.user.dto.response.GetUserResponse;
 import com.negongal.hummingbird.global.auth.model.CustomUserDetail;
 import com.negongal.hummingbird.global.common.response.ApiResponse;
 import com.negongal.hummingbird.global.common.response.ResponseUtils;
@@ -34,7 +35,7 @@ public class UserApiController {
 		security = {@SecurityRequirement(name = "access-token")})
 	@PreAuthorize("hasRole('USER')")
 	@GetMapping("/user/info")
-	public ApiResponse<?> userDetail(@AuthenticationPrincipal CustomUserDetail userDetail) {
+	public ApiResponse<GetUserResponse> userDetail(@AuthenticationPrincipal CustomUserDetail userDetail) {
 		return ResponseUtils.success(userInfoService.getUser(userDetail.getUserId()));
 	}
 
@@ -48,7 +49,7 @@ public class UserApiController {
 		security = {@SecurityRequirement(name = "access-token")})
 	@PreAuthorize("hasRole('USER')")
 	@PutMapping(value = "/user/photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ApiResponse<?> userPhotoAdd(
+	public ApiResponse<Void> userPhotoAdd(
 		@RequestPart(required = false, value = "profileImage") MultipartFile profileImage,
 		@AuthenticationPrincipal CustomUserDetail userDetail) {
 		userInfoService.updateUserPhoto(userDetail.getUserId(), profileImage);
@@ -59,7 +60,7 @@ public class UserApiController {
 		security = {@SecurityRequirement(name = "access-token")})
 	@PreAuthorize("hasRole('USER')")
 	@PatchMapping("/user/nickname")
-	public ApiResponse<?> userNicknameAdd(
+	public ApiResponse<Void> userNicknameAdd(
 		@Valid @RequestBody UpdateNicknameRequest request,
 		@AuthenticationPrincipal CustomUserDetail userDetail) {
 		userInfoService.updateUserNickname(userDetail.getUserId(), request);
@@ -70,7 +71,7 @@ public class UserApiController {
 		security = {@SecurityRequirement(name = "access-token")})
 	@PreAuthorize("hasRole('USER')")
 	@PostMapping("/user/fcm-token")
-	public ApiResponse postFCMToken(
+	public ApiResponse<String> postFCMToken(
 		@RequestParam String token,
 		@AuthenticationPrincipal CustomUserDetail userDetail) {
 		userInfoService.saveFCMToken(token, userDetail.getUserId());
@@ -81,7 +82,7 @@ public class UserApiController {
 		security = {@SecurityRequirement(name = "access-token")})
 	@PreAuthorize("hasRole('USER')")
 	@PostMapping("/user/remove")
-	public ApiResponse<?> remove(@AuthenticationPrincipal CustomUserDetail customUserDetail) {
+	public ApiResponse<Void> remove(@AuthenticationPrincipal CustomUserDetail customUserDetail) {
 		userService.deleteUser(customUserDetail.getUserId());
 		return ResponseUtils.success();
 	}
@@ -90,7 +91,7 @@ public class UserApiController {
 		security = {@SecurityRequirement(name = "access-token")})
 	@PreAuthorize("hasRole('USER')")
 	@PostMapping("/user/activate")
-	public ApiResponse<?> activateUser(@AuthenticationPrincipal CustomUserDetail customUserDetail) {
+	public ApiResponse<Void> activateUser(@AuthenticationPrincipal CustomUserDetail customUserDetail) {
 		userService.activateUser(customUserDetail.getUserId());
 		return ResponseUtils.success();
 	}
