@@ -30,7 +30,6 @@ public class ArtistHeart extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-
     public void toggleAlarmed() {
         isAlarmed = !isAlarmed;
     }
