@@ -31,7 +31,7 @@ public class ChatRoomController {
     @Parameter(name = "roomId", description = "공연 채팅방 아이디 값", example = "roomId")
     @GetMapping("/{roomId}/message")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<?> chatMessageList(@PathVariable String roomId, Pageable pageable) {
+    public ApiResponse<ChatMessagePageDto> chatMessageList(@PathVariable String roomId, Pageable pageable) {
         ChatMessagePageDto chatMessagePageList = chatMessageService.loadMessage(roomId, pageable);
         return ResponseUtils.success(chatMessagePageList);
     }

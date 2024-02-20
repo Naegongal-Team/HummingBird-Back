@@ -54,7 +54,7 @@ public class PerformanceApiController {
     @Operation(summary = "공연 등록", description = "관리자가 공연을 등록합니다.")
     @PostMapping(value = "/admin", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse performanceAdd(
+    public ApiResponse<Void> performanceAdd(
             @Valid @RequestPart(value = "performance") PerformanceRequestDto requestDto,
             @RequestPart(required = false, value = "photo") MultipartFile photo) throws IOException {
         String photoUrl = (photo == null) ? null : uploader.saveFile(photo);
@@ -70,7 +70,7 @@ public class PerformanceApiController {
     @PatchMapping(value = "/{performanceId}/admin", consumes = {MediaType.APPLICATION_JSON_VALUE,
             MediaType.MULTIPART_FORM_DATA_VALUE})
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<?> performanceModify(
+    public ApiResponse<Void> performanceModify(
             @PathVariable Long performanceId,
             @Valid @RequestPart(value = "performance") PerformanceRequestDto requestDto,
             @RequestPart(required = false, value = "photo") MultipartFile photo) throws IOException {
@@ -83,7 +83,7 @@ public class PerformanceApiController {
     @Operation(summary = "공연 삭제", description = "관리자가 공연을 삭제합니다.")
     @Parameter(name = "performanceId", description = "공연 아이디 값", example = "performanceId")
     @DeleteMapping("/{performanceId}/admin")
-    public ApiResponse<?> performanceRemove(@PathVariable Long performanceId) {
+    public ApiResponse<Void> performanceRemove(@PathVariable Long performanceId) {
         performanceService.deletePerformance(performanceId);
         return ResponseUtils.success();
     }
@@ -92,7 +92,7 @@ public class PerformanceApiController {
     @Parameter(name = "performanceId", description = "공연 아이디 값", example = "performanceId")
     @GetMapping("/{performanceId}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<?> performanceDetails(@PathVariable Long performanceId) {
+    public ApiResponse<PerformanceDetailDto> performanceDetails(@PathVariable Long performanceId) {
         PerformanceDetailDto Performance = performanceService.findPerformance(performanceId);
         return ResponseUtils.success(Performance);
     }
@@ -100,7 +100,7 @@ public class PerformanceApiController {
     @Operation(summary = "전체 공연 리스트 조회", description = "전체 공연 리스트를 공연 날짜 순, 티켓팅 날짜 순, 인기있는 공연 순으로 조회합니다.")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<?> performanceList(Pageable pageable) {
+    public ApiResponse<PerformancePageDto> performanceList(Pageable pageable) {
         PerformancePageDto performancePageList = performanceService.findAllPerformance(pageable);
         return ResponseUtils.success(performancePageList);
     }
@@ -108,7 +108,7 @@ public class PerformanceApiController {
     @Operation(summary = "메인 페이지 공연 리스트 조회", description = "메인 페이지에서 공연 리스트를 공연 날짜 순, 인기있는 공연 순으로 조회합니다.")
     @GetMapping("/main")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<?> performanceMainList(@RequestParam("size") int size, @RequestParam("sort") String sort) {
+    public ApiResponse<List<PerformanceDto>> performanceMainList(@RequestParam("size") int size, @RequestParam("sort") String sort) {
         List<PerformanceDto> performanceList = performanceService.findMainPerformances(size, sort);
         return ResponseUtils.success("performance_list", performanceList);
     }
@@ -118,7 +118,7 @@ public class PerformanceApiController {
     @Parameter(name = "isHearted", description = "현재 공연 좋아요 유무", example = "true")
     @PostMapping("/{performanceId}/heart")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<?> performanceHeartAdd(@PathVariable Long performanceId, @RequestParam boolean isHearted) {
+    public ApiResponse<String> performanceHeartAdd(@PathVariable Long performanceId, @RequestParam boolean isHearted) {
         if (isHearted) {
             performanceHeartService.deletePerformanceHeart(performanceId);
             return ResponseUtils.success("좋아요 삭제가 완료되었습니다.");
@@ -130,7 +130,7 @@ public class PerformanceApiController {
     @Operation(summary = "유저가 좋아요한 공연 리스트 조회", description = "유저가 좋아요한 공연 리스트 정보를 조회합니다.")
     @GetMapping("/user/heart")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<?> performanceHeartList(Pageable pageable) {
+    public ApiResponse<PerformancePageDto> performanceHeartList(Pageable pageable) {
         PerformancePageDto performancePageList = performanceHeartService.findPerformancesByUserHeart(pageable);
         return ResponseUtils.success(performancePageList);
     }
@@ -140,7 +140,7 @@ public class PerformanceApiController {
     @Parameter(name = "scheduled", description = "예정된 공연(true)인지 지난 공연(false)인지 유무", example = "true")
     @GetMapping("/artist/{artistId}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<?> artistPerformanceList(@PathVariable String artistId,
+    public ApiResponse<List<PerformanceDto>> artistPerformanceList(@PathVariable String artistId,
                                                 @RequestParam boolean scheduled) { // 예정된 공연
         List<PerformanceDto> performanceList = performanceService.findPerformancesByArtist(artistId, scheduled);
         return ResponseUtils.success("performance_list", performanceList);
@@ -149,7 +149,7 @@ public class PerformanceApiController {
     @Operation(summary = "공연 검색", description = "가수 이름으로 공연을 검색할 수 있습니다.")
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<?> performanceSearch(@RequestBody PerformanceSearchRequestDto requestDto, Pageable pageable) {
+    public ApiResponse<PerformancePageDto> performanceSearch(@RequestBody PerformanceSearchRequestDto requestDto, Pageable pageable) {
         PerformancePageDto performancePageList = performanceService.searchPerformances(requestDto, pageable);
         return ResponseUtils.success(performancePageList);
     }
