@@ -31,8 +31,8 @@ public class ArtistHeart extends BaseTimeEntity {
     }
 
     @Builder
-    public ArtistHeart(Boolean isAlarmed, Artist artist, User user) {
-        this.isAlarmed = isAlarmed;
+    public ArtistHeart(Artist artist, User user) {
+        this.isAlarmed = false;
         this.artist = artist;
         this.user = user;
     }

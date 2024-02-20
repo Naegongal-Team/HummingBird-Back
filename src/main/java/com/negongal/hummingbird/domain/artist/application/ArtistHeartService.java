@@ -48,7 +48,6 @@ public class ArtistHeartService {
         ArtistHeart artistHeart = ArtistHeart.builder()
                 .artist(artist)
                 .user(user)
-                .isAlarmed(false)
                 .build();
         artistHeartRepository.save(artistHeart);
     }
