@@ -7,15 +7,15 @@ import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.notification.application.NotificationService;
 import com.negongal.hummingbird.domain.notification.dao.NotificationRepository;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceHeartRepository;
-import com.negongal.hummingbird.domain.performance.dto.PerformancePageDto;
-import com.negongal.hummingbird.domain.performance.dto.PerformanceRequestDto;
+import com.negongal.hummingbird.domain.performance.dto.response.PerformancePageDto;
+import com.negongal.hummingbird.domain.performance.dto.request.PerformanceRequestDto;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceDateRepository;
 import com.negongal.hummingbird.domain.performance.domain.Performance;
-import com.negongal.hummingbird.domain.performance.dto.PerformanceDetailDto;
-import com.negongal.hummingbird.domain.performance.dto.PerformanceDto;
+import com.negongal.hummingbird.domain.performance.dto.response.PerformanceDetailDto;
+import com.negongal.hummingbird.domain.performance.dto.response.PerformanceDto;
 import com.negongal.hummingbird.domain.performance.domain.PerformanceDate;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceRepository;
-import com.negongal.hummingbird.domain.performance.dto.PerformanceSearchRequestDto;
+import com.negongal.hummingbird.domain.performance.dto.request.PerformanceSearchRequestDto;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.domain.user.domain.User;
 import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
@@ -45,13 +45,13 @@ public class PerformanceService {
     private final NotificationRepository notificationRepository;
 
     @Transactional
-    public Long save(PerformanceRequestDto requestDto, String photo) {
+    public Long savePerformance(PerformanceRequestDto requestDto, String photo) {
         Artist artist = artistRepository.findByName(requestDto.getArtistName())
                 .orElseThrow(() -> new NotExistException(ARTIST_NOT_EXIST));
 
         Performance savePerformance = performanceRepository.save(requestDto.toEntity(artist, photo));
 
-        List<PerformanceDate> dateList = createDate(requestDto.getDateList(), savePerformance);
+        List<PerformanceDate> dateList = createPerformanceDate(requestDto.getDates(), savePerformance);
         dateRepository.saveAll(dateList);
 
         String topicName = artist.getId();
@@ -60,16 +60,8 @@ public class PerformanceService {
         return savePerformance.getId();
     }
 
-    public List<PerformanceDate> createDate(List<LocalDateTime> dateList, Performance performance) {
-        return dateList.stream().map(d -> PerformanceDate.builder()
-                        .performance(performance)
-                        .startDate(d)
-                        .build())
-                .collect(Collectors.toList());
-    }
-
     @Transactional
-    public void update(Long performanceId, PerformanceRequestDto request, String photo) {
+    public void updatePerformance(Long performanceId, PerformanceRequestDto request, String photo) {
         Performance findPerformance = performanceRepository.findById(performanceId)
                 .orElseThrow(() -> new NotExistException(PERFORMANCE_NOT_EXIST));
 
@@ -78,23 +70,28 @@ public class PerformanceService {
 
         findPerformance.update(request.getName(), artist, request.getLocation(), request.getRuntime(),
                 request.getDescription(), photo);
-        dateRepository.saveAll(createDate(request.getDateList(), findPerformance));
+        dateRepository.saveAll(createPerformanceDate(request.getDates(), findPerformance));
     }
 
     @Transactional
-    public void delete(Long performanceId) {
+    public void deletePerformance(Long performanceId) {
         Performance findPerformance = performanceRepository.findById(performanceId)
                 .orElseThrow(() -> new NotExistException(PERFORMANCE_NOT_EXIST));
         performanceRepository.delete(findPerformance);
     }
 
-    /**
-     * 공연 조회: 공연 날짜 순 or 티켓팅 날짜 순 or 인기있는 공연 순
-     */
-    public PerformancePageDto findAll(Pageable pageable) {
+    public List<PerformanceDate> createPerformanceDate(List<LocalDateTime> dateList, Performance performance) {
+        return dateList.stream().map(d -> PerformanceDate.builder()
+                        .performance(performance)
+                        .startDate(d)
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    public PerformancePageDto findAllPerformance(Pageable pageable) {
         Page<PerformanceDto> dtoPage = performanceRepository.findAllCustom(pageable);
         return PerformancePageDto.builder()
-                .performanceDto(dtoPage.getContent())
+                .performanceDtos(dtoPage.getContent())
                 .totalPages(dtoPage.getTotalPages())
                 .totalElements(dtoPage.getTotalElements())
                 .isLast(dtoPage.isLast())
@@ -102,14 +99,11 @@ public class PerformanceService {
                 .build();
     }
 
-    /**
-     * 공연 조회: 메인 페이지에서 띄울 개수 제한
-     */
-    public List<PerformanceDto> findSeveral(int size, String sort) {
+    public List<PerformanceDto> findMainPerformances(int size, String sort) {
         return performanceRepository.findSeveral(size, sort);
     }
 
-    public PerformanceDetailDto findOne(Long performanceId) {
+    public PerformanceDetailDto findPerformance(Long performanceId) {
         Performance performance = performanceRepository.findById(performanceId)
                 .orElseThrow(() -> new NotExistException(PERFORMANCE_NOT_EXIST));
 
@@ -127,15 +121,15 @@ public class PerformanceService {
         return PerformanceDetailDto.of(performance, heartPressed, isAlarmed);
     }
 
-    public List<PerformanceDto> findByArtist(String artistId, boolean scheduled) {
+    public List<PerformanceDto> findPerformancesByArtist(String artistId, boolean scheduled) {
         return performanceRepository.findByArtist(artistId, scheduled);
     }
 
-    public PerformancePageDto search(PerformanceSearchRequestDto requestDto, Pageable pageable) {
+    public PerformancePageDto searchPerformances(PerformanceSearchRequestDto requestDto, Pageable pageable) {
         Page<PerformanceDto> dtoPage = performanceRepository.search(requestDto, pageable);
 
         return PerformancePageDto.builder()
-                .performanceDto(dtoPage.getContent())
+                .performanceDtos(dtoPage.getContent())
                 .totalPages(dtoPage.getTotalPages())
                 .totalElements(dtoPage.getTotalElements())
                 .isLast(dtoPage.isLast())

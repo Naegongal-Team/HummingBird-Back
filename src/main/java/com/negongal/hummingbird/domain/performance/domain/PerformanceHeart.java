@@ -45,7 +45,7 @@ public class PerformanceHeart extends BaseTimeEntity {
         this.performance = performance;
         this.user = user;
 
-        this.performance.getPerformanceHeartList().add(this);
+        this.performance.getPerformanceHearts().add(this);
         this.user.getPerformanceHeartList().add(this);
     }
 }

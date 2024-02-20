@@ -5,13 +5,11 @@ import static com.negongal.hummingbird.domain.performance.domain.QPerformanceDat
 import static com.negongal.hummingbird.domain.performance.domain.QPerformanceHeart.performanceHeart;
 import static com.negongal.hummingbird.domain.performance.domain.QTicketing.ticketing;
 
-import com.negongal.hummingbird.domain.performance.dto.PerformanceDto;
-import com.negongal.hummingbird.domain.performance.dto.QPerformanceDto;
+import com.negongal.hummingbird.domain.performance.dto.response.PerformanceDto;
+import com.negongal.hummingbird.domain.performance.dto.response.QPerformanceDto;
 import com.querydsl.jpa.JPQLQuery;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -26,14 +24,6 @@ public class PerformanceHeartRepositoryCustomImpl implements PerformanceHeartRep
     private static final String TICKETING = "ticketing";
     private static final String HEART_INPUT = "heart-input";
 
-    public String getSort(Pageable pageable) {
-        if(pageable.getSort().isSorted()) {
-            Order order = pageable.getSort().stream().findAny().get();
-            return order.getProperty();
-        }
-        return START_DATE;
-    }
-
     @Override
     public Page<PerformanceDto> findAllByUserHeart(Pageable pageable, Long userId) {
         long offset = pageable.getOffset();
@@ -47,6 +37,14 @@ public class PerformanceHeartRepositoryCustomImpl implements PerformanceHeartRep
         dtoQuery.limit(pageSize);
 
         return new PageImpl<>(dtoQuery.fetch(), pageable, countQuery.fetchCount());
+    }
+
+    public String getSort(Pageable pageable) {
+        if(pageable.getSort().isSorted()) {
+            Order order = pageable.getSort().stream().findAny().get();
+            return order.getProperty();
+        }
+        return START_DATE;
     }
 
     public JPQLQuery<Long> countPerformanceList(String sort, Long userId) {
@@ -84,8 +82,8 @@ public class PerformanceHeartRepositoryCustomImpl implements PerformanceHeartRep
                         performance.id, performance.name, performance.artist.name, performance.photo,
                         performanceDate.startDate.min()))
                 .from(performance)
-                .leftJoin(performance.dateList, performanceDate)
-                .leftJoin(performance.performanceHeartList, performanceHeart)
+                .leftJoin(performance.performanceDates, performanceDate)
+                .leftJoin(performance.performanceHearts, performanceHeart)
                 .where(performanceDate.startDate.goe(currentDate)) // 현재 날짜 이후만 join
                 .where(performanceHeart.user.userId.eq(userId))
                 .groupBy(performance.id, performance.name, performance.photo);
@@ -98,8 +96,8 @@ public class PerformanceHeartRepositoryCustomImpl implements PerformanceHeartRep
                         performance.id, performance.name, performance.artist.name, performance.photo,
                         ticketing.startDate.min()))
                 .from(performance)
-                .leftJoin(performance.ticketingList, ticketing)
-                .leftJoin(performance.performanceHeartList, performanceHeart)
+                .leftJoin(performance.ticketings, ticketing)
+                .leftJoin(performance.performanceHearts, performanceHeart)
                 .where(ticketing.startDate.goe(currentDate)) // 현재 날짜 이후만 join
                 .where(performanceHeart.user.userId.eq(userId))
                 .groupBy(performance.id, performance.name, performance.photo);

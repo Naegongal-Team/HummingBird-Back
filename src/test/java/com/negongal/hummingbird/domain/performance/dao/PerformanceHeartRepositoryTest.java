@@ -1,7 +1,6 @@
 package com.negongal.hummingbird.domain.performance.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
 import com.negongal.hummingbird.domain.artist.domain.Artist;
@@ -10,13 +9,12 @@ import com.negongal.hummingbird.domain.performance.domain.Performance;
 import com.negongal.hummingbird.domain.performance.domain.PerformanceDate;
 import com.negongal.hummingbird.domain.performance.domain.PerformanceHeart;
 import com.negongal.hummingbird.domain.performance.domain.Ticketing;
-import com.negongal.hummingbird.domain.performance.dto.PerformanceDto;
+import com.negongal.hummingbird.domain.performance.dto.response.PerformanceDto;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.domain.user.domain.Role;
 import com.negongal.hummingbird.domain.user.domain.User;
 import com.negongal.hummingbird.global.config.JpaConfig;
 import com.negongal.hummingbird.global.config.QueryDSLConfig;
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

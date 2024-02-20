@@ -36,7 +36,6 @@ public class PerformanceDate {
         this.performance = performance;
         this.startDate = startDate;
 
-        //==연관관계 편의 메서드==//
-        performance.getDateList().add(this);
+        performance.getPerformanceDates().add(this);
     }
 }

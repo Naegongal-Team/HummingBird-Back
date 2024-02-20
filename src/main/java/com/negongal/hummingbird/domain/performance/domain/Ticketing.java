@@ -46,7 +46,6 @@ public class Ticketing {
         this.platform = platform;
         this.link = link;
 
-        //==연관관계 편의 메서드==//
-        performance.getTicketingList().add(this);
+        performance.getTicketings().add(this);
     }
 }

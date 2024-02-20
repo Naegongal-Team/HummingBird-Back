@@ -6,7 +6,6 @@ import static com.negongal.hummingbird.global.error.ErrorCode.PERFORMANCE_NOT_EX
 import static com.negongal.hummingbird.global.error.ErrorCode.USER_NOT_EXIST;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mockStatic;
@@ -86,7 +85,7 @@ class PerformanceHeartServiceTest {
             given(performanceHeartRepository.save(any())).willReturn(performanceHeart);
 
             //when
-            Long saveId = performanceHeartService.save(performanceId);
+            Long saveId = performanceHeartService.savePerformanceHeart(performanceId);
 
             //then
             assertThat(performanceHeartId).isEqualTo(saveId);
@@ -105,7 +104,7 @@ class PerformanceHeartServiceTest {
             given(performanceRepository.findById(performanceId)).willReturn(Optional.empty());
 
             //then
-            assertThatThrownBy(() -> performanceHeartService.save(performanceId))
+            assertThatThrownBy(() -> performanceHeartService.savePerformanceHeart(performanceId))
                     .isInstanceOf(NotExistException.class)
                     .hasMessageContaining(PERFORMANCE_NOT_EXIST.getMessage());
         }
@@ -115,7 +114,7 @@ class PerformanceHeartServiceTest {
         void savePerformanceButNotLoginInTest() {
             Long performanceId = 1L;
             given(SecurityUtil.getCurrentUserId()).willReturn(Optional.empty());
-            assertThatThrownBy(() -> performanceHeartService.save(performanceId))
+            assertThatThrownBy(() -> performanceHeartService.savePerformanceHeart(performanceId))
                     .isInstanceOf(NotExistException.class)
                     .hasMessageContaining(USER_NOT_EXIST.getMessage());
         }
@@ -135,7 +134,7 @@ class PerformanceHeartServiceTest {
                     Optional.ofNullable(performanceHeart));
 
             //then
-            assertThatThrownBy(() -> performanceHeartService.save(performanceId))
+            assertThatThrownBy(() -> performanceHeartService.savePerformanceHeart(performanceId))
                     .isInstanceOf(AlreadyExistException.class)
                     .hasMessageContaining(PERFORMANCE_HEART_ALREADY_EXIST.getMessage());
         }
@@ -149,7 +148,7 @@ class PerformanceHeartServiceTest {
         void savePerformanceButNotLoginInTest() {
             Long performanceId = 1L;
             given(SecurityUtil.getCurrentUserId()).willReturn(Optional.empty());
-            assertThatThrownBy(() -> performanceHeartService.delete(performanceId))
+            assertThatThrownBy(() -> performanceHeartService.deletePerformanceHeart(performanceId))
                     .isInstanceOf(NotExistException.class)
                     .hasMessageContaining(USER_NOT_EXIST.getMessage());
         }
@@ -167,7 +166,7 @@ class PerformanceHeartServiceTest {
             given(performanceRepository.findById(performanceId)).willReturn(Optional.empty());
 
             //then
-            assertThatThrownBy(() -> performanceHeartService.delete(performanceId))
+            assertThatThrownBy(() -> performanceHeartService.deletePerformanceHeart(performanceId))
                     .isInstanceOf(NotExistException.class)
                     .hasMessageContaining(PERFORMANCE_NOT_EXIST.getMessage());
         }
@@ -186,7 +185,7 @@ class PerformanceHeartServiceTest {
             given(performanceHeartRepository.findByUserAndPerformance(any(), any())).willReturn(Optional.empty());
 
             //then
-            assertThatThrownBy(() -> performanceHeartService.delete(performanceId))
+            assertThatThrownBy(() -> performanceHeartService.deletePerformanceHeart(performanceId))
                     .isInstanceOf(NotExistException.class)
                     .hasMessageContaining(PERFORMANCE_HEART_NOT_EXIST.getMessage());
         }
