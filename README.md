@@ -1,6 +1,8 @@
 # 🐦 Humming-Bird Backend
 
-<img src="https://github.com/Naegongal-Team/HummingBird-Back/assets/52346113/39fa3d72-2ebe-46fe-bde1-0ef8edfe6538">
+<br/>
+<img src="https://github.com/Naegongal-Team/HummingBird-Back/assets/52346113/6c7b0a62-7492-427b-b8d2-d1750325ff42" width="30%"/>
+<br/>
 
 > 허밍버드 프로젝트는 공연 알림 서비스를 제공하는 프로젝트입니다.  
 > 해당 레포지토리는 허밍버드 백엔드 전용 레포지토리입니다.
