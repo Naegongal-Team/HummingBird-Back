@@ -10,7 +10,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Repository;
 @Repository
-public interface ArtistRepository extends JpaRepository<Artist, String> {
+public interface ArtistRepository extends JpaRepository<Artist, String>, ArtistRepositoryCustom {
 
     Page<Artist> findAll(Pageable pageable);
 

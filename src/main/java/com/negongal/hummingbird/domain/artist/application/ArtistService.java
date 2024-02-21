@@ -35,7 +35,6 @@ public class ArtistService {
 
     private final ArtistRepository artistRepository;
     private final ArtistHeartRepository artistHeartRepository;
-    private final ArtistRepositoryCustom artistRepositoryCustom;
 
     public Page<ArtistDto> findAllArtist(Pageable pageable) {
         List<ArtistDto> artists = artistRepository.findAll(pageable).stream().map(artist -> {
@@ -92,6 +91,6 @@ public class ArtistService {
 
     public Page<ArtistDto> findLikeArtists(Pageable pageable) {
         Long currentUserId = SecurityUtil.getCurrentUserId().orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
-        return artistRepositoryCustom.findLikedArtists(currentUserId, pageable);
+        return artistRepository.findLikedArtists(currentUserId, pageable);
     }
 }
