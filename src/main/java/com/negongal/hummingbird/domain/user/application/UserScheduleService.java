@@ -1,8 +1,9 @@
 package com.negongal.hummingbird.domain.user.application;
 
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
-import com.negongal.hummingbird.domain.user.domain.MemberStatus;
+import com.negongal.hummingbird.domain.user.domain.UserStatus;
 import com.negongal.hummingbird.domain.user.domain.User;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,7 +23,7 @@ public class UserScheduleService {
 
     @Scheduled(fixedDelay = 1000*60*60*24) // 24시간마다 실행
     public void userRemove() {
-        List<User> inactiveUser = userRepository.findAllByStatusIs(MemberStatus.INACTIVE);
+        List<User> inactiveUser = userRepository.findAllByStatusIs(UserStatus.INACTIVE);
         inactiveUser.stream()
             .filter(user -> Period.between(user.getInactiveDate(), LocalDate.now()).getMonths() >= 6)
             .forEach(userRepository::delete);

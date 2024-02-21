@@ -87,7 +87,7 @@ public class PerformanceHeartRepositoryCustomImpl implements PerformanceHeartRep
                 .leftJoin(performance.dateList, performanceDate)
                 .leftJoin(performance.performanceHeartList, performanceHeart)
                 .where(performanceDate.startDate.goe(currentDate)) // 현재 날짜 이후만 join
-                .where(performanceHeart.user.userId.eq(userId))
+                .where(performanceHeart.user.id.eq(userId))
                 .groupBy(performance.id, performance.name, performance.photo);
     }
 
@@ -101,7 +101,7 @@ public class PerformanceHeartRepositoryCustomImpl implements PerformanceHeartRep
                 .leftJoin(performance.ticketingList, ticketing)
                 .leftJoin(performance.performanceHeartList, performanceHeart)
                 .where(ticketing.startDate.goe(currentDate)) // 현재 날짜 이후만 join
-                .where(performanceHeart.user.userId.eq(userId))
+                .where(performanceHeart.user.id.eq(userId))
                 .groupBy(performance.id, performance.name, performance.photo);
     }
 }
