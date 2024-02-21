@@ -2,8 +2,8 @@ package com.negongal.hummingbird.domain.performance.application;
 
 import static com.negongal.hummingbird.global.error.ErrorCode.PERFORMANCE_NOT_EXIST;
 
-import com.negongal.hummingbird.domain.performance.dto.PerformanceRequestDto;
-import com.negongal.hummingbird.domain.performance.dto.TicketingRequestDto;
+import com.negongal.hummingbird.domain.performance.dto.request.PerformanceRequestDto;
+import com.negongal.hummingbird.domain.performance.dto.request.TicketingRequestDto;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceRepository;
 import com.negongal.hummingbird.domain.performance.dao.TicketingRepository;
 import com.negongal.hummingbird.domain.performance.domain.Performance;
@@ -28,7 +28,7 @@ public class TicketingService {
     private final PerformanceRepository performanceRepository;
 
     @Transactional
-    public void save(Long performanceId, PerformanceRequestDto requestDto){
+    public void saveTicketing(Long performanceId, PerformanceRequestDto requestDto){
         Performance performance = performanceRepository.findById(performanceId)
                 .orElseThrow(() -> new NotExistException(PERFORMANCE_NOT_EXIST));
 

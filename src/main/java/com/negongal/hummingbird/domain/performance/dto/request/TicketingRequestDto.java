@@ -1,4 +1,4 @@
-package com.negongal.hummingbird.domain.performance.dto;
+package com.negongal.hummingbird.domain.performance.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

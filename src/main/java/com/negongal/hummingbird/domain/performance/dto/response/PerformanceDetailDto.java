@@ -1,4 +1,4 @@
-package com.negongal.hummingbird.domain.performance.dto;
+package com.negongal.hummingbird.domain.performance.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -71,7 +71,7 @@ public class PerformanceDetailDto {
     }
 
     public static PerformanceDetailDto of(Performance p, boolean heartPressed, boolean isAlarmed) {
-        List<LocalDateTime> dateList = p.getDateList().stream().map(d -> d.getStartDate()).sorted()
+        List<LocalDateTime> dateList = p.getPerformanceDates().stream().map(d -> d.getStartDate()).sorted()
                 .collect(Collectors.toList());
         return PerformanceDetailDto.builder()
                 .id(p.getId())
@@ -83,12 +83,12 @@ public class PerformanceDetailDto {
                 .runtime(p.getRuntime())
                 .description(p.getDescription())
                 .date(dateList)
-                .regularTicketing(p.getTicketingList().stream()
+                .regularTicketing(p.getTicketings().stream()
                         .filter(t -> t.getTicketType() == TicketType.REGULAR)
                         .map(t -> TicketingDto.of(t))
                         .sorted(Comparator.comparing(TicketingDto::getDate))
                         .collect(Collectors.toList()))
-                .earlybirdTicketing(p.getTicketingList().stream()
+                .earlybirdTicketing(p.getTicketings().stream()
                         .filter(t -> t.getTicketType() == TicketType.EARLY_BIRD)
                         .map(t -> TicketingDto.of(t))
                         .sorted(Comparator.comparing(TicketingDto::getDate))
