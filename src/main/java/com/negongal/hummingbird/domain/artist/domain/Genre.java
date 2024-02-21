@@ -25,8 +25,6 @@ public class Genre {
 
     private String name;
 
-    private boolean isAlarmed;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artist_id")
     private Artist artist;
