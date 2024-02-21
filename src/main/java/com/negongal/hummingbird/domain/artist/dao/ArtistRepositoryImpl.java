@@ -28,7 +28,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
-@Repository
 @RequiredArgsConstructor
 @Transactional
 public class ArtistRepositoryImpl implements ArtistRepositoryCustom {

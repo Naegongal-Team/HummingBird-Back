@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ public class ScheduleService {
     private final NotificationService notificationService;
 
     @Scheduled(fixedRate = 60000)
+    @Async
     public void performTimeCheckAndPushNotification() {
         log.info("run Notification System");
         LocalDateTime now = LocalDateTime.now().withNano(0).withSecond(0);

@@ -7,13 +7,9 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-@Builder
 @Getter
-@ToString
+@Entity
 public class ArtistHeart extends BaseTimeEntity {
 
     @Id
@@ -30,8 +26,14 @@ public class ArtistHeart extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-
     public void toggleAlarmed() {
         isAlarmed = !isAlarmed;
+    }
+
+    @Builder
+    public ArtistHeart(Artist artist, User user) {
+        this.isAlarmed = false;
+        this.artist = artist;
+        this.user = user;
     }
 }

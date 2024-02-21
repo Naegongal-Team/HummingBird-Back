@@ -7,11 +7,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
-    List<Notification> findByNotificationTime(LocalDateTime notificationTime);
+    @Query("SELECT n FROM Notification n WHERE n.notificationTime = :notificationTime")
+    List<Notification> findByNotificationTime(@Param("notificationTime") LocalDateTime notificationTime);
 
     Optional<Notification> findByUserAndPerformance(User user, Performance performance);
 }
