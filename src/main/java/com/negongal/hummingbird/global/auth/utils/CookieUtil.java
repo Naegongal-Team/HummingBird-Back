@@ -1,5 +1,7 @@
 package com.negongal.hummingbird.global.auth.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.Cookie;
@@ -8,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 @Component
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CookieUtil {
 
     public static Optional<Cookie> getCookie(HttpServletRequest request, String cookieName){
