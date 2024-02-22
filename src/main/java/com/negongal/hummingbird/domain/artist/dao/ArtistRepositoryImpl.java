@@ -45,7 +45,7 @@ public class ArtistRepositoryImpl implements ArtistRepositoryCustom {
                 .from(artist)
                 .leftJoin(genre).on(artist.id.eq(genre.artist.id))
                 .join(artist.hearts, artistHeart)
-                .where(artistHeart.user.userId.eq(userId))
+                .where(artistHeart.user.id.eq(userId))
                 .orderBy(orders.toArray(OrderSpecifier[]::new))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
