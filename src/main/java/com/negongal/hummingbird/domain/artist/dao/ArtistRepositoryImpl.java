@@ -13,7 +13,6 @@ import com.negongal.hummingbird.global.error.exception.InvalidException;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,7 +23,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
@@ -47,8 +45,8 @@ public class ArtistRepositoryImpl implements ArtistRepositoryCustom {
                 .from(artist)
                 .leftJoin(genre).on(artist.id.eq(genre.artist.id))
                 .join(artist.hearts, artistHeart)
-                .where(artistHeart.user.id.eq(userId))
-                .orderBy(orders.stream().toArray(OrderSpecifier[]::new))
+                .where(artistHeart.user.userId.eq(userId))
+                .orderBy(orders.toArray(OrderSpecifier[]::new))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .transform(groupBy(artist.id).list(Projections.constructor(ArtistDto.class,
