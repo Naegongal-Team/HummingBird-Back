@@ -98,7 +98,7 @@ public class NotificationService {
 
     private LocalDateTime getNotificationTime(int beforeTime, Performance findPerformance) {
         Comparator<Ticketing> comparatorByStartDate = Comparator.comparing(Ticketing::getStartDate, Comparator.nullsLast(Comparator.naturalOrder()));
-        Ticketing findPerformanceTicket = findPerformance.getTicketingList().stream().min(comparatorByStartDate)
+        Ticketing findPerformanceTicket = findPerformance.getTicketings().stream().min(comparatorByStartDate)
                 .orElseThrow(() -> new NotExistException(ErrorCode.TICKET_NOT_EXIST));
         return findPerformanceTicket.getStartDate().minusHours(beforeTime);
     }

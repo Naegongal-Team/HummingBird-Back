@@ -1,12 +1,17 @@
-package com.negongal.hummingbird.domain.user.dto;
+package com.negongal.hummingbird.domain.user.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
 @Getter
+@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UpdateNicknameRequest {
 
     @NotNull(message = "닉네임은 필수 값입니다.")
@@ -14,4 +19,7 @@ public class UpdateNicknameRequest {
     @Schema(description = "회원 닉네임", example = "cherry")
     private String nickname;
 
+    public UpdateNicknameRequest(String nickname) {
+        this.nickname = nickname;
+    }
 }

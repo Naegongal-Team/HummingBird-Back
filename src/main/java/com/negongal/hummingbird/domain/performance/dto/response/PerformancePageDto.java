@@ -1,4 +1,4 @@
-package com.negongal.hummingbird.domain.performance.dto;
+package com.negongal.hummingbird.domain.performance.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class PerformancePageDto {
 
     @JsonProperty("performance_list")
-    private List<PerformanceDto> performanceDto;
+    private List<PerformanceDto> performanceDtos;
 
     private int totalPages; // 총 페이지 개수
     private Long totalElements; // 총 데이터 개수
@@ -26,9 +26,9 @@ public class PerformancePageDto {
     private int currPage; // 현재 페이지 번호
 
     @Builder
-    public PerformancePageDto(List<PerformanceDto> performanceDto, int totalPages, Long totalElements, boolean isLast,
+    public PerformancePageDto(List<PerformanceDto> performanceDtos, int totalPages, Long totalElements, boolean isLast,
                               int currPage) {
-        this.performanceDto = performanceDto;
+        this.performanceDtos = performanceDtos;
         this.totalPages = totalPages;
         this.totalElements = totalElements;
         this.isLast = isLast;

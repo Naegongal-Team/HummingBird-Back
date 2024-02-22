@@ -6,8 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.negongal.hummingbird.domain.user.domain.User;
-import com.negongal.hummingbird.domain.user.dto.UpdateNicknameRequest;
-import com.negongal.hummingbird.domain.user.dto.UserDetailDto;
+import com.negongal.hummingbird.domain.user.dto.request.UpdateNicknameRequest;
+import com.negongal.hummingbird.domain.user.dto.response.GetUserResponse;
 import com.negongal.hummingbird.infra.awsS3.S3Uploader;
 
 import lombok.RequiredArgsConstructor;
@@ -36,9 +36,9 @@ public class UserInfoService {
 		user.updatePhoto(photo);
 	}
 
-	public UserDetailDto getUser(Long id) {
+	public GetUserResponse getUser(Long id) {
 		User user = userService.getById(id);
-		return UserDetailDto.of(user);
+		return GetUserResponse.of(user);
 	}
 
 	@Transactional

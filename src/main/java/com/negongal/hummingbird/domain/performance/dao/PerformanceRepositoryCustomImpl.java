@@ -4,9 +4,9 @@ import static com.negongal.hummingbird.domain.performance.domain.QPerformance.pe
 import static com.negongal.hummingbird.domain.performance.domain.QPerformanceDate.performanceDate;
 import static com.negongal.hummingbird.domain.performance.domain.QTicketing.ticketing;
 
-import com.negongal.hummingbird.domain.performance.dto.PerformanceDto;
-import com.negongal.hummingbird.domain.performance.dto.PerformanceSearchRequestDto;
-import com.negongal.hummingbird.domain.performance.dto.QPerformanceDto;
+import com.negongal.hummingbird.domain.performance.dto.response.PerformanceDto;
+import com.negongal.hummingbird.domain.performance.dto.response.QPerformanceDto;
+import com.negongal.hummingbird.domain.performance.dto.request.PerformanceSearchRequestDto;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
@@ -72,7 +72,7 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
                         performance.id, performance.name, performance.artist.name, performance.photo,
                         performanceDate.startDate.min()))
                 .from(performance)
-                .innerJoin(performance.dateList, performanceDate)
+                .innerJoin(performance.performanceDates, performanceDate)
                 .where(performance.artist.id.eq(artistId))
                 .groupBy(performance.id, performance.name, performance.artist.name, performance.photo)
                 .having(
@@ -121,7 +121,7 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
 
         JPQLQuery<PerformanceDto> dtoQuery = getBasicDtoQuery();
         if (sort.equals(HEART_COUNT)) {
-            dtoQuery.orderBy(performance.performanceHeartList.size().desc());
+            dtoQuery.orderBy(performance.performanceHearts.size().desc());
         }
         else if(sort.equals(START_DATE)){
             dtoQuery.orderBy(performanceDate.startDate.min().asc());
@@ -136,7 +136,7 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
                         performance.id, performance.name, performance.artist.name, performance.photo,
                         performanceDate.startDate.min()))
                 .from(performance)
-                .leftJoin(performance.dateList, performanceDate)
+                .leftJoin(performance.performanceDates, performanceDate)
                 .where(performanceDate.startDate.goe(currentDate)) // 현재 날짜 이후만 join
                 .groupBy(performance.id, performance.name, performance.artist.name, performance.photo);
     }
@@ -148,7 +148,7 @@ public class PerformanceRepositoryCustomImpl implements PerformanceRepositoryCus
                         performance.id, performance.name, performance.artist.name, performance.photo,
                         ticketing.startDate.min()))
                 .from(performance)
-                .leftJoin(performance.ticketingList, ticketing)
+                .leftJoin(performance.ticketings, ticketing)
                 .where(ticketing.startDate.goe(currentDate)) // 현재 날짜 이후만 join
                 .groupBy(performance.id, performance.name, performance.artist.name, performance.photo);
     }

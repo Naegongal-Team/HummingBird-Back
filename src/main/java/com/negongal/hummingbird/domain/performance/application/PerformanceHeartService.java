@@ -1,19 +1,20 @@
 package com.negongal.hummingbird.domain.performance.application;
 
-import static com.negongal.hummingbird.global.error.ErrorCode.*;
+import static com.negongal.hummingbird.global.error.ErrorCode.PERFORMANCE_HEART_ALREADY_EXIST;
+import static com.negongal.hummingbird.global.error.ErrorCode.PERFORMANCE_HEART_NOT_EXIST;
+import static com.negongal.hummingbird.global.error.ErrorCode.PERFORMANCE_NOT_EXIST;
+import static com.negongal.hummingbird.global.error.ErrorCode.USER_NOT_EXIST;
 
+import com.negongal.hummingbird.domain.performance.dao.PerformanceHeartRepository;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceRepository;
 import com.negongal.hummingbird.domain.performance.domain.Performance;
 import com.negongal.hummingbird.domain.performance.domain.PerformanceHeart;
-import com.negongal.hummingbird.domain.performance.dao.PerformanceHeartRepository;
-import com.negongal.hummingbird.domain.performance.dto.PerformanceDto;
-import com.negongal.hummingbird.domain.performance.dto.PerformancePageDto;
+import com.negongal.hummingbird.domain.performance.dto.response.PerformanceDto;
+import com.negongal.hummingbird.domain.performance.dto.response.PerformancePageDto;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.domain.user.domain.User;
-import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
 import com.negongal.hummingbird.global.error.exception.AlreadyExistException;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,10 +30,7 @@ public class PerformanceHeartService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Long save(Long performanceId) {
-        Long userId = SecurityUtil.getCurrentUserId()
-                .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
-
+    public Long savePerformanceHeart(Long performanceId, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
 
@@ -53,10 +51,7 @@ public class PerformanceHeartService {
     }
 
     @Transactional
-    public void delete(Long performanceId) {
-        Long userId = SecurityUtil.getCurrentUserId()
-                .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
-
+    public void deletePerformanceHeart(Long performanceId, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
 
@@ -70,13 +65,10 @@ public class PerformanceHeartService {
         performanceHeartRepository.delete(performanceHeart);
     }
 
-    public PerformancePageDto findByUserHeart(Pageable pageable) {
-        Long userId = SecurityUtil.getCurrentUserId()
-                .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
-
+    public PerformancePageDto findPerformancesByUserHeart(Long userId, Pageable pageable) {
         Page<PerformanceDto> dtoPage = performanceHeartRepository.findAllByUserHeart(pageable, userId);
         return PerformancePageDto.builder()
-                .performanceDto(dtoPage.getContent())
+                .performanceDtos(dtoPage.getContent())
                 .totalPages(dtoPage.getTotalPages())
                 .totalElements(dtoPage.getTotalElements())
                 .isLast(dtoPage.isLast())
