@@ -10,7 +10,7 @@ import com.negongal.hummingbird.domain.performance.dto.request.PerformanceSearch
 import com.negongal.hummingbird.domain.performance.dto.response.PerformanceDetailDto;
 import com.negongal.hummingbird.domain.performance.dto.response.PerformanceDto;
 import com.negongal.hummingbird.domain.performance.dto.response.PerformancePageDto;
-import com.negongal.hummingbird.global.auth.oauth2.CustomUserDetail;
+import com.negongal.hummingbird.global.auth.model.CustomUserDetail;
 import com.negongal.hummingbird.global.common.response.ApiResponse;
 import com.negongal.hummingbird.global.common.response.ResponseUtils;
 import com.negongal.hummingbird.infra.awsS3.S3Uploader;
@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -114,7 +115,7 @@ public class PerformanceApiController {
 
     @Operation(summary = "메인 페이지 공연 리스트 조회", description = "메인 페이지에서 공연 리스트를 공연 날짜 순, 인기있는 공연 순으로 조회합니다.")
     @GetMapping("/main")
-    public ApiResponse<List<PerformanceDto>> performanceMainList(@RequestParam("size") int size, @RequestParam("sort") String sort) {
+    public ApiResponse<Map<String, List<PerformanceDto>>> performanceMainList(@RequestParam("size") int size, @RequestParam("sort") String sort) {
         List<PerformanceDto> performanceList = performanceService.findMainPerformances(size, sort);
         return ResponseUtils.success("performance_list", performanceList);
     }
@@ -149,8 +150,8 @@ public class PerformanceApiController {
     @Parameter(name = "artistId", description = "가수 아이디 값", example = "artistId")
     @Parameter(name = "scheduled", description = "예정된 공연(true)인지 지난 공연(false)인지 유무", example = "true")
     @GetMapping("/artist/{artistId}")
-    public ApiResponse<List<PerformanceDto>> artistPerformanceList(@PathVariable String artistId,
-                                                @RequestParam boolean scheduled) { // 예정된 공연
+    public ApiResponse<Map<String, List<PerformanceDto>>> artistPerformanceList(@PathVariable String artistId,
+                                                                                @RequestParam boolean scheduled) { // 예정된 공연
         List<PerformanceDto> performanceList = performanceService.findPerformancesByArtist(artistId, scheduled);
         return ResponseUtils.success("performance_list", performanceList);
     }
