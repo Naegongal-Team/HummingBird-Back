@@ -14,12 +14,13 @@ import org.springframework.data.domain.Persistable;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Table(name = "ARTIST", indexes = @Index(name = "idx_artist_name", columnList = "name", unique = true))
 @Entity
 public class Artist extends BaseTimeEntity implements Persistable<String> {
     @Id
     private String id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
     private String image;
