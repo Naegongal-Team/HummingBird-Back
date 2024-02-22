@@ -9,6 +9,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+    generate-ddl: true
     properties:
       hibernate:
         show_sql: true
