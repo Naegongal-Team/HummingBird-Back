@@ -33,8 +33,8 @@ public class PerformanceTestHelper {
 
         ChatRoom chatRoom = new ChatRoom("room" + id, performance);
         ReflectionTestUtils.setField(performance, "chatRoom", chatRoom);
-        ReflectionTestUtils.setField(performance, "dateList", createPerformanceDateList(performance, strDates));
-        ReflectionTestUtils.setField(performance, "performanceHeartList", new ArrayList<>());
+        ReflectionTestUtils.setField(performance, "performanceDates", createPerformanceDateList(performance, strDates));
+        ReflectionTestUtils.setField(performance, "performanceHearts", new ArrayList<>());
         return performance;
     }
 

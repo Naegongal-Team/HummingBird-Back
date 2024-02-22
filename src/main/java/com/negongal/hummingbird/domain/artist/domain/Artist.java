@@ -2,29 +2,32 @@ package com.negongal.hummingbird.domain.artist.domain;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.negongal.hummingbird.domain.performance.domain.Performance;
+import com.negongal.hummingbird.global.common.BaseTimeEntity;
 import java.util.ArrayList;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 import org.hibernate.annotations.Formula;
+import org.springframework.data.domain.Persistable;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Table(name = "ARTIST", indexes = @Index(name = "idx_artist_name", columnList = "name", unique = true))
 @Entity
-public class Artist {
+public class Artist extends BaseTimeEntity implements Persistable<String> {
     @Id
     private String id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
     private String image;
 
     @Basic(fetch=FetchType.LAZY)
     @Formula("(SELECT COUNT(1) FROM artist_heart ah WHERE ah.artist_id = id)")
-    private int heartCount;
+    private Integer heartCount;
 
     @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Genre> genres;
@@ -48,5 +51,10 @@ public class Artist {
         this.performances = new ArrayList<>();
         this.hearts = new ArrayList<>();
         this.heartCount = 0;
+    }
+
+    @Override
+    public boolean isNew() {
+        return this.getCreatedDate() == null;
     }
 }

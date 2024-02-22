@@ -1,6 +1,5 @@
 package com.negongal.hummingbird.domain.artist.api;
 
-import com.google.firebase.ErrorCode;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.negongal.hummingbird.domain.artist.application.ArtistHeartService;
 import com.negongal.hummingbird.domain.artist.dto.ArtistDetailDto;
@@ -10,8 +9,12 @@ import com.negongal.hummingbird.domain.artist.application.ArtistService;
 import com.negongal.hummingbird.global.common.response.ApiResponse;
 import com.negongal.hummingbird.global.common.response.ResponseUtils;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 
+@Slf4j
 @Tag(name = "Artist API", description = "")
 @RestController
 @RequiredArgsConstructor
@@ -30,15 +34,18 @@ public class ArtistApiController {
 
     private final ArtistHeartService artistHeartService;
 
-    @Operation(summary = "아티스트 전체 조회", description = "인기 순으로 정렬 가능")
+    @Operation(summary = "아티스트 전체 조회", description = "등록되어 있는 아티스트 전체를 조회할 수 있습니다.")
     @GetMapping
+    @Cacheable(cacheNames = "artists")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse artistsList(Pageable pageable) {
-        Page<ArtistDto> artistList = artistService.findAllArtist(pageable);
-        return ResponseUtils.success(artistList);
+        log.info("test");
+        Page<ArtistDto> artists = artistService.findAllArtist(pageable);
+        return ResponseUtils.success(artists);
     }
 
-    @Operation(summary = "아티스트 이름 조회", description = "")
+    @Operation(summary = "아티스트 이름 조회", description = "등록되어 있는 아티스트를 원하는 이름으로 검색할 수 있습니다.")
+    @Parameter(name = "artist name", description = "아티스트의 이름", example = "Paledusk")
     @GetMapping("/search/{artistName}")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse artistByNameList(@PathVariable String artistName) {
@@ -46,7 +53,8 @@ public class ArtistApiController {
         return ResponseUtils.success(artistSearchList);
     }
 
-    @Operation(summary = "아티스트 단건 조회", description = "아티스트의 상세 내용과 좋아요 유무 boolean 값 전달")
+    @Operation(summary = "아티스트 단건 조회", description = "원하는 아티스트 한 명의 상세 정보를 조회할 수 있습니다.")
+    @Parameter(name = "artist id", description = "아티스트의 아이디", example = "2GWuBfYdmPB91krBNQavHa")
     @GetMapping("/{artistId}")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse artistDetails(@PathVariable String artistId) {
@@ -54,7 +62,7 @@ public class ArtistApiController {
         return ResponseUtils.success(artist);
     }
 
-    @Operation(summary = "좋아요한 아티스트 조회", description = "아티스트의 전체 조회는 하지 않고 좋아요한 아티스트만 전달")
+    @Operation(summary = "좋아요한 아티스트 조회", description = "사용자의 좋아요한 아티스트 목록을 조회합니다.")
     @GetMapping("/heart")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse heartedArtistsList(Pageable pageable) {
@@ -64,11 +72,12 @@ public class ArtistApiController {
         return ResponseUtils.success(response);
     }
 
-    @Operation(summary = "아티스트 좋아요 추가", description = "boolean값으로 isHearted를 필히 넘겨야 한다.")
+    @Operation(summary = "아티스트 좋아요 추가", description = "사용자가 아티스트 좋아요 혹은 취소할 수 있습니다.")
+    @Parameter(name = "artist id", description = "아티스트의 아이디", example = "2GWuBfYdmPB91krBNQavHa")
     @PostMapping("/{artistId}/heart")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse artistHeartAdd(@PathVariable String artistId,
-                                      @RequestParam(required = true) boolean isHearted) {
+    public ApiResponse artistHeartToggle(@PathVariable String artistId,
+                                         @RequestParam(required = true) boolean isHearted) {
         if (isHearted) {
             artistHeartService.delete(artistId);
             return ResponseUtils.success("좋아요 삭제가 완료되었습니다.");
@@ -77,7 +86,11 @@ public class ArtistApiController {
         return ResponseUtils.success("좋아요 등록이 완료되었습니다.");
     }
 
-    @Operation(summary = "아티스트 알람 등록", description = "boolean값으로 isHearted를 필히 넘겨야 한다.")
+    @Operation(summary = "아티스트 알람 등록", description = "아티스트의 새 공연에 대한 알람 등록을 할 수 있습니다.")
+    @Parameters({
+            @Parameter(name = "artist id", description = "아티스트의 아이디", example = "2GWuBfYdmPB91krBNQavHa"),
+            @Parameter(name = "heart validation", description = "하트의 유무", example = "false")
+    })
     @PostMapping("/{artistId}/alarm")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse artistAlarmModify(@PathVariable String artistId,

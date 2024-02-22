@@ -11,15 +11,13 @@ import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.notification.application.NotificationService;
 import com.negongal.hummingbird.domain.performance.PerformanceTestHelper;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceDateRepository;
-import com.negongal.hummingbird.domain.performance.dao.PerformanceHeartRepository;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceRepository;
 import com.negongal.hummingbird.domain.performance.domain.Performance;
-import com.negongal.hummingbird.domain.performance.dto.PerformanceDetailDto;
-import com.negongal.hummingbird.domain.performance.dto.PerformanceDto;
-import com.negongal.hummingbird.domain.performance.dto.PerformancePageDto;
-import com.negongal.hummingbird.domain.performance.dto.PerformanceRequestDto;
-import com.negongal.hummingbird.domain.performance.dto.PerformanceSearchRequestDto;
-import com.negongal.hummingbird.domain.user.dao.UserRepository;
+import com.negongal.hummingbird.domain.performance.dto.response.PerformanceDetailDto;
+import com.negongal.hummingbird.domain.performance.dto.response.PerformanceDto;
+import com.negongal.hummingbird.domain.performance.dto.response.PerformancePageDto;
+import com.negongal.hummingbird.domain.performance.dto.request.PerformanceRequestDto;
+import com.negongal.hummingbird.domain.performance.dto.request.PerformanceSearchRequestDto;
 import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
 import java.util.ArrayList;
@@ -84,11 +82,11 @@ class PerformanceServiceTest {
             given(performanceRepository.findAllCustom(any(Pageable.class))).willReturn(dtoPage);
 
             //when
-            PerformancePageDto performancePageDto = performanceService.findAll(pageable);
+            PerformancePageDto performancePageDto = performanceService.findAllPerformance(pageable);
 
             //then
             assertThat(dtoPage.getTotalElements()).isEqualTo(performancePageDto.getTotalElements());
-            assertThat(dtoPage.getContent().size()).isEqualTo(performancePageDto.getPerformanceDto().size());
+            assertThat(dtoPage.getContent().size()).isEqualTo(performancePageDto.getPerformanceDtos().size());
             assertThat(performancePageDto.isLast()).isEqualTo(true);
         }
     }
@@ -107,7 +105,7 @@ class PerformanceServiceTest {
             given(performanceRepository.findById(findId)).willReturn(Optional.ofNullable(performance));
 
             //when
-            PerformanceDetailDto detailDto = performanceService.findOne(findId);
+            PerformanceDetailDto detailDto = performanceService.findPerformance(findId);
 
             //then
             assertThat(detailDto.getId()).isEqualTo(findId);
@@ -120,7 +118,7 @@ class PerformanceServiceTest {
         void findPerformanceButNotExistIdTest() {
             Long performanceId = 1L;
             given(performanceRepository.findById(any())).willReturn(Optional.empty());
-            assertThatThrownBy(() -> performanceService.findOne(performanceId));
+            assertThatThrownBy(() -> performanceService.findPerformance(performanceId));
         }
     }
 
@@ -140,12 +138,12 @@ class PerformanceServiceTest {
                     .willReturn(dtoPage);
 
             //when
-            PerformancePageDto performancePageDto = performanceService.search(requestDto, pageable);
+            PerformancePageDto performancePageDto = performanceService.searchPerformances(requestDto, pageable);
 
             //then
             assertThat(dtoPage.getTotalElements()).isEqualTo(performancePageDto.getTotalElements());
-            assertThat(dtoPage.getContent().size()).isEqualTo(performancePageDto.getPerformanceDto().size());
-            assertThat(requestDto.getArtistName()).isEqualTo(performancePageDto.getPerformanceDto().get(0).getArtistName());
+            assertThat(dtoPage.getContent().size()).isEqualTo(performancePageDto.getPerformanceDtos().size());
+            assertThat(requestDto.getArtistName()).isEqualTo(performancePageDto.getPerformanceDtos().get(0).getArtistName());
         }
     }
 
@@ -159,7 +157,7 @@ class PerformanceServiceTest {
             PerformanceRequestDto request = PerformanceRequestDto.builder()
                     .name("Harry Styles 공연")
                     .artistName("Harry Styles")
-                    .dateList(new ArrayList<>())
+                    .dates(new ArrayList<>())
                     .regularTicketing(new ArrayList<>())
                     .build();
             Artist artist = Artist.builder().name(request.getArtistName()).build();
@@ -169,7 +167,7 @@ class PerformanceServiceTest {
             given(artistRepository.findByName(any(String.class))).willReturn(Optional.ofNullable(artist));
 
             //when
-            Long saverId = performanceService.save(request, "");
+            Long saverId = performanceService.savePerformance(request, "");
 
             //then
             assertThat(performance.getId()).isEqualTo(saverId);
@@ -180,7 +178,7 @@ class PerformanceServiceTest {
         void savePerformanceButNotExistArtistTest() {
             PerformanceRequestDto request = PerformanceRequestDto.builder().build();
             given(artistRepository.findByName(any())).willReturn(Optional.empty());
-            assertThatThrownBy(() -> performanceService.save(request, ""))
+            assertThatThrownBy(() -> performanceService.savePerformance(request, ""))
                     .isInstanceOf(NotExistException.class);
         }
     }
@@ -194,7 +192,7 @@ class PerformanceServiceTest {
             Long performanceId = 1L;
             PerformanceRequestDto request = PerformanceRequestDto.builder().build();
             given(performanceRepository.findById(any())).willReturn(Optional.empty());
-            assertThatThrownBy(() -> performanceService.update(performanceId, request, ""));
+            assertThatThrownBy(() -> performanceService.updatePerformance(performanceId, request, ""));
         }
     }
 
@@ -206,7 +204,7 @@ class PerformanceServiceTest {
         void deletePerformanceButNotPerformanceTest() {
             Long performanceId = 1L;
             given(performanceRepository.findById(any())).willReturn(Optional.empty());
-            assertThatThrownBy(() -> performanceService.delete(performanceId));
+            assertThatThrownBy(() -> performanceService.deletePerformance(performanceId));
         }
     }
 

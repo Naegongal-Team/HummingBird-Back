@@ -7,14 +7,7 @@ spring:
 
   jpa:
     defer-datasource-initialization: true
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
-        highlight_sql: true
-    open-in-view: true
+    open-in-view: false
 
   redis:
     pool:

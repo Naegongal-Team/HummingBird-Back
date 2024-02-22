@@ -113,7 +113,6 @@ public class SpotifyService {
                     .albumImage(albumImageUrl)
                     .name(track.getName())
                     .build();
-
             trackRepository.save(customTrack);
         });
     }

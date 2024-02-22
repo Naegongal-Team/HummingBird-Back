@@ -41,14 +41,13 @@ public class ArtistHeartService {
                 .orElseThrow(() -> new NotExistException(ARTIST_NOT_EXIST));
         User user = userRepository.findById(currentUserId)
                 .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
-        Long userId = user.getUserId();
+        Long userId = user.getId();
         if (artistHeartRepository.findByUserIdAndArtistId(userId, artistId).isPresent()) {
             throw new AlreadyExistException(ARTIST_ALREADY_EXIST);
         }
         ArtistHeart artistHeart = ArtistHeart.builder()
                 .artist(artist)
                 .user(user)
-                .isAlarmed(false)
                 .build();
         artistHeartRepository.save(artistHeart);
     }

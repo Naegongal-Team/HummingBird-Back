@@ -32,22 +32,25 @@ repositories {
 }
 
 test {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
     implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+
+    //caffeine
+    implementation 'com.github.ben-manes.caffeine:caffeine'
 
     //spotify
     implementation 'se.michaelthelin.spotify:spotify-web-api-java:8.3.4'
 
     //firebase
     implementation 'com.google.firebase:firebase-admin:8.1.0'
-
     implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
@@ -87,11 +90,6 @@ dependencies {
     testImplementation 'org.mockito:mockito-inline:3.6.0'
     testImplementation 'com.h2database:h2:2.2.220'
     testRuntimeOnly 'com.h2database:h2'
-
-    //JUnit4 추가
-//    testImplementation("org.junit.vintage:junit-vintage-engine") {
-//        exclude group: "org.hamcrest", module: "hamcrest-core"
-//    }
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
 

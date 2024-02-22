@@ -8,17 +8,17 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
-        show_sql: false
-        format_sql: false
-    generate-ddl: true
+        show_sql: true
+        format_sql: true
+        highlight_sql: true
 
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3306/hummingbird
-    username: root
+    username: naegongal
     password: hummingbird
 
   redis:
