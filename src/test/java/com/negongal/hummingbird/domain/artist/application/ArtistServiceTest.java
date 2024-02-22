@@ -1,6 +1,10 @@
 package com.negongal.hummingbird.domain.artist.application;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mockStatic;
 
 import com.negongal.hummingbird.domain.artist.dao.ArtistHeartRepository;
@@ -13,6 +17,7 @@ import com.negongal.hummingbird.domain.artist.dto.ArtistSearchDto;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.domain.user.domain.Role;
 import com.negongal.hummingbird.domain.user.domain.User;
+import com.negongal.hummingbird.domain.user.domain.UserStatus;
 import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
 import java.util.ArrayList;
@@ -26,7 +31,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.mockito.BDDMockito;
-import org.mockito.InjectMocks;
 import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -51,7 +55,13 @@ class ArtistServiceTest {
     @BeforeAll
     void mockInit() {
         mockedSecurityUtil = mockStatic(SecurityUtil.class);
-        User user = User.builder().nickname("test").oauth2Id("test").provider("test").role(Role.USER).build();
+        User user = User.builder()
+                .nickname("test")
+                .oauth2Id("test")
+                .provider("test")
+                .role(Role.USER)
+                .status(UserStatus.ACTIVE)
+                .build();
         userRepository.save(user);
     }
 

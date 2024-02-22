@@ -1,8 +1,14 @@
-package com.negongal.hummingbird.domain.user;
+package com.negongal.hummingbird.domain.user.application;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.BDDMockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 
+import com.negongal.hummingbird.domain.user.domain.Role;
+import com.negongal.hummingbird.domain.user.domain.User;
+import com.negongal.hummingbird.domain.user.dto.request.UpdateNicknameRequest;
+import com.negongal.hummingbird.domain.user.dto.response.GetUserResponse;
+import com.negongal.hummingbird.global.error.ErrorCode;
+import com.negongal.hummingbird.global.error.exception.NotExistException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,16 +16,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import com.negongal.hummingbird.domain.user.application.UserInfoService;
-import com.negongal.hummingbird.domain.user.application.UserService;
-import com.negongal.hummingbird.domain.user.dao.UserRepository;
-import com.negongal.hummingbird.domain.user.domain.Role;
-import com.negongal.hummingbird.domain.user.domain.User;
-import com.negongal.hummingbird.domain.user.dto.UpdateNicknameRequest;
-import com.negongal.hummingbird.domain.user.dto.UserDetailDto;
-import com.negongal.hummingbird.global.error.ErrorCode;
-import com.negongal.hummingbird.global.error.exception.NotExistException;
 
 @ExtendWith(MockitoExtension.class)
 public class UserInfoServiceTest {
@@ -48,7 +44,7 @@ public class UserInfoServiceTest {
 		User user = User.builder().nickname("user1").role(Role.USER).build();
 		Long userFakeId = 1L;
 		given(userService.getById(userFakeId)).willReturn(user);
-		UserDetailDto response = userInfoService.getUser(userFakeId);
+		GetUserResponse response = userInfoService.getUser(userFakeId);
 
 		assertThat(response.getNickname()).isEqualTo("user1");
 		assertThat(response.getRole()).isEqualTo("USER");

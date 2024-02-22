@@ -60,11 +60,12 @@ public class User extends BaseTimeEntity {
 	private LocalDate inactiveDate;
 
 	@Builder
-	public User(String oauth2Id, String provider, Role role, UserStatus status) {
+	public User(String oauth2Id, String provider, Role role, UserStatus status, String nickname) {
 		this.oauth2Id = oauth2Id;
 		this.provider = provider;
 		this.role = role;
 		this.status = status;
+		this.nickname = nickname;
 	}
 
 	public static User createUser(Oauth2Attributes attributes) {

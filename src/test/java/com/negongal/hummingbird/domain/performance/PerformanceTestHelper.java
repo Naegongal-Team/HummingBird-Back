@@ -61,7 +61,7 @@ public class PerformanceTestHelper {
     }
 
     public static String[] getArtistNames() {
-        return new String[] {"Harry Styless", "Harry Styless", "Slowdives", "Novo Amors", "Sam Smiths"};
+        return new String[] {"Harry Styless", "Charlie Puths", "Slowdives", "Novo Amors", "Sam Smiths"};
     }
 
     public static String[][] getDates() {

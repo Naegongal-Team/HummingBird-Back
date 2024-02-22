@@ -1,6 +1,7 @@
 package com.negongal.hummingbird.domain.artist.application;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mockStatic;
 
 import com.negongal.hummingbird.domain.artist.dao.ArtistHeartRepository;
@@ -10,12 +11,10 @@ import com.negongal.hummingbird.domain.artist.domain.ArtistHeart;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.domain.user.domain.Role;
 import com.negongal.hummingbird.domain.user.domain.User;
+import com.negongal.hummingbird.domain.user.domain.UserStatus;
 import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
-
-import java.util.List;
 import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -54,6 +53,7 @@ class ArtistHeartServiceTest {
                 .oauth2Id("test")
                 .provider("test")
                 .role(Role.USER)
+                .status(UserStatus.ACTIVE)
                 .build();
         userRepository.save(user);
     }
@@ -98,7 +98,7 @@ class ArtistHeartServiceTest {
     void artistLikeTest() {
         // Given
         String artistId = "159125";
-        Long userId = userRepository.findById(user.getUserId()).get().getUserId();
+        Long userId = userRepository.findById(user.getId()).get().getId();
 
         BDDMockito.given(SecurityUtil.getCurrentUserId()).willReturn(Optional.of(userId));
 
@@ -108,7 +108,7 @@ class ArtistHeartServiceTest {
 
         // Then
         assertEquals(artistHeart.getArtist().getId(), artistId);
-        assertEquals(artistHeart.getUser().getUserId(), userId);
+        assertEquals(artistHeart.getUser().getId(), userId);
     }
 
     @DisplayName("로그인 하지 않고 아티스트 좋아요 삭제 시도")
@@ -148,7 +148,7 @@ class ArtistHeartServiceTest {
     void dislikeLikeArtistTest() {
         // Given
         String artistId = "159125";
-        Long userId = userRepository.findById(user.getUserId()).get().getUserId();
+        Long userId = userRepository.findById(user.getId()).get().getId();
         BDDMockito.given(SecurityUtil.getCurrentUserId()).willReturn(Optional.of(userId));
         artistHeartService.save(artistId);
 

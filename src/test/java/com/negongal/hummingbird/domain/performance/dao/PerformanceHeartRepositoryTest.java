@@ -13,6 +13,7 @@ import com.negongal.hummingbird.domain.performance.dto.response.PerformanceDto;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.domain.user.domain.Role;
 import com.negongal.hummingbird.domain.user.domain.User;
+import com.negongal.hummingbird.domain.user.domain.UserStatus;
 import com.negongal.hummingbird.global.config.JpaConfig;
 import com.negongal.hummingbird.global.config.QueryDSLConfig;
 import java.util.List;
@@ -48,13 +49,14 @@ class PerformanceHeartRepositoryTest {
                 .nickname("jim")
                 .provider("provider")
                 .role(Role.USER)
+                .status(UserStatus.ACTIVE)
                 .build();
-       userId = userRepository.save(user).getUserId();
+       userId = userRepository.save(user).getId();
 
         String[] artistName = PerformanceTestHelper.getArtistNames();
         String[][] dates = PerformanceTestHelper.getDates();
         String[][] ticketingDates = PerformanceTestHelper.getTicketingDates();
-        for(int i = 0; i < 5; i++) {
+        for(int i = 0; i < artistName.length; i++) {
             Artist artist = Artist.builder()
                     .id(artistName[i] + "ID123")
                     .name(artistName[i])

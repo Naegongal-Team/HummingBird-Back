@@ -41,7 +41,7 @@ class PerformanceRepositoryTest {
         String[] artistName = PerformanceTestHelper.getArtistNames();
         String[][] dates = PerformanceTestHelper.getDates();
         String[][] ticketingDates = PerformanceTestHelper.getTicketingDates();
-        for(int i = 0; i < 5; i++) {
+        for(int i = 0; i < artistName.length; i++) {
             Artist artist = Artist.builder()
                     .id(artistName[i] + "ID123")
                     .name(artistName[i])
@@ -73,10 +73,6 @@ class PerformanceRepositoryTest {
 
         Page<PerformanceDto> dtoPage = performanceRepository.findAllCustom(pageable);
         List<PerformanceDto> content = dtoPage.getContent();
-
-//        for (PerformanceDto p : content) {
-//            System.out.println(p.getDate());
-//        }
 
         assertThat(dtoPage.getTotalElements()).isEqualTo(4);
         for(int i = 0; i < content.size(); i++) {
@@ -117,7 +113,7 @@ class PerformanceRepositoryTest {
         List<PerformanceDto> pastPerformances = performanceRepository.findByArtist(findArtistId, false);
 
         assertThat(scheduledPerformances.size()).isEqualTo(1);
-        assertThat(pastPerformances.size()).isEqualTo(1);
+        assertThat(pastPerformances.size()).isEqualTo(0);
     }
 
 }
