@@ -2,7 +2,6 @@ package com.negongal.hummingbird.domain.artist.application;
 
 
 import com.negongal.hummingbird.domain.artist.dao.ArtistHeartRepository;
-import com.negongal.hummingbird.domain.artist.dao.ArtistRepositoryCustom;
 import com.negongal.hummingbird.domain.artist.domain.ArtistHeart;
 import com.negongal.hummingbird.domain.artist.dto.ArtistDetailDto;
 import com.negongal.hummingbird.domain.artist.dto.ArtistDto;
@@ -12,9 +11,7 @@ import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
 import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -67,7 +64,7 @@ public class ArtistService {
     }
 
     public List<ArtistSearchDto> findArtistByName(String name) {
-        return artistRepository.findAllByNameStartingWithOrderByNameAsc(name).stream()
+        return artistRepository.findByNameStartingWithOrderByNameAsc(name).stream()
                 .map(a ->
                         ArtistSearchDto.builder()
                                 .id(a.getId())
