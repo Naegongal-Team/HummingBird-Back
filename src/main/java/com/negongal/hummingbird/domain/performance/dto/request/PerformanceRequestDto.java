@@ -1,4 +1,4 @@
-package com.negongal.hummingbird.domain.performance.dto;
+package com.negongal.hummingbird.domain.performance.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -38,7 +38,7 @@ public class PerformanceRequestDto {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     @JsonProperty("date")
-    private List<LocalDateTime> dateList;
+    private List<LocalDateTime> dates;
 
     private List<TicketingRequestDto> regularTicketing;
     private List<TicketingRequestDto> earlybirdTicketing;

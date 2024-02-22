@@ -49,13 +49,13 @@ public class Performance extends BaseTimeEntity {
     private String description;
 
     @OneToMany(mappedBy = "performance", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PerformanceHeart> performanceHeartList;
+    private List<PerformanceHeart> performanceHearts;
 
     @OneToMany(mappedBy = "performance", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PerformanceDate> dateList;
+    private List<PerformanceDate> performanceDates;
 
     @OneToMany(mappedBy = "performance", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Ticketing> ticketingList;
+    private List<Ticketing> ticketings;
 
     @OneToOne(mappedBy = "performance", cascade = CascadeType.ALL, orphanRemoval = true)
     private ChatRoom chatRoom;
@@ -68,9 +68,9 @@ public class Performance extends BaseTimeEntity {
         this.runtime = runtime;
         this.description = description;
         this.photo = photo;
-        this.ticketingList = new ArrayList<>();
-        this.dateList = new ArrayList<>();
-        this.performanceHeartList = new ArrayList<>();
+        this.ticketings = new ArrayList<>();
+        this.performanceDates = new ArrayList<>();
+        this.performanceHearts = new ArrayList<>();
 
         this.artist.getPerformances().add(this);
     }
@@ -83,8 +83,8 @@ public class Performance extends BaseTimeEntity {
         this.description = description;
         this.photo = photo;
 
-        this.ticketingList.clear();
-        this.dateList.clear();
+        this.ticketings.clear();
+        this.performanceDates.clear();
         this.artist.getPerformances().add(this);
     }
 

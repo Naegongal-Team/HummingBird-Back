@@ -1,4 +1,4 @@
-package com.negongal.hummingbird.domain.performance.dto;
+package com.negongal.hummingbird.domain.performance.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -55,16 +55,5 @@ public class PerformanceDto {
                 .artistName(p.getArtist().getName())
                 .photo(p.getPhoto())
                 .build();
-    }
-
-    @Override
-    public String toString() {
-        return "PerformanceDto{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", artistName='" + artistName + '\'' +
-                ", photo='" + photo + '\'' +
-                ", date=" + date +
-                '}';
     }
 }

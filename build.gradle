@@ -32,7 +32,7 @@ repositories {
 }
 
 test {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 dependencies {

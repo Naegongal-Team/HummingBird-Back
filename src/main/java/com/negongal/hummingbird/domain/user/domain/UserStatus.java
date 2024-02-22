@@ -1,5 +1,5 @@
 package com.negongal.hummingbird.domain.user.domain;
 
-public enum MemberStatus {
+public enum UserStatus {
     ACTIVE, INACTIVE
 }
