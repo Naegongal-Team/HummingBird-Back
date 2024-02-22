@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum CacheType {
-    ARTISTS("artists", 24 * 60 * 60, 10000);
+    ARTISTS("artists", 24 * 60 * 60, 5000000);
 
     CacheType(String cacheName, int expiredAfterWrite, int maximumSize) {
         this.cacheName = cacheName;
