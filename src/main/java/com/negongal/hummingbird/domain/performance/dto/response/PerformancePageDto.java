@@ -1,11 +1,13 @@
 package com.negongal.hummingbird.domain.performance.dto.response;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import java.util.List;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,21 +19,21 @@ import lombok.NoArgsConstructor;
 @JsonInclude(Include.NON_EMPTY)
 public class PerformancePageDto {
 
-    @JsonProperty("performance_list")
-    private List<PerformanceDto> performanceDtos;
+	@JsonProperty("performance_list")
+	private List<PerformanceDto> performanceDtos;
 
-    private int totalPages; // 총 페이지 개수
-    private Long totalElements; // 총 데이터 개수
-    private boolean isLast; // 마지막 페이지인지 여부
-    private int currPage; // 현재 페이지 번호
+	private int totalPages; // 총 페이지 개수
+	private Long totalElements; // 총 데이터 개수
+	private boolean isLast; // 마지막 페이지인지 여부
+	private int currPage; // 현재 페이지 번호
 
-    @Builder
-    public PerformancePageDto(List<PerformanceDto> performanceDtos, int totalPages, Long totalElements, boolean isLast,
-                              int currPage) {
-        this.performanceDtos = performanceDtos;
-        this.totalPages = totalPages;
-        this.totalElements = totalElements;
-        this.isLast = isLast;
-        this.currPage = currPage;
-    }
+	@Builder
+	public PerformancePageDto(List<PerformanceDto> performanceDtos, int totalPages, Long totalElements, boolean isLast,
+		int currPage) {
+		this.performanceDtos = performanceDtos;
+		this.totalPages = totalPages;
+		this.totalElements = totalElements;
+		this.isLast = isLast;
+		this.currPage = currPage;
+	}
 }

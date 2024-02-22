@@ -1,25 +1,31 @@
 package com.negongal.hummingbird.domain.user.domain;
 
-import com.negongal.hummingbird.domain.performance.domain.PerformanceHeart;
-import com.negongal.hummingbird.global.auth.model.Oauth2Attributes;
-import com.negongal.hummingbird.global.common.BaseTimeEntity;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import com.negongal.hummingbird.domain.performance.domain.PerformanceHeart;
+import com.negongal.hummingbird.global.auth.model.Oauth2Attributes;
+import com.negongal.hummingbird.global.common.BaseTimeEntity;
 
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import org.hibernate.annotations.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
-import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

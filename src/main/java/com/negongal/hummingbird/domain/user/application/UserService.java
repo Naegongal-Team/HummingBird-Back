@@ -1,17 +1,17 @@
 package com.negongal.hummingbird.domain.user.application;
 
-import com.negongal.hummingbird.domain.user.domain.User;
+import static com.negongal.hummingbird.global.error.ErrorCode.*;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
+import com.negongal.hummingbird.domain.user.domain.User;
 import com.negongal.hummingbird.domain.user.domain.UserStatus;
 import com.negongal.hummingbird.global.auth.model.Oauth2Attributes;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
 
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import static com.negongal.hummingbird.global.error.ErrorCode.USER_NOT_EXIST;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)

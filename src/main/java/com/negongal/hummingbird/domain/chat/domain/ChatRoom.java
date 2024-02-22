@@ -1,7 +1,7 @@
 package com.negongal.hummingbird.domain.chat.domain;
 
-import com.negongal.hummingbird.domain.performance.domain.Performance;
 import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,10 +13,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.negongal.hummingbird.domain.performance.domain.Performance;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;;
+import lombok.NoArgsConstructor;
+
+;
 
 @Getter
 @Entity
@@ -24,22 +29,23 @@ import lombok.NoArgsConstructor;;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatRoom {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(unique = true)
-    private String roomId;
+	@Column(unique = true)
+	private String roomId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "performance_id")
-    private Performance performance;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "performance_id")
+	private Performance performance;
 
-    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ChatMessage> chatMessageList;
+	@OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<ChatMessage> chatMessageList;
 
-    @Builder
-    public ChatRoom(String roomId, Performance performance) {
-        this.roomId = roomId;
-        this.performance = performance;
-    }
+	@Builder
+	public ChatRoom(String roomId, Performance performance) {
+		this.roomId = roomId;
+		this.performance = performance;
+	}
 }

@@ -1,13 +1,7 @@
 package com.negongal.hummingbird.global.auth.application;
 
-import com.negongal.hummingbird.global.auth.model.Oauth2Attributes;
-import com.negongal.hummingbird.global.auth.model.userInfo.GoogleUserInfo;
-import com.negongal.hummingbird.global.auth.model.userInfo.KakaoUserInfo;
-import com.negongal.hummingbird.global.auth.model.userInfo.Oauth2UserInfo;
-import com.negongal.hummingbird.global.error.ErrorCode;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -16,8 +10,14 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
+import com.negongal.hummingbird.global.auth.model.Oauth2Attributes;
+import com.negongal.hummingbird.global.auth.model.userInfo.GoogleUserInfo;
+import com.negongal.hummingbird.global.auth.model.userInfo.KakaoUserInfo;
+import com.negongal.hummingbird.global.auth.model.userInfo.Oauth2UserInfo;
+import com.negongal.hummingbird.global.error.ErrorCode;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service

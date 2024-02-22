@@ -1,7 +1,10 @@
 package com.negongal.hummingbird.domain.chat.service;
 
-import static com.negongal.hummingbird.global.error.ErrorCode.CHAT_ROOM_NOT_EXIST;
-import static com.negongal.hummingbird.global.error.ErrorCode.USER_NOT_EXIST;
+import static com.negongal.hummingbird.global.error.ErrorCode.*;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import com.negongal.hummingbird.domain.chat.dao.ChatMessageRepository;
 import com.negongal.hummingbird.domain.chat.dao.ChatRoomRepository;
@@ -13,48 +16,46 @@ import com.negongal.hummingbird.domain.chat.dto.ChatMessageResponseDto;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.domain.user.domain.User;
 import com.negongal.hummingbird.global.error.exception.NotExistException;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class ChatMessageService {
 
-    private final ChatMessageRepository chatMessageRepository;
-    private final ChatRoomRepository chatRoomRepository;
-    private final UserRepository userRepository;
+	private final ChatMessageRepository chatMessageRepository;
+	private final ChatRoomRepository chatRoomRepository;
+	private final UserRepository userRepository;
 
-    public void saveMessage(ChatMessageDto messageDto) {
-        ChatRoom chatRoom = chatRoomRepository.findByRoomId(messageDto.getRoomId())
-                .orElseThrow(() -> new NotExistException(CHAT_ROOM_NOT_EXIST));
+	public void saveMessage(ChatMessageDto messageDto) {
+		ChatRoom chatRoom = chatRoomRepository.findByRoomId(messageDto.getRoomId())
+			.orElseThrow(() -> new NotExistException(CHAT_ROOM_NOT_EXIST));
 
-        User user = userRepository.findByNickname(messageDto.getNickname())
-                .orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
+		User user = userRepository.findByNickname(messageDto.getNickname())
+			.orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
 
-        ChatMessage chatMessage = ChatMessage.builder()
-                .chatRoom(chatRoom)
-                .user(user)
-                .type(messageDto.getType())
-                .content(messageDto.getContent())
-                .sendTime(messageDto.getSendTime())
-                .build();
-        chatMessageRepository.save(chatMessage);
-    }
+		ChatMessage chatMessage = ChatMessage.builder()
+			.chatRoom(chatRoom)
+			.user(user)
+			.type(messageDto.getType())
+			.content(messageDto.getContent())
+			.sendTime(messageDto.getSendTime())
+			.build();
+		chatMessageRepository.save(chatMessage);
+	}
 
-    public ChatMessagePageDto loadMessage(String roomId, Pageable pageable) {
-        ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId)
-                .orElseThrow(() -> new NotExistException(CHAT_ROOM_NOT_EXIST));
+	public ChatMessagePageDto loadMessage(String roomId, Pageable pageable) {
+		ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId)
+			.orElseThrow(() -> new NotExistException(CHAT_ROOM_NOT_EXIST));
 
-        Page<ChatMessageResponseDto> dtoPage = chatMessageRepository.findAllCustom(chatRoom.getId(), pageable);
+		Page<ChatMessageResponseDto> dtoPage = chatMessageRepository.findAllCustom(chatRoom.getId(), pageable);
 
-        return ChatMessagePageDto.builder()
-                .chatMessageDto(dtoPage.getContent())
-                .totalPages(dtoPage.getTotalPages())
-                .totalElements(dtoPage.getTotalElements())
-                .isLast(dtoPage.isLast())
-                .currPage(dtoPage.getPageable().getPageNumber())
-                .build();
-    }
+		return ChatMessagePageDto.builder()
+			.chatMessageDto(dtoPage.getContent())
+			.totalPages(dtoPage.getTotalPages())
+			.totalElements(dtoPage.getTotalElements())
+			.isLast(dtoPage.isLast())
+			.currPage(dtoPage.getPageable().getPageNumber())
+			.build();
+	}
 }

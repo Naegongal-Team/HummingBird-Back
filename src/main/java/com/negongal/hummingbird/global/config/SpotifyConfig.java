@@ -1,6 +1,8 @@
 package com.negongal.hummingbird.global.config;
 
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+
+import javax.annotation.PostConstruct;
 
 import org.apache.hc.core5.http.ParseException;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,10 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
-import javax.annotation.PostConstruct;
-
-import java.io.IOException;
-
+import lombok.extern.slf4j.Slf4j;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.ClientCredentials;

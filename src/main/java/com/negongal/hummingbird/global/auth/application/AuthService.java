@@ -1,5 +1,19 @@
 package com.negongal.hummingbird.global.auth.application;
 
+import static com.negongal.hummingbird.global.error.ErrorCode.*;
+
+import java.util.Set;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.negongal.hummingbird.domain.user.application.UserService;
 import com.negongal.hummingbird.domain.user.application.UserSignUpService;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
@@ -17,20 +31,6 @@ import com.negongal.hummingbird.global.error.exception.NotMatchException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import static com.negongal.hummingbird.global.error.ErrorCode.*;
-
-import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor

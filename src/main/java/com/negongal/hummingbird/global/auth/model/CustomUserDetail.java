@@ -1,17 +1,17 @@
 package com.negongal.hummingbird.global.auth.model;
 
-import com.negongal.hummingbird.domain.user.domain.User;
-
-import lombok.Builder;
-import lombok.Getter;
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+
+import com.negongal.hummingbird.domain.user.domain.User;
+
+import lombok.Builder;
+import lombok.Getter;
 
 @Builder
 @Getter

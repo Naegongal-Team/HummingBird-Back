@@ -1,11 +1,10 @@
 package com.negongal.hummingbird.global.auth.jwt;
 
-import com.negongal.hummingbird.domain.user.application.UserService;
-import com.negongal.hummingbird.domain.user.domain.User;
-import com.negongal.hummingbird.global.auth.model.CustomUserDetail;
-
-import io.jsonwebtoken.*;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.Date;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,11 +13,16 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Date;
-import java.util.Set;
-import java.util.stream.Collectors;
+import com.negongal.hummingbird.domain.user.application.UserService;
+import com.negongal.hummingbird.domain.user.domain.User;
+import com.negongal.hummingbird.global.auth.model.CustomUserDetail;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
@@ -41,7 +45,6 @@ public class JwtProvider {
 	public String createAccessToken(CustomUserDetail principal) {
 		Date now = new Date();
 		Date validity = new Date(now.getTime() + ACCESS_TOKEN_EXPIRE_LENGTH);
-
 
 		String role = principal.getAuthorities().stream()
 			.map(GrantedAuthority::getAuthority)

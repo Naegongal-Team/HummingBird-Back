@@ -1,13 +1,13 @@
 package com.negongal.hummingbird.global.auth.model.userInfo;
 
+import java.util.Map;
+
 import com.negongal.hummingbird.domain.user.domain.Role;
 import com.negongal.hummingbird.domain.user.domain.User;
 import com.negongal.hummingbird.domain.user.domain.UserStatus;
 import com.negongal.hummingbird.global.auth.model.Oauth2Attributes;
 
 import lombok.Getter;
-
-import java.util.Map;
 
 @Getter
 public class KakaoUserInfo implements Oauth2UserInfo {

@@ -1,6 +1,7 @@
 package com.negongal.hummingbird.global.common.response;
 
 import java.util.Map;
+
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

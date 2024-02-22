@@ -1,15 +1,11 @@
 package com.negongal.hummingbird.global.auth.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.negongal.hummingbird.global.auth.dto.AuthenticationResult;
-import com.negongal.hummingbird.global.auth.jwt.JwtProvider;
-import com.negongal.hummingbird.global.auth.model.CustomUserDetail;
-import com.negongal.hummingbird.global.auth.model.Oauth2Attributes;
-import com.negongal.hummingbird.global.auth.application.AuthService;
-import com.negongal.hummingbird.global.common.response.ResponseUtils;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,12 +16,16 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.negongal.hummingbird.global.auth.application.AuthService;
+import com.negongal.hummingbird.global.auth.dto.AuthenticationResult;
+import com.negongal.hummingbird.global.auth.jwt.JwtProvider;
+import com.negongal.hummingbird.global.auth.model.CustomUserDetail;
+import com.negongal.hummingbird.global.auth.model.Oauth2Attributes;
+import com.negongal.hummingbird.global.common.response.ResponseUtils;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j

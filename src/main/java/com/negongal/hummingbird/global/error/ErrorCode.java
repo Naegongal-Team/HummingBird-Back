@@ -1,9 +1,9 @@
 package com.negongal.hummingbird.global.error;
 
+import org.springframework.http.HttpStatus;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor

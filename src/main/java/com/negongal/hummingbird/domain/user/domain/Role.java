@@ -1,7 +1,6 @@
 package com.negongal.hummingbird.domain.user.domain;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
 public enum Role {

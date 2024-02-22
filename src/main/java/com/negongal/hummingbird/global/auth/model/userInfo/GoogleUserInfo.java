@@ -1,10 +1,10 @@
 package com.negongal.hummingbird.global.auth.model.userInfo;
 
+import java.util.Map;
+
 import com.negongal.hummingbird.domain.user.domain.Role;
 import com.negongal.hummingbird.domain.user.domain.User;
 import com.negongal.hummingbird.global.auth.model.Oauth2Attributes;
-
-import java.util.Map;
 
 public class GoogleUserInfo implements Oauth2UserInfo {
 	private Map<String, Object> attributes;

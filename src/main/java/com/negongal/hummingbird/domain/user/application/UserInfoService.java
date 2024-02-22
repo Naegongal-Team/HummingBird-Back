@@ -52,7 +52,7 @@ public class UserInfoService {
 	}
 
 	private void checkPhoto(User user) {
-		if(user.getProfileImage() != null) {
+		if (user.getProfileImage() != null) {
 			uploader.deleteFile(user.getProfileImage());
 		}
 	}
