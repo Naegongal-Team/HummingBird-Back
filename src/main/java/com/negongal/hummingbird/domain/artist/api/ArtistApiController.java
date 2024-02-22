@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 
+@Slf4j
 @Tag(name = "Artist API", description = "")
 @RestController
 @RequiredArgsConstructor
@@ -34,8 +36,10 @@ public class ArtistApiController {
 
     @Operation(summary = "아티스트 전체 조회", description = "등록되어 있는 아티스트 전체를 조회할 수 있습니다.")
     @GetMapping
+    @Cacheable(cacheNames = "artists")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse artistsList(Pageable pageable) {
+        log.info("test");
         Page<ArtistDto> artists = artistService.findAllArtist(pageable);
         return ResponseUtils.success(artists);
     }
