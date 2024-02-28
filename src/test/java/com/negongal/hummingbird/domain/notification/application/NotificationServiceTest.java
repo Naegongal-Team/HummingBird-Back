@@ -81,7 +81,6 @@ class NotificationServiceTest {
         performanceRepository.save(performance);
         User user = User.builder()
                 .oauth2Id("id")
-                .nickname("헤헤")
                 .provider("제공")
                 .role(Role.USER)
                 .build();

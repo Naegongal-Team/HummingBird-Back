@@ -72,6 +72,10 @@ dependencies {
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
 
+    // logstash
+    implementation 'net.logstash.logback:logstash-logback-encoder:6.6'
+
+
     // view
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-freemarker'

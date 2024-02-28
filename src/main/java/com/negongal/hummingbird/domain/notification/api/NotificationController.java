@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +29,14 @@ public class NotificationController {
             @RequestBody @Valid NotificationRequestDto notificationRequestDto) {
         log.info("Execute NotificationSave");
         notificationService.save(notificationRequestDto);
+        return ResponseUtils.success();
+    }
+
+    @PostMapping("/{performId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse notificationDelete(@PathVariable Long performId) {
+        log.info("Execute ");
+        notificationService.delete(performId);
         return ResponseUtils.success();
     }
 

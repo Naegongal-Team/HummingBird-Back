@@ -18,7 +18,7 @@ spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3306/hummingbird
-    username: naegongal
+    username: root
     password: hummingbird
 
   redis:

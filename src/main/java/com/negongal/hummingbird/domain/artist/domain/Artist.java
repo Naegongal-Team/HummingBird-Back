@@ -25,6 +25,8 @@ public class Artist extends BaseTimeEntity implements Persistable<String> {
 
     private String image;
 
+    private String nickname;
+
     @Basic(fetch=FetchType.LAZY)
     @Formula("(SELECT COUNT(1) FROM artist_heart ah WHERE ah.artist_id = id)")
     private Integer heartCount;
@@ -51,6 +53,10 @@ public class Artist extends BaseTimeEntity implements Persistable<String> {
         this.performances = new ArrayList<>();
         this.hearts = new ArrayList<>();
         this.heartCount = 0;
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     @Override

@@ -9,8 +9,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +26,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Builder
+@Table(name = "NOTIFICATION", indexes = @Index(name = "idx_notification_time", columnList = "notification_time"))
 @ToString
 public class Notification {
     @Id
@@ -38,7 +41,7 @@ public class Notification {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(nullable = false)
+    @Column(name = "notification_time", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime notificationTime;
 }

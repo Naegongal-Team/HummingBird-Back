@@ -25,8 +25,8 @@ public class ScheduleService {
         LocalDateTime now = LocalDateTime.now().withNano(0).withSecond(0);
         List<Notification> findNotification = notificationRepository.findByNotificationTime(now);
 
-        findNotification.forEach(notification ->
-                notificationService.pushTicketingAlertNotification(
+        findNotification
+                .forEach(notification -> notificationService.pushTicketingAlertNotification(
                         notification.getPerformance().getId(),
                         notification.getUser().getId()));
     }

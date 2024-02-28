@@ -58,19 +58,21 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
-    public void delete(Long notificationId) {
+    public void delete(Long performId) {
         log.info("Delete Notification");
-        Notification findNotification = notificationRepository.findById(notificationId).orElseThrow(()-> new NotExistException(
-                ErrorCode.NOTIFICATION_NOT_FOUND
-        ));
-        notificationRepository.delete(findNotification);
+        Long findCurrentUserId = SecurityUtil.getCurrentUserId().orElseThrow(() -> new NotExistException(
+                ErrorCode.USER_NOT_EXIST));
+        User user = userRepository.findById(findCurrentUserId).orElseThrow(() -> new NotExistException(
+                ErrorCode.USER_NOT_EXIST));
+        Performance performance = performanceRepository.findById(performId).orElseThrow(() -> new NotExistException(
+                ErrorCode.PERFORMANCE_NOT_EXIST));
+        Notification notification = notificationRepository.findByUserAndPerformance(user, performance).orElseThrow(() -> new NotExistException(
+                ErrorCode.PERFORMANCE_NOT_EXIST));
+        notificationRepository.delete(notification);
     }
 
     @Async
     public void pushPerformRegisterNotification(String artistId) {
-        /*
-        일단 토픽 = 가수 이름으로 생각 중, 프론트앤드 테스트
-         */
         log.info("Push Alert -> Register Perform Alert");
         Optional<Artist> findArtist = artistRepository.findById(artistId);
         if (findArtist.isPresent()) {

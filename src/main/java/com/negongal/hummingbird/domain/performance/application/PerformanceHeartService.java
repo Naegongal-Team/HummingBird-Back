@@ -5,6 +5,7 @@ import static com.negongal.hummingbird.global.error.ErrorCode.PERFORMANCE_HEART_
 import static com.negongal.hummingbird.global.error.ErrorCode.PERFORMANCE_NOT_EXIST;
 import static com.negongal.hummingbird.global.error.ErrorCode.USER_NOT_EXIST;
 
+import com.negongal.hummingbird.domain.notification.dao.NotificationRepository;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceHeartRepository;
 import com.negongal.hummingbird.domain.performance.dao.PerformanceRepository;
 import com.negongal.hummingbird.domain.performance.domain.Performance;
@@ -28,7 +29,6 @@ public class PerformanceHeartService {
     private final PerformanceHeartRepository performanceHeartRepository;
     private final PerformanceRepository performanceRepository;
     private final UserRepository userRepository;
-
     @Transactional
     public Long savePerformanceHeart(Long performanceId, Long userId) {
         User user = userRepository.findById(userId)
