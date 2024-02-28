@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
     @Query("SELECT n FROM Notification n WHERE n.notificationTime = :notificationTime")
-    List<Notification> findByNotificationTime(@Param("notificationTime") LocalDateTime notificationTime;
+    List<Notification> findByNotificationTime(@Param("notificationTime") LocalDateTime notificationTime);
 
     Optional<Notification> findByUserAndPerformance(User user, Performance performance);
 }
