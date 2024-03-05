@@ -35,6 +35,7 @@ public class PerformanceDetailDto {
 	private String location;
 	private String description;
 	private Long runtime;
+	private int heartCount;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
 	private List<LocalDateTime> date;
@@ -54,7 +55,7 @@ public class PerformanceDetailDto {
 		boolean isAlarmed,
 		List<LocalDateTime> date, String photo, List<TicketingDto> regularTicketing,
 		List<TicketingDto> earlybirdTicketing,
-		String roomId, String artistId) {
+		String roomId, String artistId, int heartCount) {
 		this.id = id;
 		this.name = name;
 		this.artistName = artistName;
@@ -70,6 +71,7 @@ public class PerformanceDetailDto {
 		this.heartPressed = heartPressed;
 		this.isAlarmed = isAlarmed;
 		this.roomId = roomId;
+		this.heartCount = heartCount;
 	}
 
 	public static PerformanceDetailDto of(Performance p, boolean heartPressed, boolean isAlarmed) {
@@ -98,6 +100,7 @@ public class PerformanceDetailDto {
 			.heartPressed(heartPressed)
 			.isAlarmed(isAlarmed)
 			.roomId(p.getChatRoom().getRoomId())
+			.heartCount(p.getHeartCount())
 			.build();
 	}
 }
