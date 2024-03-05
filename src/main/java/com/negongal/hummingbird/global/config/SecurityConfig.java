@@ -73,7 +73,7 @@ public class SecurityConfig {
 
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowedOrigins(List.of("http://localhost:3000", "http://hummingbird.kr"));
+		config.setAllowedOrigins(List.of("http://localhost:3000", "http://hummingbird.kr", "https://hummingbird.kr"));
 		config.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT", "PATCH"));
 		config.setAllowCredentials(true);
 		config.setAllowedHeaders(List.of("Authorization", "refresh"));
