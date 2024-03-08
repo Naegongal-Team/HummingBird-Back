@@ -13,13 +13,15 @@ public class GetLoginResponse {
 	private final String status;
 	@Schema(description = "회원 닉네임", example = "user1")
 	private final String nickname;
+	private final String accessToken;
 
-	public GetLoginResponse(String status, String nickname) {
+	public GetLoginResponse(String status, String nickname, String accessToken) {
 		this.status = status;
 		this.nickname = nickname;
+		this.accessToken = accessToken;
 	}
 
-	public static GetLoginResponse of(String status, String nickname) {
-		return new GetLoginResponse(status, nickname);
+	public static GetLoginResponse of(String status, String nickname, String accessToken) {
+		return new GetLoginResponse(status, nickname, accessToken);
 	}
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -38,36 +39,42 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-		Authentication authentication) throws IOException {
+		Authentication authentication) throws IOException{
 		OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken)authentication;
 		Oauth2Attributes attributes = Oauth2Attributes.of(oauth2Token.getPrincipal().getAttributes());
 		AuthenticationResult authenticationResult = authService.signIn(attributes);
 
-		createResponse(response, authenticationResult);
-	}
+		// createResponse(response, authenticationResult);
 
-	private void createResponse(HttpServletResponse response, AuthenticationResult authenticationResult) throws
-		IOException {
-		// JWT 생성
 		String accessToken = tokenProvider.createAccessToken(
 			authenticationResult.getAuthenticationToken().getPrincipal());
-		ResponseCookie cookie = createRefreshToken(authenticationResult.getAuthenticationToken().getPrincipal());
+		String targetUrl = "http://localhost:3000/login/success?accessToken="+accessToken;
+		getRedirectStrategy().sendRedirect(request, response, targetUrl);
 
-		String responseDto = mapper.writeValueAsString(ResponseUtils.success(authenticationResult.getResponse()));
-
-		response.setStatus(HttpStatus.ACCEPTED.value());
-		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-		response.setCharacterEncoding(StandardCharsets.UTF_8.toString());
-		response.setHeader(HttpHeaders.AUTHORIZATION, accessToken);
-		response.addHeader("Set-Cookie", cookie.toString());
-
-		PrintWriter writer = response.getWriter();
-		writer.write(responseDto);
 	}
 
-	private ResponseCookie createRefreshToken(CustomUserDetail user) {
-		String refreshToken = tokenProvider.createRefreshToken(user);
-		return tokenProvider.createRefreshTokenCookie(refreshToken);
-	}
+	// private void createResponse(HttpServletResponse response, AuthenticationResult authenticationResult) throws
+	// 	IOException {
+	// 	// JWT 생성
+	// 	String accessToken = tokenProvider.createAccessToken(
+	// 		authenticationResult.getAuthenticationToken().getPrincipal());
+	// 	ResponseCookie cookie = createRefreshToken(authenticationResult.getAuthenticationToken().getPrincipal());
+	//
+	// 	String responseDto = mapper.writeValueAsString(ResponseUtils.success(authenticationResult.getResponse()));
+	//
+	// 	response.setStatus(HttpStatus.ACCEPTED.value());
+	// 	response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+	// 	response.setCharacterEncoding(StandardCharsets.UTF_8.toString());
+	// 	response.setHeader(HttpHeaders.AUTHORIZATION, accessToken);
+	// 	response.addHeader("Set-Cookie", cookie.toString());
+	//
+	// 	PrintWriter writer = response.getWriter();
+	// 	writer.write(responseDto);
+	// }
+	//
+	// private ResponseCookie createRefreshToken(CustomUserDetail user) {
+	// 	String refreshToken = tokenProvider.createRefreshToken(user);
+	// 	return tokenProvider.createRefreshTokenCookie(refreshToken);
+	// }
 
 }
