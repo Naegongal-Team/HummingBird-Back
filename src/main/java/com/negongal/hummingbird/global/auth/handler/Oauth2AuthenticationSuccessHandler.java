@@ -48,7 +48,7 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
 		String accessToken = tokenProvider.createAccessToken(
 			authenticationResult.getAuthenticationToken().getPrincipal());
-		String targetUrl = "http://localhost:3000/login/success?accessToken="+accessToken;
+		String targetUrl = "http://hummingbird.kr/login/success?accessToken="+accessToken;
 		getRedirectStrategy().sendRedirect(request, response, targetUrl);
 
 	}
