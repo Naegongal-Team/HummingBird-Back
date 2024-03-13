@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -48,7 +49,7 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
 		String accessToken = tokenProvider.createAccessToken(
 			authenticationResult.getAuthenticationToken().getPrincipal());
-		String targetUrl = "http://hummingbird.kr/login/success?accessToken="+accessToken;
+		String targetUrl = "http://api.hummingbird.kr:8080/login/success?accessToken="+accessToken;
 		getRedirectStrategy().sendRedirect(request, response, targetUrl);
 
 	}
