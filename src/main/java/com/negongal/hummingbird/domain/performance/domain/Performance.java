@@ -3,6 +3,7 @@ package com.negongal.hummingbird.domain.performance.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Formula;
 
 import com.negongal.hummingbird.domain.artist.domain.Artist;
 import com.negongal.hummingbird.domain.chat.domain.ChatRoom;
@@ -52,6 +55,10 @@ public class Performance extends BaseTimeEntity {
 
 	private String description;
 
+	@Basic(fetch = FetchType.LAZY)
+	@Formula("(SELECT COUNT(1) FROM performance_heart ph WHERE ph.performance_id = id)")
+	private int heartCount;
+
 	@OneToMany(mappedBy = "performance", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PerformanceHeart> performanceHearts;
 
@@ -75,6 +82,7 @@ public class Performance extends BaseTimeEntity {
 		this.ticketings = new ArrayList<>();
 		this.performanceDates = new ArrayList<>();
 		this.performanceHearts = new ArrayList<>();
+		this.heartCount = 0;
 
 		this.artist.getPerformances().add(this);
 	}

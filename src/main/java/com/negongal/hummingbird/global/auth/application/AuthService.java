@@ -52,7 +52,7 @@ public class AuthService {
 			.orElseGet(() -> userSignUpService.signUp(attributes));
 
 		return new AuthenticationResult(AuthenticationToken.of(user, Set.of(user.toGrantedAuthority())),
-			GetLoginResponse.of(user.getStatus().toString(), user.getNickname()));
+			GetLoginResponse.of(user.getStatus().toString(), user.getNickname(), null));
 	}
 
 	@Transactional
