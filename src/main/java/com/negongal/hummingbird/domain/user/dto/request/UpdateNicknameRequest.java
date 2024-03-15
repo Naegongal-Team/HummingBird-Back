@@ -3,6 +3,8 @@ package com.negongal.hummingbird.domain.user.dto.request;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
@@ -18,7 +20,8 @@ public class UpdateNicknameRequest {
 	@Schema(description = "회원 닉네임", example = "cherry")
 	private String nickname;
 
-	public UpdateNicknameRequest(String nickname) {
+	@JsonCreator
+	public UpdateNicknameRequest(@JsonProperty("nickname")String nickname) {
 		this.nickname = nickname;
 	}
 }
