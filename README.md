@@ -56,19 +56,32 @@
 
 ## [프로젝트 설계](#목차)
 
-- 시스템 아키텍쳐
-- ERD
-- API 명세서
+### 시스템 아키텍쳐
+
+<br/>
+
+### ERD
+<img width="700px" src="./img/ERD.png">
+
+
+<br/>
+
+### API 명세서
+
 
 <br/>
 <br/>
 
 ## [개발 환경 및 기술 스택](#목차)
 
-- 백엔드
-- DB
-- CI/CD
-- 협업툴
+|  개발 환경  | 기술 스택                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+|:-------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **백엔드** | ![Java](https://img.shields.io/badge/Java_11-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white) ![Gradle](https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white) ![Spring Boot](https://img.shields.io/badge/Spring_Boot_2.7.16-6DB33F?style=for-the-badge&logo=spring&logoColor=white) ![Spring Security](https://img.shields.io/badge/Spring_Security-6DB33F?style=for-the-badge&logo=spring-security&logoColor=white) ![OAuth2](https://img.shields.io/badge/OAuth2-6DB33F?style=for-the-badge&logo=spring-security&logoColor=white) <br/> ![Spring Data JPA](https://img.shields.io/badge/Spring_Data_JPA-gray?style=for-the-badge&logo=Spring_Data_JPA&logoColor=white) ![QueryDSL](https://img.shields.io/badge/QueryDSL-0078D4?style=for-the-badge&logo=Querydsl&logoColor=white) ![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=json-web-tokens&logoColor=white) |
+|  **테스트**  | ![](https://img.shields.io/badge/Junit-25A162?style=for-the-badge&logo=JUnit5&logoColor=white) ![](https://img.shields.io/badge/Mockito-6DB33F?style=for-the-badge)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+|   **DB**    | ![mariadb](https://img.shields.io/badge/mariadb-4479A1?style=for-the-badge&logo=mariadb&logoColor=white) ![redis](https://img.shields.io/badge/redis-DC382D?style=for-the-badge&logo=redis&logoColor=white) ![firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+|   **인프라**   | ![amazonec2](https://img.shields.io/badge/amazon_ec2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white) ![Amazon S3](https://img.shields.io/badge/Amazon_S3-569A31?&style=for-the-badge&logo=AmazonS3&logoColor=white) ![docker](https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white) ![Jenkins](https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=Jenkins&logoColor=white)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+|   **협업툴**   | ![Git](https://img.shields.io/badge/Git-F05032?&style=for-the-badge&logo=Git&logoColor=white) ![Notion](https://img.shields.io/badge/Notion-000000.svg?style=for-the-badge&logo=notion&logoColor=white) ![discord](https://img.shields.io/badge/discord-5360E4?style=for-the-badge&logo=discord&logoColor=white) ![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white) ![Spring rest docs](https://img.shields.io/badge/Spring_rest_docs-6DB33F?style=for-the-badge&logo=googledocs&logoColor=white)                                                                                                                                                                                                                                                                                                                                                                                 |
+| **외부 API**  | ![spotify](https://img.shields.io/badge/spotify_api-000000?style=for-the-badge&logo=spotify&logoColor=white)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 
 <br/>
 <br/>
@@ -78,6 +91,6 @@
 |                     **[손지민](https://github.com/jmxx219)**                      |                   **[전현근](https://github.com/thisfetch1591)**                   |                   **[최이주](https://github.com/cherryiJuice)**                    |
 |:------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------:|
 | <img width="120px" src="https://avatars.githubusercontent.com/u/52346113?v=4"> | <img width="120px" src="https://avatars.githubusercontent.com/u/144662707?v=4"> | <img width="120px" src="https://avatars.githubusercontent.com/u/143402486?v=4"> |
-|                                       담당                                       |                                       담당                                        |                                       담당                                        |
+|                                 공연 및 채팅 기능 개발                                  |                                  가수 및 알림 기능 개발                                  |                                유저 기능 개발 및 인프라 구축                                |
 
 <br>
