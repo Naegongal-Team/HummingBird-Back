@@ -2,6 +2,7 @@ package com.negongal.hummingbird.domain.performance.api;
 
 import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
@@ -89,6 +90,8 @@ class PerformanceApiControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
 			.andDo(document("performance-select",
+				preprocessRequest(prettyPrint()),
+				preprocessResponse(prettyPrint()),
 				responseFields(
 					fieldWithPath("status").type(JsonFieldType.STRING)
 						.description("상태"),
@@ -101,12 +104,14 @@ class PerformanceApiControllerTest {
 					fieldWithPath("data.last").type(JsonFieldType.BOOLEAN)
 						.description("마지막 페이지인지 여부"),
 					fieldWithPath("data.performance_list").type(JsonFieldType.ARRAY)
+						.optional()
 						.description("공연 리스트"),
 					fieldWithPath("data.performance_list[].name").type(JsonFieldType.STRING)
 						.description("공연 이름"),
 					fieldWithPath("data.performance_list[].artist_name").type(JsonFieldType.STRING)
 						.description("가수 이름"),
 					fieldWithPath("data.performance_list[].photo").type(JsonFieldType.STRING)
+						.optional()
 						.description("사진 URL"),
 					fieldWithPath("data.performance_list[].date").type(JsonFieldType.STRING)
 						.description("공연 날짜"),

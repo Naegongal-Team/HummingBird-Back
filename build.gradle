@@ -2,8 +2,6 @@ buildscript {
     ext {
         //querydsl 추가
         queryDslVersion = "5.0.0"
-        //Rest Docs 추가
-        snippetsDir = file('build/generated-snippets')
     }
 }
 
@@ -111,7 +109,6 @@ allprojects {
 
 tasks.named('test') {
     useJUnitPlatform()
-    outputs.dir snippetsDir
 }
 
 /============== Start Querydsl ==============/
@@ -138,25 +135,23 @@ clean {
 /============== End Querydsl ==============/
 
 /============== Start Spring Rest Docs ==============/
+ext { // 전역 변수
+    snippetsDir = file('build/generated-snippets')
+}
+
+test {
+    outputs.dir snippetsDir
+}
+
 asciidoctor {
-    configurations 'asciidoctorExt'
-//    baseDirFollowsSourceFile()
     inputs.dir snippetsDir
+    configurations 'asciidoctorExt'
+
+    sources { // 특정 파일만 html로 생성
+        include("**/index.adoc")
+    }
+    baseDirFollowsSourceFile()
     dependsOn test
-}
-
-asciidoctor.doFirst {
-    delete file('src/main/resources/static/docs')
-}
-
-task copyDocument(type: Copy) {
-    dependsOn asciidoctor
-    from file("build/docs/asciidoc")
-    into file("src/main/resources/static/docs")
-}
-
-build {
-    dependsOn copyDocument
 }
 
 bootJar {

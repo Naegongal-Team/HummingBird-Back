@@ -1,0 +1,11 @@
+[[performance-select]]
+=== 전체 공연 조회
+
+==== HTTP Request
+
+include::{snippets}/performance-select/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/performance-select/http-response.adoc[]
+include::{snippets}/performance-select/response-fields.adoc[]
