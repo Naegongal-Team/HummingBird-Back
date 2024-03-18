@@ -51,9 +51,9 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 			authenticationResult.getAuthenticationToken().getPrincipal());
 		String targetUrl;
 		if(authenticationResult.getResponse().getNickname() == null) {
-			targetUrl = "http://hummingbird.kr:3000/firstLogin/success?accessToken="+accessToken;
+			targetUrl = "http://hummingbird.kr/firstLogin/success?accessToken="+accessToken;
 		} else {
-			targetUrl = "http://hummingbird.kr:3000/login/success?accessToken="+accessToken;
+			targetUrl = "http://hummingbird.kr/login/success?accessToken="+accessToken;
 		}
 		getRedirectStrategy().sendRedirect(request, response, targetUrl);
 
