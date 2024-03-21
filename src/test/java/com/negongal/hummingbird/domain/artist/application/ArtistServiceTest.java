@@ -1,5 +1,43 @@
-package com.negongal.hummingbird.domain.artist.application;
-
+// package com.negongal.hummingbird.domain.artist.application;
+//
+// import static org.junit.jupiter.api.Assertions.assertAll;
+// import static org.junit.jupiter.api.Assertions.assertEquals;
+// import static org.junit.jupiter.api.Assertions.assertFalse;
+// import static org.junit.jupiter.api.Assertions.assertThrows;
+// import static org.junit.jupiter.api.Assertions.assertTrue;
+// import static org.mockito.Mockito.mockStatic;
+//
+// import com.negongal.hummingbird.domain.artist.dao.ArtistHeartRepository;
+// import com.negongal.hummingbird.domain.artist.dao.ArtistRepository;
+// import com.negongal.hummingbird.domain.artist.domain.Artist;
+// import com.negongal.hummingbird.domain.artist.domain.ArtistHeart;
+// import com.negongal.hummingbird.domain.artist.dto.ArtistDetailDto;
+// import com.negongal.hummingbird.domain.artist.dto.ArtistDto;
+// import com.negongal.hummingbird.domain.artist.dto.ArtistSearchDto;
+// import com.negongal.hummingbird.domain.user.dao.UserRepository;
+// import com.negongal.hummingbird.domain.user.domain.Role;
+// import com.negongal.hummingbird.domain.user.domain.User;
+// import com.negongal.hummingbird.domain.user.domain.UserStatus;
+// import com.negongal.hummingbird.global.auth.utils.SecurityUtil;
+// import com.negongal.hummingbird.global.error.exception.NotExistException;
+// import java.util.ArrayList;
+// import java.util.Arrays;
+// import java.util.List;
+// import java.util.Optional;
+// import org.junit.jupiter.api.AfterEach;
+// import org.junit.jupiter.api.BeforeAll;
+// import org.junit.jupiter.api.DisplayName;
+// import org.junit.jupiter.api.Test;
+// import org.junit.jupiter.api.TestInstance;
+// import org.junit.jupiter.api.TestInstance.Lifecycle;
+// import org.mockito.BDDMockito;
+// import org.mockito.MockedStatic;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.boot.test.context.SpringBootTest;
+// import org.springframework.data.domain.PageRequest;
+// import org.springframework.data.domain.Pageable;
+// import org.springframework.transaction.annotation.Transactional;
+//
 // @TestInstance(Lifecycle.PER_CLASS)
 // @SpringBootTest(properties = "spring.profiles.active=test")
 // class ArtistServiceTest {
@@ -295,4 +333,5 @@ package com.negongal.hummingbird.domain.artist.application;
 //
 //         return artistHearts;
 //     }
+// }
 // }
