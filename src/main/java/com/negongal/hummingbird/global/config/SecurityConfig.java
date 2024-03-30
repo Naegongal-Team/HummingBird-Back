@@ -74,10 +74,10 @@ public class SecurityConfig {
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
 		config.setAllowedOrigins(List.of("http://localhost:3000", "http://hummingbird.kr", "https://hummingbird.kr"));
-		config.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT", "PATCH"));
+		config.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS"));
+		config.setAllowedHeaders(List.of("Authorization", "Set-Cookie"));
+		config.setExposedHeaders(List.of("Authorization", "Set-Cookie"));
 		config.setAllowCredentials(true);
-		config.setAllowedHeaders(List.of("Authorization", "refresh"));
-		config.setExposedHeaders(List.of("Authorization", "refresh"));
 		config.setMaxAge(3600L);
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
