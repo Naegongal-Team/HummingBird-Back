@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -48,6 +49,7 @@ public class SecurityConfig {
 			.csrf(AbstractHttpConfigurer::disable)
 			.formLogin(AbstractHttpConfigurer::disable)
 			.httpBasic(AbstractHttpConfigurer::disable)
+			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.exceptionHandling()
 			.authenticationEntryPoint(jwtAuthenticationEntryPoint) // 인증 실패 핸들링
 			.accessDeniedHandler(jwtAccessDeniedHandler); // 인가 실패 핸들링
@@ -75,7 +77,7 @@ public class SecurityConfig {
 		CorsConfiguration config = new CorsConfiguration();
 		config.setAllowedOrigins(List.of("http://localhost:3000", "http://hummingbird.kr", "https://hummingbird.kr"));
 		config.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS"));
-		config.setAllowedHeaders(List.of("Authorization", "Set-Cookie"));
+		config.setAllowedHeaders(List.of("Authorization", "Set-Cookie", "Content-Type"));
 		config.setExposedHeaders(List.of("Authorization", "Set-Cookie"));
 		config.setAllowCredentials(true);
 		config.setMaxAge(3600L);
