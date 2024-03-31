@@ -87,6 +87,7 @@ public class JwtProvider {
 
 	public ResponseCookie createRefreshTokenCookie(String refreshToken) {
 		return ResponseCookie.from(COOKIE_REFRESH_TOKEN_KEY, refreshToken)
+			.domain("hummingbird.kr")
 			.httpOnly(true)
 			.secure(true)
 			.sameSite("None")
