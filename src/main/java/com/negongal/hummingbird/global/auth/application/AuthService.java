@@ -77,9 +77,7 @@ public class AuthService {
 
 		//access token, refresh token 새로 발급
 		String accessToken = jwtProvider.createAccessToken(principal);
-		String refreshToken = jwtProvider.createRefreshToken(principal);
-		ResponseCookie cookie = jwtProvider.createRefreshTokenCookie(refreshToken);
-		response.addHeader("Set-Cookie", cookie.toString());
+		jwtProvider.createRefreshToken(principal, response);
 		response.setHeader(HttpHeaders.AUTHORIZATION, accessToken);
 
 		return accessToken;

@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
@@ -63,7 +65,7 @@ public class JwtProvider {
 			.compact();
 	}
 
-	public String createRefreshToken(CustomUserDetail principal) {
+	public void createRefreshToken(CustomUserDetail principal, HttpServletResponse response) {
 		Date now = new Date();
 		Date validity = new Date(now.getTime() + REFRESH_TOKEN_EXPIRE_LENGTH);
 
@@ -75,7 +77,8 @@ public class JwtProvider {
 			.compact();
 		saveRefreshToken(principal, refreshToken);
 
-		return refreshToken;
+		ResponseCookie cookie = createRefreshTokenCookie(refreshToken);
+		response.addHeader("Set-Cookie", cookie.toString());
 	}
 
 	private void saveRefreshToken(CustomUserDetail principal, String refreshToken) {

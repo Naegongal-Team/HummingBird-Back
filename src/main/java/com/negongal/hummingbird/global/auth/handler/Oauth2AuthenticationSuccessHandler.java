@@ -45,10 +45,10 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 		Oauth2Attributes attributes = Oauth2Attributes.of(oauth2Token.getPrincipal().getAttributes());
 		AuthenticationResult authenticationResult = authService.signIn(attributes);
 
-		// createResponse(response, authenticationResult);
-
 		String accessToken = tokenProvider.createAccessToken(
 			authenticationResult.getAuthenticationToken().getPrincipal());
+		tokenProvider.createRefreshToken(authenticationResult.getAuthenticationToken().getPrincipal(), response);
+
 		String targetUrl;
 		if(authenticationResult.getResponse().getNickname() == null) {
 			targetUrl = "http://hummingbird.kr/firstLogin/success?accessToken="+accessToken;
@@ -58,29 +58,5 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 		getRedirectStrategy().sendRedirect(request, response, targetUrl);
 
 	}
-
-	// private void createResponse(HttpServletResponse response, AuthenticationResult authenticationResult) throws
-	// 	IOException {
-	// 	// JWT 생성
-	// 	String accessToken = tokenProvider.createAccessToken(
-	// 		authenticationResult.getAuthenticationToken().getPrincipal());
-	// 	ResponseCookie cookie = createRefreshToken(authenticationResult.getAuthenticationToken().getPrincipal());
-	//
-	// 	String responseDto = mapper.writeValueAsString(ResponseUtils.success(authenticationResult.getResponse()));
-	//
-	// 	response.setStatus(HttpStatus.ACCEPTED.value());
-	// 	response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-	// 	response.setCharacterEncoding(StandardCharsets.UTF_8.toString());
-	// 	response.setHeader(HttpHeaders.AUTHORIZATION, accessToken);
-	// 	response.addHeader("Set-Cookie", cookie.toString());
-	//
-	// 	PrintWriter writer = response.getWriter();
-	// 	writer.write(responseDto);
-	// }
-	//
-	// private ResponseCookie createRefreshToken(CustomUserDetail user) {
-	// 	String refreshToken = tokenProvider.createRefreshToken(user);
-	// 	return tokenProvider.createRefreshTokenCookie(refreshToken);
-	// }
 
 }
