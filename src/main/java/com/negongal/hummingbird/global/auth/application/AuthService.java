@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,8 +17,6 @@ import com.negongal.hummingbird.domain.user.application.UserService;
 import com.negongal.hummingbird.domain.user.application.UserSignUpService;
 import com.negongal.hummingbird.domain.user.dao.UserRepository;
 import com.negongal.hummingbird.domain.user.domain.User;
-import com.negongal.hummingbird.domain.user.dto.response.GetLoginResponse;
-import com.negongal.hummingbird.global.auth.dto.AuthenticationResult;
 import com.negongal.hummingbird.global.auth.jwt.JwtProvider;
 import com.negongal.hummingbird.global.auth.model.CustomUserDetail;
 import com.negongal.hummingbird.global.auth.model.Oauth2Attributes;
@@ -47,12 +44,11 @@ public class AuthService {
 	private String cookieKey;
 
 	@Transactional
-	public AuthenticationResult signIn(Oauth2Attributes attributes) {
+	public AuthenticationToken signIn(Oauth2Attributes attributes) {
 		User user = userRepository.findByOauth2IdAndProvider(attributes.getOauth2Id(), attributes.getProvider())
 			.orElseGet(() -> userSignUpService.signUp(attributes));
 
-		return new AuthenticationResult(AuthenticationToken.of(user, Set.of(user.toGrantedAuthority())),
-			GetLoginResponse.of(user.getStatus().toString(), user.getNickname(), null));
+		return AuthenticationToken.of(user, Set.of(user.toGrantedAuthority()));
 	}
 
 	@Transactional
