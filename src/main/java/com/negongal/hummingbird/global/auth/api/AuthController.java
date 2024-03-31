@@ -24,19 +24,10 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 
 	private final AuthService authService;
-	private final JwtProvider jwtProvider;
 
 	@Operation(summary = "토큰 재발급", description = "쿠키에 저장된 리프레시 토큰으로 토큰을 재발급합니다.")
 	@PostMapping("/refresh")
 	public ApiResponse<String> reissueToken(HttpServletResponse response, HttpServletRequest request) {
 		return ResponseUtils.success(authService.reissueToken(request, response));
-	}
-
-	@GetMapping("/login/success")
-	public ApiResponse<GetLoginResponse> login(String accessToken) {
-		Claims claims = jwtProvider.parseClaims(accessToken);
-		GetLoginResponse response = GetLoginResponse.of(claims.get("status").toString(),
-			claims.get("nickname").toString(), accessToken);
-		return ResponseUtils.success(response);
 	}
 }
