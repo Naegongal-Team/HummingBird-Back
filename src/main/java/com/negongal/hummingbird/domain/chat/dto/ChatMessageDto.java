@@ -26,11 +26,16 @@ public class ChatMessageDto {
 	private String nickname;
 	private MessageType type;
 	private String content;
+	private String profileImage;
 
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	private LocalDateTime sendTime;
+
+	public void setProfileImage(String profileImage) {
+		this.profileImage = profileImage;
+	}
 
 	@Override
 	public String toString() {
@@ -39,6 +44,8 @@ public class ChatMessageDto {
 			", nickname='" + nickname + '\'' +
 			", type=" + type +
 			", content='" + content + '\'' +
+			", profileImage='" + profileImage + '\'' +
+			", sendTime=" + sendTime +
 			'}';
 	}
 }

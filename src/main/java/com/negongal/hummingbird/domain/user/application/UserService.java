@@ -25,6 +25,11 @@ public class UserService {
 			.orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
 	}
 
+	public User getByNickname(String nickname) {
+		return userRepository.findByNickname(nickname)
+			.orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
+	}
+
 	public User getByOauth2Id(String oauth2Id) {
 		return userRepository.findByOauth2Id(oauth2Id)
 			.orElseThrow(() -> new NotExistException(USER_NOT_EXIST));
