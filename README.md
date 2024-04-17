@@ -57,6 +57,7 @@
 ## [프로젝트 설계](#목차)
 
 ### 시스템 아키텍쳐
+<img width="700px" src="./img/SystemArchitecture.png">
 
 <br/>
 
